@@ -1,0 +1,26 @@
+div {
+}
+
+.button {
+  background-color: #fff798;
+  color: #a87900;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  height: 50vh;
+}
+
+.icon {
+  font-size: 5vw;
+  margin-bottom: 15px;
+}
+
+body {
+  background-color: #2dafff;
+}
+
+.navbar.navbar-light.navbar-expand-md.navigation-clean {
+  background-color: #2dafff;
+}
+
