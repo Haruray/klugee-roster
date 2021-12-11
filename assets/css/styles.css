@@ -1,14 +1,56 @@
-div {
-}
-
 .button {
-  background-color: #fff798;
-  color: #a87900;
+  background-color: #31c0fd;
+  color: white;
   text-align: center;
-  padding: 20px;
   margin-bottom: 20px;
   border-radius: 5px;
-  height: 50vh;
+  font-size: 4vmin;
+  font-weight: bold;
+  padding: 40% 0;
+  position: relative;
+}
+
+@media (max-width: 992px) {
+  .button {
+    background-color: #31c0fd;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 40% 0;
+    position: relative;
+  }
+}
+
+@media (max-width: 767px) {
+  .button {
+    background-color: #31c0fd;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 20% 0;
+    position: relative;
+    padding-top: 130px;
+  }
+}
+
+@media (max-width: 575px) {
+  .button {
+    background-color: #31c0fd;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 1% 0;
+    position: relative;
+  }
 }
 
 .icon {
@@ -17,10 +59,177 @@ div {
 }
 
 body {
-  background-color: #2dafff;
+  background-color: white;
+  font-family: "roboto";
 }
 
 .navbar.navbar-light.navbar-expand-md.navigation-clean {
   background-color: #2dafff;
+}
+
+.profile-img {
+  border-radius: 50%;
+  width: 50px;
+}
+
+@media (max-width: 767px) {
+  .profile-img {
+    border-radius: 50%;
+    width: 0px;
+    visibility: hidden;
+  }
+}
+
+.nav-center-pad {
+  padding: 50% 0;
+}
+
+.navbar.navbar-light.navbar-expand-md.navigation-clean {
+  padding-bottom: 0px;
+  padding-top: 5px;
+  margin-bottom: 100px;
+}
+
+.page-heading {
+  color: #28abe3;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.profile-text {
+  display: inline-block;
+  color: #faf5cc;
+  margin-right: 15px;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+
+@media (max-width: 575px) {
+  .button-content-icon {
+    width: 0;
+    visibility: collapse;
+    height: 0;
+    margin: 0;
+    padding: inherit;
+  }
+}
+
+@media (max-width: 767px) {
+  .button-content-icon {
+    padding-bottom: 80px;
+  }
+}
+
+.button-content-icon {
+  margin-bottom: 80px;
+}
+
+.button:hover {
+  background-color: #00c2cb;
+}
+
+.attendance-box {
+  background-color: #31c0fd;
+  margin: auto;
+  width: 40%;
+  padding: 30px 1px 30px 1px;
+  border-radius: 10px;
+}
+
+@media (max-width: 954px) {
+  .attendance-box {
+    width: 80%;
+    padding-right: 10px;
+  }
+}
+
+.attendance-icon {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  width: 20px;
+}
+
+.attendance-input {
+  display: inline-block;
+  width: 90%;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+
+.attendance-input-student {
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.attendance-input-div {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.attendance-input-button {
+  color: #31c0fd;
+  background-color: #faf5cc;
+  font-weight: bold;
+}
+
+.attendance-input-button:hover {
+  color: white;
+  background-color: #00c2cb;
+}
+
+.attendance-input-button-box {
+  text-align: center;
+}
+
+.attendance-plus {
+  color: white;
+  background-color: #00c2cb;
+  width: 50px;
+  height: 50px;
+  font-size: 25px;
+  border-radius: 50%;
+  padding-top: 7px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 35px;
+}
+
+.attendance-confirm {
+  color: white;
+  background-color: #6ce679;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 50%;
+  padding-top: 6px;
+  text-align: center;
+  margin-left: 10px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 954px) {
+  .attendance-confirm {
+    color: white;
+    background-color: #6ce679;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 50%;
+    padding-top: 6px;
+    text-align: center;
+    margin-left: 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+}
+
+.attendance-plus:hover {
+  color: #faf5cc;
 }
 
