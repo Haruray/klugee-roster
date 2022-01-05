@@ -170,3 +170,13 @@
   transform: translate(-50%, -50%);
 }
 
+.navbar.navbar-light.navbar-expand-md.navigation-clean-button {
+}
+
+.navbar.navbar-light.navbar-expand-md.navigation-clean-button.navbar-main {
+  background-color: #2dafff;
+}
+
+.input-confirm-check {
+}
+

@@ -1,5 +1,5 @@
 .button {
-  background-color: #31c0fd;
+  background-color: #2AB4EE;
   color: white;
   text-align: center;
   margin-bottom: 20px;
@@ -12,7 +12,7 @@
 
 @media (max-width: 992px) {
   .button {
-    background-color: #31c0fd;
+    background-color: #2AB4EE;
     color: white;
     text-align: center;
     margin-bottom: 20px;
@@ -26,7 +26,7 @@
 
 @media (max-width: 767px) {
   .button {
-    background-color: #31c0fd;
+    background-color: #2AB4EE;
     color: white;
     text-align: center;
     margin-bottom: 20px;
@@ -41,7 +41,7 @@
 
 @media (max-width: 575px) {
   .button {
-    background-color: #31c0fd;
+    background-color: #2AB4EE;
     color: white;
     text-align: center;
     margin-bottom: 20px;
@@ -64,7 +64,7 @@ body {
 }
 
 .navbar.navbar-light.navbar-expand-md.navigation-clean {
-  background-color: #2dafff;
+  background-color: #2AB4EE;
 }
 
 .profile-img {
@@ -72,26 +72,31 @@ body {
   width: 50px;
 }
 
-@media (max-width: 767px) {
-  .profile-img {
-    border-radius: 50%;
-    width: 0px;
-    visibility: hidden;
-  }
+.notif-img {
+  border-radius: 50%;
+  width: 50px;
+  position: relative;
 }
 
 .nav-center-pad {
   padding: 50% 0;
 }
 
-.navbar.navbar-light.navbar-expand-md.navigation-clean {
+.navbar-main {
   padding-bottom: 0px;
   padding-top: 5px;
   margin-bottom: 100px;
 }
 
+.page-sub-heading {
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .page-heading {
-  color: #28abe3;
+  color: #2AB4EE;
   text-align: center;
   font-weight: bold;
   margin-bottom: 30px;
@@ -131,16 +136,41 @@ body {
 }
 
 .attendance-box {
-  background-color: #31c0fd;
+  background-color: #2AB4EE;
   margin: auto;
   width: 40%;
   padding: 30px 1px 30px 1px;
   border-radius: 10px;
 }
 
-@media (max-width: 954px) {
+.attendance-history-box {
+  background-color: #54DEE4;
+  margin: auto;
+  width: 60%;
+  padding: 30px 1px 30px 1px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .attendance-history-box {
+    background-color: #54DEE4;
+    margin: auto;
+    width: 80%;
+    padding: 30px 1px 30px 1px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 1200px) {
   .attendance-box {
     width: 80%;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 532px) {
+  .attendance-box {
+    width: 90%;
     padding-right: 10px;
   }
 }
@@ -149,7 +179,7 @@ body {
   display: inline-block;
   color: white;
   text-align: center;
-  font-size: 30px;
+  font-size: inherit;
   width: 20px;
 }
 
@@ -171,7 +201,7 @@ body {
 }
 
 .attendance-input-button {
-  color: #31c0fd;
+  color: #2AB4EE;
   background-color: #faf5cc;
   font-weight: bold;
 }
@@ -183,6 +213,7 @@ body {
 
 .attendance-input-button-box {
   text-align: center;
+  margin-top: 20px;
 }
 
 .attendance-plus {
@@ -198,38 +229,475 @@ body {
   margin-bottom: 35px;
 }
 
-.attendance-confirm {
+.attendance-plus:hover {
   color: white;
   background-color: #6ce679;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
+  width: 50px;
+}
+
+.attendance-plus:active {
+  color: white;
+  background-color: #6ce679;
+  width: 50px;
+}
+
+.attendance-confirm {
+  color: grey;
+  background-color: #eeeeee;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
   border-radius: 50%;
-  padding-top: 6px;
+  padding-top: 5px;
   text-align: center;
-  margin-left: 10px;
+  margin-left: 2px;
   display: inline-block;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+}
+
+.attendance-confirm:hover {
+  color: white;
+  background-color: #00848a;
+}
+
+.attendance-confirm:active {
+  color: white;
+  background-color: blue;
+}
+
+.attendance-confirm-yes {
+  color: white;
+  background-color: #6ce679;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  border-radius: 50%;
+  padding-top: 5px;
+  text-align: center;
+  margin-left: 2px;
+  display: inline-block;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 954px) {
   .attendance-confirm {
+    color: grey;
+    background-color: #eeeeee;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 50%;
+    padding-top: 5px;
+    text-align: center;
+    margin-left: 5px;
+    display: inline-block;
+    margin-bottom: 6px;
+    margin-top: -5px;
+  }
+}
+
+@media (max-width: 954px) {
+  .attendance-confirm-yes {
     color: white;
     background-color: #6ce679;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
     border-radius: 50%;
-    padding-top: 6px;
+    padding-top: 5px;
     text-align: center;
-    margin-left: 10px;
+    margin-left: 5px;
     display: inline-block;
-    margin-bottom: 10px;
-    margin-top: 20px;
+    margin-bottom: 6px;
+    margin-top: -5px;
   }
 }
 
 .attendance-plus:hover {
   color: #faf5cc;
+}
+
+.navbar-logo {
+  height: 80px;
+}
+
+.navbar-icons-center {
+  text-align: center;
+}
+
+.warning-sign {
+  width: 20px;
+  float: right;
+  position: relative;
+  right: 15px;
+  margin-right: -20px;
+  padding-right: 0px;
+}
+
+.warning-sign-hidden {
+  width: 20px;
+  float: right;
+  position: relative;
+  right: 15px;
+  margin-right: -20px;
+  padding-right: 0px;
+  visibility: hidden;
+}
+
+.student-card {
+  background-color: #2AB4EE;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.student-program-card {
+  background-color: white;
+  box-shadow: 0 0 0 3pt #2AB4EE;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.fa.fa-search.nav-item-icon {
+}
+
+.student-card-profile {
+  width: inherit;
+}
+
+.student-card-name {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 25px;
+}
+
+.student-program-payment-paid {
+  color: #6ce679;
+  text-align: center;
+  font-size: 15px;
+}
+
+.student-program-payment-late {
+  color: red;
+  text-align: center;
+  font-size: 15px;
+}
+
+.student-level-name {
+  color: #38b6ff;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.student-program-name {
+  color: #38b6ff;
+  font-weight: bold;
+  text-align: center;
+  font-size: 25px;
+}
+
+.container.student-card-container {
+  text-align: center;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  max-width: 2000px;
+  margin: auto;
+}
+
+.student-card-button {
+  background-color: #fff5cc;
+  color: #2AB4EE;
+  font-weight: bold;
+  width: inherit;
+}
+
+.student-search {
+  margin: auto;
+  text-align: center;
+  width: 70%;
+  background-color: #2AB4EE;
+  padding: 15px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+.student-search-form {
+  width: 95%;
+  margin: auto;
+}
+
+.student-search-icon {
+  margin-right: 15px;
+  color: white;
+  font-size: 25px;
+}
+
+@media (max-width: 598px) {
+  .attendance-icon {
+    visibility: hidden;
+    width: 0;
+  }
+}
+
+.input-confirm-check {
+  background-color: #6ce679;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  padding-top: 7px;
+}
+
+.input-confirm-description {
+  color: white;
+  text-align: center;
+}
+
+.input-confirm-buttons {
+  text-align: center;
+  margin: auto;
+}
+
+.input-confirm-button {
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  color: #2AB4EE;
+  background-color: #faf5cc;
+  font-weight: bold;
+}
+
+.progress-report-check-attendance-button {
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  color: white;
+  background-color: #00c2cb;
+  font-weight: bold;
+}
+
+.input-confirm-button:hover {
+  color: white;
+  background-color: #00c2cb;
+}
+
+.attendance-history-search-text {
+  color: white;
+  width: inherit;
+  font-weight: bold;
+}
+
+.attendance-history-card {
+  background-color: #2AB4EE;
+  padding: 10px;
+  margin-top: 30px;
+  text-align: center;
+  border-radius: 10px;
+  margin-right: 15px;
+}
+
+.attendance-history-card-icon {
+  color: white;
+  font-size: 40px;
+}
+
+.attendance-history-text {
+  color: white;
+  font-weight: bold;
+}
+
+.attendance-history-box-container {
+  text-align: center;
+  max-width: 2000px;
+}
+
+.attendance-history-icon-done {
+  background-color: #6ce679;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding-top: 5px;
+}
+
+.attendance-history-icon-notdone {
+  background-color: red;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding-top: 5px;
+}
+
+.student-profile-img {
+  width: 200px;
+  border-radius: 50%;
+}
+
+.progress-report-img {
+  width: 80px;
+  border-radius: 50%;
+}
+
+.student-profile-img-outline {
+  width: 220px;
+  height: 220px;
+  background-color: #54dee4;
+  border-radius: 50%;
+  padding-top: 10px;
+  margin: auto;
+}
+
+.progress-report-img-outline {
+  width: 100px;
+  height: 100px;
+  background-color: #54dee4;
+  border-radius: 50%;
+  padding-top: 10px;
+  margin-right: 20px;
+}
+
+.student-profile-name {
+  color: #00c2cb;
+  font-weight: bolder;
+  font-size: 40px;
+  text-align: center;
+}
+
+.progress-report-program-name {
+  color: #38b6ff;
+  font-weight: bolder;
+  font-size: 35px;
+  text-align: center;
+}
+
+.progress-report-student-name {
+  color: #00c2cb;
+  font-weight: bolder;
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.student-profile-desc {
+  color: #38b6ff;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.student-profile {
+  margin-bottom: 30px;
+}
+
+.progress-report-table {
+  margin-top: 20px;
+}
+
+thead {
+  background-color: #00c2cb;
+  color: white;
+}
+
+tr {
+  border: #00c2cb 2px solid;
+}
+
+td {
+  border: #00c2cb 2px solid;
+}
+
+.progress-report-text {
+  margin-left: 20px;
+}
+
+.yellow {
+  color: #fff5cc;
+}
+
+.nav-item-text {
+  color: #fff5cc;
+  font-weight: bold;
+  margin-left: 10px;
+  visibility: hidden;
+  width: 0;
+}
+
+@media (max-width: 767.9px) {
+  .nav-item-text {
+    color: #fff5cc;
+    font-weight: bold;
+    margin-left: 10px;
+    width: inherit;
+    visibility: visible;
+    display: block;
+  }
+}
+
+.nav-item-div {
+  text-align: left;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+@media (max-width: 767.9px) {
+  .nav-item-div {
+    text-align: left;
+    width: 540px;
+    height: 51.7px;
+  }
+}
+
+.nav-item-dropdown {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+@media (max-width: 767.9px) {
+  .nav-item-dropdown {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 2px;
+    margin-left: -15px;
+  }
+}
+
+.nav-item-icon {
+  box-shadow: 0 0 0 2pt white;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  text-align: center;
+  padding-top: 12px;
+  visibility: hidden;
+  width: 0px;
+  height: 0px;
+  padding-top: 0px;
+}
+
+@media (max-width: 767.9px) {
+  .nav-item-icon {
+    box-shadow: 0 0 0 2pt white;
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 12px;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 374px) {
+  .brand-name {
+    visibility: hidden;
+    width: 0;
+  }
 }
 
