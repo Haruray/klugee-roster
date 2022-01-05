@@ -475,6 +475,20 @@ body {
   font-weight: bold;
 }
 
+.input-confirm-button-alternative {
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  color: #2AB4EE;
+  background-color: #faf5cc;
+  font-weight: bold;
+}
+
+.input-confirm-button-alternative:hover {
+  color: white;
+  background-color: #2AB4EE;
+}
+
 .progress-report-check-attendance-button {
   margin: auto;
   margin-bottom: 10px;
@@ -568,6 +582,7 @@ body {
   font-weight: bolder;
   font-size: 40px;
   text-align: center;
+  margin-bottom: -5px;
 }
 
 .progress-report-program-name {
@@ -589,7 +604,16 @@ body {
 .student-profile-desc {
   color: #38b6ff;
   font-weight: bold;
+  font-size: 18px;
+  margin-bottom: -8px;
+  text-decoration: underline;
+}
+
+.student-profile-desc-subtitle {
+  color: #00c2cb;
+  font-weight: bold;
   font-size: 22px;
+  margin-bottom: 0px;
 }
 
 .student-profile {
@@ -699,5 +723,27 @@ td {
     visibility: hidden;
     width: 0;
   }
+}
+
+.progress-report-button {
+  color: white;
+  background-color: #2ab4ee;
+  font-size: 13px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.progress-report-button:hover {
+  color: #fff5cc;
+  background-color: #00c2cb;
+}
+
+.progress-report-list-button-group {
+  text-align: right;
+  margin-bottom: -10px;
+}
+
+.bold {
+  font-weight: bolder;
 }
 
