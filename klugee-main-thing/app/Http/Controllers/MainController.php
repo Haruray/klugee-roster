@@ -45,7 +45,7 @@ class MainController extends Controller
         $max_stud = 10; //max students for input
         //Save attendance data
         $new_attendance = new Attendance;
-        $new_attendance->id_teacher = auth()->user()->id;
+        $new_attendance->id_teacher = auth()->user()->id_teacher;
         $new_attendance->date = $request->input('date');
         $new_attendance->time = $request->input('hour');
         $new_attendance->program = $request->input('program');
@@ -87,6 +87,13 @@ class MainController extends Controller
                 $new_progress->id_attendance = $new_attendance->id;
                 $new_progress->filled = false;
                 $new_progress->save();
+                if (!$new_progress->save()){
+                    //If it doesn't success, then return error message
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fail to create progress report. Please contact the developer for this problem.'
+                    ], 401);
+                }
             }
         }
 

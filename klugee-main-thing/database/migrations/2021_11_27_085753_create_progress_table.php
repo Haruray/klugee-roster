@@ -18,10 +18,10 @@ class CreateProgressTable extends Migration
             $table->bigInteger("id_teacher");
             $table->bigInteger("id_student");
             $table->bigInteger("id_attendance");
-            $table->string("level");
-            $table->string("unit");
-            $table->string("last_exercise");
-            $table->integer("score");
+            $table->string("level")->nullable();
+            $table->string("unit")->nullable();
+            $table->string("last_exercise")->nullable();
+            $table->integer("score")->nullable();
             $table->text("note")->nullable();
             $table->string("documentation")->nullable();
             $table->boolean("filled");

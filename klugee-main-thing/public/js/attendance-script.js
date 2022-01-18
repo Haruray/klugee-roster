@@ -200,11 +200,11 @@
                     })
                 }
                 else{
-                    alert("nein");
+                    alert(response.message);
                 }
             },
             error : function(response){
-                alert("nein2");
+                alert(response.message);
             }
         })
     }
