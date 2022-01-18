@@ -15,9 +15,9 @@ class CreateTuitionFeesTable extends Migration
     {
         Schema::create('tuition_fees', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_student");
+            $table->bigInteger("id_student");
             $table->string("program");
-            $table->integer("nominal");
+            $table->bigInteger("nominal");
             $table->integer("quota");
             $table->timestamps();
         });

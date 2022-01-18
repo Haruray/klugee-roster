@@ -15,7 +15,7 @@ class CreateStudentProgramsTable extends Migration
     {
         Schema::create('student_programs', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_student");
+            $table->bigInteger("id_student");
             $table->string("program");
             $table->timestamps();
         });

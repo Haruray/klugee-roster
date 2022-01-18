@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProgressTable extends Migration
+class CreateFeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,15 @@ class CreateProgressTable extends Migration
      */
     public function up()
     {
-        Schema::create('progress', function (Blueprint $table) {
+        Schema::create('fees', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("id_teacher");
-            $table->bigInteger("id_student");
+            $table->bigInteger("id_teach_presences");
             $table->bigInteger("id_attendance");
-            $table->string("level");
-            $table->string("unit");
-            $table->string("last_exercise");
-            $table->integer("score");
+            $table->bigInteger("fee_nominal");
+            $table->bigInteger("lunch_nominal");
+            $table->bigInteger("transport_nominal");
             $table->text("note")->nullable();
-            $table->string("documentation")->nullable();
-            $table->boolean("filled");
+            $table->boolean("approved");
             $table->timestamps();
         });
     }
@@ -36,6 +33,6 @@ class CreateProgressTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('progress');
+        Schema::dropIfExists('fees');
     }
 }

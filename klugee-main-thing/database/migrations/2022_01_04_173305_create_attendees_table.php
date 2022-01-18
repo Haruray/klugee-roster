@@ -15,8 +15,8 @@ class CreateAttendeesTable extends Migration
     {
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_attendance");
-            $table->integer("id_student");
+            $table->bigInteger("id_attendance");
+            $table->bigInteger("id_student");
             $table->boolean("present");
             $table->timestamps();
         });

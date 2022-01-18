@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeachPresencesTable extends Migration
+class CreateIncentivesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateTeachPresencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('teach_presences', function (Blueprint $table) {
+        Schema::create('incentives', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger("id_referral")->nullable();
             $table->bigInteger("id_teacher")->nullable();
-            $table->bigInteger("id_non_teach_staff")->nullable();
-            $table->bigInteger("id_attendance");
-            $table->date("date");
+            $table->bigInteger("id_non_teacher")->nullable();
+            $table->bigInteger("nominal");
+            $table->text("note");
             $table->boolean("approved");
-            $table->boolean("fee_paid");
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateTeachPresencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teach_presences');
+        Schema::dropIfExists('incentives');
     }
 }

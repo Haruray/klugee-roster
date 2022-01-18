@@ -15,7 +15,7 @@ class CreateCutisTable extends Migration
     {
         Schema::create('cutis', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_teacher");
+            $table->bigInteger("id_teacher");
             $table->date("date_begin");
             $table->date("date_end");
             $table->boolean("approved");

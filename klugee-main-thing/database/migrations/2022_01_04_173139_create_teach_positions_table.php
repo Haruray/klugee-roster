@@ -15,7 +15,7 @@ class CreateTeachPositionsTable extends Migration
     {
         Schema::create('teach_positions', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_teacher");
+            $table->bigInteger("id_teacher");
             $table->string("position");
             $table->timestamps();
         });

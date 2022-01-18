@@ -15,7 +15,7 @@ class CreateTeachProgramsTable extends Migration
     {
         Schema::create('teach_programs', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_teacher");
+            $table->bigInteger("id_teacher");
             $table->string("program_name");
             $table->timestamps();
         });

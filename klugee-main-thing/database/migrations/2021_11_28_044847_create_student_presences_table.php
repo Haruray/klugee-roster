@@ -15,9 +15,9 @@ class CreateStudentPresencesTable extends Migration
     {
         Schema::create('student_presences', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_student");
-            $table->integer("id_progress");
-            $table->integer("spp_paid");
+            $table->bigInteger("id_student");
+            $table->bigInteger("id_attendance");
+            $table->boolean("spp_paid");
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendancesTable extends Migration
+class CreateReferralsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateAttendancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('referrals', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("id_teacher");
             $table->date("date");
-            $table->string("time");
-            $table->string("program");
-            $table->string("location");
-            $table->string("class_type");
+            $table->integer("registering_student_id");
+            $table->integer("referrer_parent_student_id")->nullable();
+            $table->string("referrer_name");
+            $table->integer("pic_id_teacher")->nullable();
+            $table->integer("pic_id_nonteacher")->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateAttendancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('referrals');
     }
 }

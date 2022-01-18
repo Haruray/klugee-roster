@@ -15,7 +15,7 @@ class CreateSupervisorNotesTable extends Migration
     {
         Schema::create('supervisor_notes', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_teacher");
+            $table->bigInteger("id_teacher");
             $table->text("note")->nullable();
             $table->timestamps();
         });

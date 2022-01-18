@@ -15,7 +15,7 @@ class CreateTeachMethodsTable extends Migration
     {
         Schema::create('teach_methods', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_teacher");
+            $table->bigInteger("id_teacher");
             $table->string("method");
             $table->timestamps();
         });
