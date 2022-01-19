@@ -120,19 +120,30 @@ class MainController extends Controller
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
-        //Check if input is empty
+        // - Check if input is empty
+        // - update the score individually
         if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null || $request->input('score')==null){
             return response()->json([
                 'success' => false,
                 'message' => 'Fail to save data. Please reload and re-enter the data.'
             ], 401);
         }
+        //Update the progress reports in bulk
+        //$documentation_file_name = auth()->user()->name."-Progress-report-".$request->input('attendance_id');
+        $documentation_file_name = "yoo";
         $progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
                 'unit' => $request->input('unit'),
                 'last_exercise' => $request->input('last_exercise'),
                 'score' => $request->input('score'),
+                'note' => $request->input('note'),
+                'documentation' =>$documentation_file_name,
         ]);
+
+        //Move the file to uploads\progress-reports
+        $file = $request->file('documentation');
+        $destinationPath = 'uploads/progress-reports';
+        $file->move($destinationPath,$file->getClientOriginalName());
 
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
 

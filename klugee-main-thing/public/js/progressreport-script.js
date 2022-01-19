@@ -62,6 +62,8 @@
                 "unit" : $("#unit").val(),
                 "last_exercise" : $("#last_exercise").val(),
                 "score" : $("#score").val(),
+                "documentation" : $("#file").val(),
+                "note" : $("#note").val(),
                 "_token" : $("meta[name='csrf-token']").attr("content")
             },
             success : function(response){

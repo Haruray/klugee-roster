@@ -83,8 +83,25 @@
                     </div>
                 </div>
             </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="documentation" name="documentation" class="form-control attendance-input" type="file" placeholder="Documentation" required></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><textarea id="note" name="note" class="form-control attendance-input" placeholder="Note" required></textarea></div>
+                    </div>
+                </div>
+            </div>
             <input type="hidden" id="attendance_id" name="attendance_id" value="{{$attendance_id}}">
             <div class="attendance-input-button-box"><button onclick="$dc.ProgressReportInput()" class="btn btn-primary attendance-input-button" type="button">Submit</button></div>
+            <!--<div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" name="submit" value="submit">Submit</button></div>-->
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
