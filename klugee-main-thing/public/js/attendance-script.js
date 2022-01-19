@@ -200,11 +200,22 @@
                     })
                 }
                 else{
-                    alert(response.message);
+                    //alert(response.message);
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Request failed. Please reload the page.'
+                    });
+    
                 }
             },
             error : function(response){
-                alert(response.message);
+                //alert(response.message);
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Input error. Please re-enter the data or reload the page.'
+                });
             }
         })
     }

@@ -93,11 +93,19 @@
                     })
                 }
                 else{
-                    alert("nein");
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Request failed. Please reload the page.'
+                    });
                 }
             },
             error : function(response){
-                alert("nein2");
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Input error. Please re-enter the data or reload the page.'
+                });
             }
         })
     }

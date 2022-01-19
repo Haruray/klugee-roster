@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
 
     <script src="{{asset('js/progressreport-script.js')}}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -54,7 +55,7 @@
                 <div class="form-row">
                     <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input id="level" name="level" class="form-control attendance-input" type="text" placeholder="Level" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input id="level" name="level" class="form-control attendance-input" type="text" placeholder="Level" required></div>
                     </div>
                 </div>
             </div>
@@ -62,7 +63,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div><input id="unit" name="unit" class="form-control attendance-input" type="text" placeholder="Unit" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div><input id="unit" name="unit" class="form-control attendance-input" type="text" placeholder="Unit" required></div>
                     </div>
                 </div>
             </div>
@@ -70,7 +71,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="last_exercise" name="last_exercise" class="form-control attendance-input" type="text" placeholder="Last Exercise" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="last_exercise" name="last_exercise" class="form-control attendance-input" type="text" placeholder="Last Exercise" required></div>
                     </div>
                 </div>
             </div>
@@ -78,7 +79,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score" name="score" class="form-control attendance-input" type="text" placeholder="Score" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score" name="score" class="form-control attendance-input" type="text" placeholder="Score" required></div>
                     </div>
                 </div>
             </div>

@@ -38,9 +38,9 @@ class MainController extends Controller
 
     public function AttendanceInputProcess(Request $request){
         //TO DO :
-        //Check student duplicate
-        //If not present, don't make progress report
-        //dont forget about studentprensences database, about spp paid or nah
+        // - Check student duplicate
+        // - If not present, don't make progress report
+        // - dont forget about studentprensences database, about spp paid or nah
 
         $max_stud = 10; //max students for input
         //Save attendance data
@@ -105,8 +105,8 @@ class MainController extends Controller
 
     public function AttendanceProgressReport($attendance_id){
         //TO DO :
-        //Check if progress report is filled or no
-        //Add more score input if more students are present
+        // - Check if progress report is filled or no
+        // - Add more score input if more students are present
 
         //Get every student on current attendance
         $students = array();
@@ -120,6 +120,13 @@ class MainController extends Controller
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
+        //Check if input is empty
+        if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null || $request->input('score')==null){
+            return response()->json([
+                'success' => false,
+                'message' => 'Fail to save data. Please reload and re-enter the data.'
+            ], 401);
+        }
         $progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
                 'unit' => $request->input('unit'),
