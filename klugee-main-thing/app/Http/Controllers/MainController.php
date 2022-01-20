@@ -107,6 +107,108 @@ class MainController extends Controller
         ], 200);
     }
 
+    private function CheckAttendeeDuplicate($attendance_id, $name){
+        $attendee_data = GetAttendee($attendance_id);
+
+        foreach ($attendee_data as $a){
+            if ($a->name == $name){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
+
+    public function AttendanceEdit(Request $request){
+        $edited_attendance = Attendance::where('id',$request->input('attendance_id'))->update([
+            'date' => $request->input('date'),
+            'time' => $request->input('hour'),
+            'program'=> $request->input('program'),
+            'location' => $request->input('location'),
+            'class_type' => $request->input('class-type')
+        ]);
+        for ($i = 1 ; $i < $max_stud ; $i++){
+            //Search for every student input form
+            $string_search = "student".$i;
+            $string_search_2 = "student-attend-".$i;
+            if ($request->input($string_search) != NULL){
+                //check sudah ada di database atau tidak
+                //Kalau iya, edit aja
+                if (self::CheckAttendeeDuplicate($request->input('attendance_id'), $request->input($string_search))){
+                    $student_present_new = Attendee::where('name', $request->input($string_search))->first()->present;
+                    $need_new_progress_report = !$student_present_new;
+                    if ($request->input($string_search_2)=='no'){
+                        $student_present_new = false;
+                    }
+                    else{
+                        $student_present_new = true;
+                    }
+                    $updated_attendee = Attendee::where('name', $request->input($string_search))->update([
+                        'present' => $student_present_new
+                    ]);
+
+                    if ($need_new_progress_report && $student_present_new){
+                        $new_progress = new Progress;
+                        $new_progress->id_teacher = $edited_attendance->id_teacher;
+                        $new_progress->id_student = Attendee::where('name', $request->input($string_search))->first()->id;
+                        $new_progress->id_attendance = $edited_attendance->id;
+                        $new_progress->filled = false;
+                        $new_progress->save();
+                        if (!$new_progress->save()){
+                            //If it doesn't success, then return error message
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Fail to create progress report. Please contact the developer for this problem.'
+                            ], 401);
+                        }
+                    }
+                    
+                }
+                else{
+                    //Save attendee data
+                    $new_attendee = new Attendee;
+                    $new_attendee->id_attendance = $edited_attendance->id;
+                    $new_attendee->id_student = Students::where('name',$request->input($string_search))->first()['id'];
+                    if ($request->input($string_search_2)=='no'){
+                        $new_attendee->present = false;
+                    }
+                    else{
+                        $new_attendee->present = true;
+                    }
+                    if (!$new_attendee->save()){
+                        //If it doesn't success, then return error message
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Fail to save data. Please reload and re-enter the data.'
+                        ], 401);
+                    }
+                    //Create progress report
+                    $new_progress = new Progress;
+                    $new_progress->id_teacher = $edited_attendance->id_teacher;
+                    $new_progress->id_student = $new_attendee->id_student;
+                    $new_progress->id_attendance = $edited_attendance->id;
+                    $new_progress->filled = false;
+                    $new_progress->save();
+                    if (!$new_progress->save()){
+                        //If it doesn't success, then return error message
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Fail to create progress report. Please contact the developer for this problem.'
+                        ], 401);
+                    }
+                }
+                
+                
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'attendance_id' => $new_attendance->id,
+        ], 200);
+    }
+
     private function GetAttendee($attendance_id){
         $students = array();
         $attendee = Attendee::where('id_attendance',$attendance_id)->get();
