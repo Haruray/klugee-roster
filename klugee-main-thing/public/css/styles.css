@@ -196,11 +196,14 @@ body {
 .attendance-input-student {
   display: inline-block;
   border-radius: 5px;
+  
 }
 
 .attendance-input-div {
   margin-bottom: 15px;
   text-align: center;
+  text-align: left;
+  overflow: hidden;
 }
 
 .attendance-input-button {
@@ -332,7 +335,7 @@ body {
   width: 20px;
   float: right;
   position: relative;
-  right: 24px;
+  right: 15px;
   margin-right: -20px;
   padding-right: 0px;
 }
@@ -830,6 +833,15 @@ td {
 .white {
   color: white;
 }
+
+.select2-container--default .select2-selection--single{
+  display: inline-block;
+  width: 90%!important;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+.select2-selection { overflow: hidden; }
+.select2-selection__rendered { white-space: normal; word-break: break-all; }
 
 .loader {
   border: 16px solid #f3f3f3; /* Light grey /
