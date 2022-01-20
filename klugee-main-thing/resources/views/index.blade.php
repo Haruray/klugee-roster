@@ -25,14 +25,14 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
-                <div data-bs-hover-animate="jello" class="nav-item-div">
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
                     <a class="login" href="#">
-                        <div class="d-inline-block"><img class="notif-img" src="{{asset('img/13.png')}}"><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
         </div>
         </div>
     </nav>
@@ -41,7 +41,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/attendance">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
                             <p class="button-content">Attendance</p>
@@ -49,7 +49,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/students">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-user"></i></p>
                             <p class="button-content">Students</p>
@@ -57,7 +57,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/schedule">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-table"></i></p>
                             <p class="button-content">Schedule</p>
@@ -65,7 +65,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/earnings">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-money"></i></p>
                             <p class="button-content">Earnings</p>

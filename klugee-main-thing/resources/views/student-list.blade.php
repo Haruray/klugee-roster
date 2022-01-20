@@ -12,11 +12,12 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
+    <script src="{{asset('js/studentsearch-script.js')}}"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
-        <div class="container"><a class="navbar-brand navbar-logo" href="#"><img class="d-inline-block" src="assets/img/2.png"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+<nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+        <div class="container"><a class="navbar-brand navbar-logo" href="#"><img class="d-inline-block" src="{{asset('img/2.png')}}"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
                 <ul class="nav navbar-nav text-left mr-auto nav-item-dropdown">
@@ -25,14 +26,14 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/edgysul.png"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
-                <div data-bs-hover-animate="jello" class="nav-item-div">
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
                     <a class="login" href="#">
-                        <div class="d-inline-block"><img class="notif-img" src="assets/img/13.png"><img class="warning-sign" src="assets/img/15.png"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/sign%20out.png"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
         </div>
         </div>
     </nav>
@@ -40,25 +41,16 @@
     <div class="student-search">
         <h1></h1>
         <form>
-            <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input class="form-control d-inline-block student-search-form" type="text"></form>
+            <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input id="student-search" onkeyup="$dc.StudentSearch()" class="form-control d-inline-block student-search-form" type="text"></form>
     </div>
     <div class="container student-card-container">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="assets/img/FGr6hhhVQAEnlUQ.jpg">
-                    <p class="student-card-name">Xehanort #69</p><button class="btn btn-primary student-card-button" type="button">Select</button></div>
+            <div id="student-list" class="col-lg-12">
+                @foreach ($students as $student)
+                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{asset('img/default-profile-img.png')}}">
+                    <p class="student-card-name">{{$student->name}}</p><a href="/students/{{$student->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>

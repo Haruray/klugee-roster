@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+<nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
         <div class="container"><a class="navbar-brand navbar-logo" href="#"><img class="d-inline-block" src="{{asset('img/2.png')}}"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
@@ -25,14 +25,14 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
-                <div data-bs-hover-animate="jello" class="nav-item-div">
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
                     <a class="login" href="#">
-                        <div class="d-inline-block"><img class="notif-img" src="{{asset('img/13.png')}}"><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
         </div>
         </div>
     </nav>
@@ -41,7 +41,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 offset-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/attendance/input">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
                             <p class="button-content">Input</p>
@@ -49,7 +49,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 offset-md-0 col-sm-6">
-                    <a href="#">
+                    <a href="/attendance/history">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-history"></i></p>
                             <p class="button-content">History</p>

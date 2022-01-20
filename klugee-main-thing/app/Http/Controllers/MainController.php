@@ -121,6 +121,7 @@ class MainController extends Controller
     }
 
     public function AttendanceEdit(Request $request){
+        //UNTESTED
         $edited_attendance = Attendance::where('id',$request->input('attendance_id'))->update([
             'date' => $request->input('date'),
             'time' => $request->input('hour'),
@@ -293,6 +294,19 @@ class MainController extends Controller
             'attendance_id' => $request->input('attendance_id'),
             'progress_report' => $new_pr
         ], 200);
+    }
+
+    public function Students(){
+        $students = Students::get();
+        $view = view('student-list');
+
+        return $view->with('students',$students);
+    }
+
+    public function AttendanceHistory(){
+        $view = view('attendance-history');
+
+        return $view;
     }
 
 }
