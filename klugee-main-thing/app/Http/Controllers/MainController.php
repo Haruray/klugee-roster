@@ -103,48 +103,70 @@ class MainController extends Controller
         ], 200);
     }
 
+    private function GetAttendee($attendance_id){
+        $students = array();
+        $attendee = Attendee::where('id_attendance',$attendance_id)->get();
+        foreach ($attendee as $a){
+            array_push($students, Students::where('id',$a->id_student)->get()->first());
+        }
+        return $students;
+    }
+
     public function AttendanceProgressReport($attendance_id){
         //TO DO :
         // - Check if progress report is filled or no
         // - Add more score input if more students are present
 
         //Get every student on current attendance
-        $students = array();
-        $attendee = Attendee::where('id_attendance',$attendance_id)->get();
-        foreach ($attendee as $a){
-            array_push($students, Students::where('id',$a->id_student)->get()->first());
-        }
+        $students = self::GetAttendee($attendance_id);
         $view = view('progress-report-input');
         return $view->with('students', $students)->with('attendance_id',$attendance_id);
     }
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
-        // - Check if input is empty
         // - update the score individually
-        if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null || $request->input('score')==null){
+        if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
             return response()->json([
                 'success' => false,
                 'message' => 'Fail to save data. Please reload and re-enter the data.'
-            ], 401);
+            ],401);
         }
-        //Update the progress reports in bulk
-        //$documentation_file_name = auth()->user()->name."-Progress-report-".$request->input('attendance_id');
-        $documentation_file_name = "yoo";
-        $progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
+        //Move the file to uploads\progress-reports
+        $file = $request->file('documentation');
+        $destinationPath = 'uploads/progress-reports';
+        
+        $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
+        $file->move($destinationPath,$documentation_file_name);
+
+
+        /*$progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
                 'unit' => $request->input('unit'),
                 'last_exercise' => $request->input('last_exercise'),
                 'score' => $request->input('score'),
                 'note' => $request->input('note'),
                 'documentation' =>$documentation_file_name,
-        ]);
+        ]);*/
 
-        //Move the file to uploads\progress-reports
-        $file = $request->file('documentation');
-        $destinationPath = 'uploads/progress-reports';
-        $file->move($destinationPath,$file->getClientOriginalName());
+        //Update data individually per student
+        $students = self::GetAttendee($request->input('attendance_id'));
+        foreach ($students as $student){
+            $score_id = 'score-'.$student->id;
+            $progress_report_update = Progress::where([
+                ['id_attendance', $request->input('attendance_id')],
+                ['id_student', $student->id]
+            ])->update([
+                'level' => $request->input('level'),
+                'unit' => $request->input('unit'),
+                'last_exercise' => $request->input('last_exercise'),
+                'score' => $request->input($score_id),
+                'note' => $request->input('note'),
+                'documentation' =>$documentation_file_name,
+            ]);
+        }
 
+        //get the new progress report data
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
 
         return response()->json([

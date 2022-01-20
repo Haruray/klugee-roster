@@ -76,14 +76,17 @@
                     </div>
                 </div>
             </div>
+            @foreach ($students as $student)
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score" name="score" class="form-control attendance-input" type="text" placeholder="Score" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score-{{$student->id}}" name="score-{{$student->id}}" class="form-control attendance-input" type="text" placeholder="{{$student->nickname}}'s Score" required></div>
                     </div>
                 </div>
             </div>
+            @endforeach
+            
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">

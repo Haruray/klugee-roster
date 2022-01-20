@@ -44,6 +44,14 @@
         }
     }
 
+    let getAttendeeScore = function(progressReport, studentID){
+        for (var i = 0 ; i < progressReport.length ; i++){
+            if (progressReport[i]['id_student'] == studentID){
+                return progressReport[i]['score'];
+            }
+        }
+    }
+
     dc.ProgressReportInput = function(){
         var form = $('form')[0]; 
         var formdata = new FormData(form);
@@ -85,15 +93,22 @@
                             let progressReportConfirm2 = "<p class=\"input-confirm-description\">";
                             let _date = new Date(second_response['attendance']['date']);
                             let day = convertDay(_date.getDay());
+                            //Getting the names for attendee
                             for (var j = 0 ; j < second_response['attendee'].length-1 ; j++){
                                 progressReportConfirm2 += second_response['attendee'][j]['name']+", ";
                             }
                             progressReportConfirm2 += second_response['attendee'][second_response['attendee'].length-1]['name'];
-                            let progressReportConfirm3 = "<br>"+day+", "+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+","+response['progress_report'][0]['level']+"<br>"+response['progress_report'][0]['unit']+"<br>"+response['progress_report'][0]['last_exercise']+"<br>Score : "+response['progress_report'][0]['score']+"</p>"+
-                            "<div class=\"input-confirm-buttons\"><a href= \"\""+response.attendance_id+"\"><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Edit Progress Report</button></a>"+
+                            //Filling the details of the meeting
+                            let progressReportConfirm3 = "<br>"+day+", "+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+","+response['progress_report'][0]['level']+"<br>"+response['progress_report'][0]['unit']+"<br>"+response['progress_report'][0]['last_exercise']
+                            //Filling the scores
+                            for (var i = 0 ; i < second_response['attendee'].length ; i++){
+                                progressReportConfirm3 += "<br>"+second_response['attendee'][i]['nickname']+"'s Score : "+getAttendeeScore(response['progress_report'],second_response['attendee'][i]['id']);
+                            }
+                            progressReportConfirm3 +="</p>"
+                            let progressReportConfirm4 ="<div class=\"input-confirm-buttons\"><a href= \"\""+response.attendance_id+"\"><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Edit Progress Report</button></a>"+
                         "</div>";
                             let selector = "#attendance-box";
-                            progressReportComplete+= progressReportConfirm2 + progressReportConfirm3;
+                            progressReportComplete+= progressReportConfirm2 + progressReportConfirm3 + progressReportConfirm4;
                             erase_loading(selector);
                             replaceHtml(selector,progressReportComplete);
                         }
