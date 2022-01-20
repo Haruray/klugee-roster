@@ -36,21 +36,20 @@
         </div>
         </div>
     </nav>
-    <h2 class="bounce animated page-heading">STUDENT'S PROFILE</h2>
-    <div>
-        <div class="container student-profile">
-            <div class="row">
-                <div class="col-md-4 text-center">
-                    <div class="text-center student-profile-img-outline"><img class="student-profile-img" src="assets/img/FGr6hhhVQAEnlUQ.jpg"></div><button class="btn btn-primary attendance-input-button" type="button" style="margin: 10px ;">Attendance History</button></div>
-                <div class="col-md-6 col-lg-8">
-                    <div></div>
-                    <p class="text-left student-profile-name">Xehanort's Nobody</p>
-                    <p class="student-profile-desc">School</p>
-                    <p class="student-profile-desc-subtitle">SD Insan Amanah</p>
-                    <p class="student-profile-desc">Parent's Name</p>
-                    <p class="student-profile-desc-subtitle">Xehanort</p>
-                    <p class="student-profile-desc">Parent's Contact</p>
-                    <p class="student-profile-desc-subtitle">+6281232158548</p>
+    <div class="text-center">
+        <div class="container student-profile-img-div">
+            <div class="row" style="padding: 0 20px 0 20px;">
+                <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-1 text-center">
+                    <div class="text-left d-inline-block teacher-profile-img-group">
+                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{asset('img/edgysul.png')}}"><button class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Attendance History</button></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-7 col-xl-8 offset-lg-0 text-center">
+                    <div class="d-inline-block">
+                        <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">Muhammad EmetiK</p>
+                        <p class="green bold" style="font-size: 20px;">School</p>
+                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">SD Insan Amanah</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,13 +58,13 @@
     <div class="container student-card-container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="assets/img/40.png">
+                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/40.png')}}">
                     <p class="student-program-name">Smartie</p>
                     <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="assets/img/41.png">
+                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/41.png')}}">
                     <p class="student-program-name">Science</p>
                     <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="assets/img/42.png">
+                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/42.png')}}">
                     <p class="student-program-name">Speak Up</p>
                     <p class="student-program-payment-late"><i class="fa fa-exclamation"></i>&nbsp;Late Payment</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
             </div>

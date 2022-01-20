@@ -76,6 +76,9 @@ body {
   border-radius: 50%;
   width: 50px;
   position: relative;
+  font-size: 38px;
+  padding-left: 5px;
+  padding-top: 8px;
 }
 
 .nav-center-pad {
@@ -197,8 +200,7 @@ body {
 
 .attendance-input-div {
   margin-bottom: 15px;
-  text-align: left;
-  overflow: hidden;
+  text-align: center;
 }
 
 .attendance-input-button {
@@ -216,15 +218,6 @@ body {
   text-align: center;
   margin-top: 20px;
 }
-
-.select2-container--default .select2-selection--single{
-  display: inline-block;
-  width: 90%!important;
-  margin-left: 20px;
-  border-radius: 5px;
-}
-.select2-selection { overflow: hidden; }
-.select2-selection__rendered { white-space: normal; word-break: break-all; }
 
 .attendance-plus {
   color: white;
@@ -339,7 +332,7 @@ body {
   width: 20px;
   float: right;
   position: relative;
-  right: 15px;
+  right: 24px;
   margin-right: -20px;
   padding-right: 0px;
 }
@@ -569,6 +562,15 @@ body {
   border-radius: 50%;
 }
 
+.teacher-profile-img-outline {
+  width: 220px;
+  height: 220px;
+  background-color: #2ab4ee;
+  border-radius: 50%;
+  padding-top: 10px;
+  position: relative;
+}
+
 .student-profile-img-outline {
   width: 220px;
   height: 220px;
@@ -757,9 +759,81 @@ td {
   font-weight: bolder;
 }
 
+.student-profile-img-div {
+  padding: 30px;
+  max-width: 2000px;
+  margin-top: -100px;
+}
+
+.teacher-profile-img-div {
+  padding: 30px;
+  max-width: 2000px;
+  background-color: #54dee4;
+  margin-top: -100px;
+}
+
+.teacher-profile-camera:hover {
+  background-color: #2ab4ee;
+  box-shadow: 0 0 0 1pt white;
+}
+
+.teacher-profile-camera {
+  position: absolute;
+  color: white;
+  background-color: #00c2cb;
+  box-shadow: 0 0 0 1pt white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  padding-top: 10px;
+  top: 170px;
+  right: 10px;
+}
+
+.teacher-profile-name {
+  font-size: 40px;
+}
+
+.blue {
+  color: #38b6ff;
+}
+
+.teacher-status {
+  font-size: 25px;
+}
+
+.teacher-join-time {
+  font-size: 25px;
+  margin-top: -20px;
+}
+
+.teacher-status-individual {
+  margin-right: 20px;
+}
+
+.teacher-fee {
+  background-color: #00c2cb;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 2px;
+  padding-top: 12px;
+}
+
+.teacher-fee-nominal {
+  margin-top: -10px;
+  font-size: 20px;
+}
+
+.white {
+  color: white;
+}
+
 .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border: 16px solid #f3f3f3; /* Light grey /
+  border-top: 16px solid #3498db; / Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;

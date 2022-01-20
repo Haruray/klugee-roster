@@ -57,6 +57,7 @@
         var formdata = new FormData(form);
         //To do :
         //Implement input empty error message
+        //Implement image/file validation
         let progressReportConfirm1 = "<div class=\"tada animated attendance-box\" style=\"background-color: #00c2cb;\">" +
         "<h3 class=\"page-sub-heading\">Progress report is&nbsp;<span class=\"yellow\">filled</span></h3>"+
         "<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>"
