@@ -55,9 +55,20 @@
     dc.ProgressReportInput = function(){
         var form = $('form')[0]; 
         var formdata = new FormData(form);
-        //To do :
-        //Implement input empty error message
-        //Implement image/file validation
+
+        //Image validation
+        var file = document.getElementById("documentation").files[0];
+        var t = file.type.split('/').pop().toLowerCase();
+        if (t != "jpeg" && t != "jpg" && t != "png" && t != "bmp" && t != "gif") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Please select a valid image.'
+            });
+            document.getElementById("documentation").value = '';
+            return false;
+        }
+
         let progressReportConfirm1 = "<div class=\"tada animated attendance-box\" style=\"background-color: #00c2cb;\">" +
         "<h3 class=\"page-sub-heading\">Progress report is&nbsp;<span class=\"yellow\">filled</span></h3>"+
         "<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>"

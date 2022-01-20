@@ -39,8 +39,14 @@
     <div class="tada animated attendance-box">
         <h3 class="page-sub-heading">Student's attendance is&nbsp;<span class="yellow">recorded</span></h3>
         <h1 class="page-sub-heading"><i class="fa fa-check swing animated infinite input-confirm-check"></i></h1>
-        <p class="input-confirm-description">Michelle Anatolia, Diva Azaria<br>Monday, 29-11-2021<br>3pm-4pm<br>Smartie<br>Studen'ts House 5km</p>
-        <div class="input-confirm-buttons"><button class="btn btn-primary d-block input-confirm-button" type="button">Progress Report</button><button class="btn btn-primary d-block input-confirm-button" type="button">Edit Attendance</button></div>
+        <p class="input-confirm-description">
+            @for ($i = 0 ; $i < count($students) - 1 ; $i++)
+                {{$students[$i]->name}}, 
+            @endfor
+            {{$students[count($students)-1]->name}}
+            
+            <br>{{date('l', strtotime($attendance->date))}}, {{$attendance->date}}<br>{{$attendance->time}}<br>{{$attendance->program}}<br>{{$attendance->location}}</p>
+        <div class="input-confirm-buttons"><a href="/attendance/progress-report/{{$attendance->id}}"><button class="btn btn-primary d-block input-confirm-button" type="button">Progress Report</button></a><button class="btn btn-primary d-block input-confirm-button" type="button">Edit Attendance</button></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>

@@ -23,6 +23,7 @@ Route::get('/', 'MainController@index')->name('home');
 Route::get('/attendance', 'MainController@AttendanceMenu');
 Route::get('/attendance/input','MainController@AttendanceInput');
 Route::get('attendance/progress-report/{attendance_id}','MainController@AttendanceProgressReport');
+Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
 Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');

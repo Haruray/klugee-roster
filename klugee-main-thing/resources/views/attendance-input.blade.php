@@ -95,9 +95,9 @@
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Program" required=""> -->
                                 <select id="attendance-form-program" class="required js-placeholder-program js-example-basic-single form-control attendance-input" name="program" placeholder="Program" required>
                                         <option></option>
-                                        <option value="smartie">Smartie</option>
-                                        <option value="science">Science</option>
-                                        <option value="speak up">Speak up</option>
+                                        @foreach ($programs as $program)
+                                            <option value="{{$program->program}}">{{$program->program}}</option>
+                                        @endforeach
                                 </select>
                             </div>
                         </div>
@@ -121,16 +121,16 @@
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Location" required=""> -->
                                 <select id="attendance-form-hour" class="required js-example-basic-single form-control attendance-input" name="hour" placeholder="hour" required="">
                                         <option></option>
-                                        <option value="7am-8am">7AM - 8AM</option>
-                                        <option value="8am-9am">8AM - 9AM</option>
-                                        <option value="9am-10am">9AM - 10AM</option>
-                                        <option value="10am-11am">10AM - 11AM</option>
-                                        <option value="11am-12am">11AM - 12AM</option>
-                                        <option value="12am-1pm">12AM - 1PM</option>
-                                        <option value="1pm-2pm">1PM - 2PM</option>
-                                        <option value="2pm-3pm">2PM - 3PM</option>
-                                        <option value="3pm-4pm">3PM - 4PM</option>
-                                        <option value="4pm-5pm">4PM - 5PM</option>
+                                        <option value="7AM-8AM">7AM - 8AM</option>
+                                        <option value="8AM-9AM">8AM - 9AM</option>
+                                        <option value="9AM-10AM">9AM - 10AM</option>
+                                        <option value="10AM-11AM">10AM - 11AM</option>
+                                        <option value="11AM-12PM">11AM - 12PM</option>
+                                        <option value="12PM-1PM">12AM - 1PM</option>
+                                        <option value="1PM-2PM">1PM - 2PM</option>
+                                        <option value="2PM-3PM">2PM - 3PM</option>
+                                        <option value="3PM-4PM">3PM - 4PM</option>
+                                        <option value="4PM-5PM">4PM - 5PM</option>
                                 </select>
                             </div>
                         </div>
@@ -144,8 +144,10 @@
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Location" required=""> -->
                                 <select id="attendance-form-location" class="required js-example-basic-single form-control attendance-input" name="location" placeholder="Location" required="">
                                         <option></option>
-                                        <option value="studio">Studio</option>
-                                        <option value="house">Student's house</option>
+                                        <option value="Studio">Studio</option>
+                                        <option value="Online">Online</option>
+                                        <option value="Visit-Near">Visit-Near (0-5KM)</option>
+                                        <option value="Visit-Far">Visit-Near (6-10KM)</option>
                                 </select>
                             </div>
                         </div>
@@ -159,9 +161,9 @@
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Class Type" required="">-->
                                 <select id="attendance-form-classtype" class="required js-example-basic-single form-control attendance-input" name="class-type" placeholder="Program" required="">
                                         <option></option>
-                                        <option value="exclusive">Exclusive</option>
-                                        <option value="semi-private">Semi-Private</option>
-                                        <option value="mini-group">Mini-Group</option>
+                                        <option value="Exclusive">Exclusive</option>
+                                        <option value="Semi-Private">Semi-Private</option>
+                                        <option value="School Group">School Group</option>
                                 </select>
                             </div>
                         </div>

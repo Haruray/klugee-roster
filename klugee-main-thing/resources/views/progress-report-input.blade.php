@@ -41,6 +41,7 @@
         </div>
     </nav>
     <h1 class="bounce animated page-heading">Progress Report Input</h1>
+    @if ($flag)
     <div id="attendance-box" class="attendance-box">
         <h3 class="page-sub-heading yellow">
             @for ($i = 0 ; $i < count($students) - 1 ; $i++)
@@ -108,6 +109,10 @@
             <!--<div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" name="submit" value="submit">Submit</button></div>-->
         </form>
     </div>
+    @else
+        nothing to fill, cunt
+    @endif
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>

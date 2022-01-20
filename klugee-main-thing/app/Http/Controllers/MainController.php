@@ -11,6 +11,7 @@ use App\Students;
 use App\Attendance;
 use App\Attendee;
 use App\Progress;
+use App\Program;
 
 class MainController extends Controller
 {
@@ -35,7 +36,8 @@ class MainController extends Controller
     public function AttendanceInput(){
         $view = view('attendance-input');
         $students = Students::get();
-        return $view->with('students',$students);
+        $programs = Program::get();
+        return $view->with('students',$students)->with('programs',$programs);
     }
 
     public function AttendanceInputProcess(Request $request){
@@ -117,12 +119,26 @@ class MainController extends Controller
     public function AttendanceProgressReport($attendance_id){
         //TO DO :
         // - Check if progress report is filled or no
-        // - Add more score input if more students are present
+        // - If no one is present, then give warning
 
         //Get every student on current attendance
         $students = self::GetAttendee($attendance_id);
+        $flag = true;
+        foreach (Attendee::where('id_attendance',$attendance_id)->get() as $attendee){
+            if (!$attendee->present){
+                $flag=false;
+            }
+        }
         $view = view('progress-report-input');
-        return $view->with('students', $students)->with('attendance_id',$attendance_id);
+        return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag);
+    }
+
+    public function AttendanceView($attendance_id){
+        //Get every student on current attendance
+        $students = self::GetAttendee($attendance_id);
+        $attendance = Attendance::where('id', $attendance_id)->get()->first();
+        $view = view('attendance-input-confirm');
+        return $view->with('students', $students)->with('attendance',$attendance);
     }
 
     public function ProgressReportInputProcess(Request $request){
