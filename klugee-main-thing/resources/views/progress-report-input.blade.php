@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!--<meta name="csrf-token" content="{{ csrf_token() }}">-->
     <title>Untitled</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -51,6 +51,7 @@
         <h2 class="page-sub-heading">SMARTIE</h2>
         <div class="input-confirm-buttons" style="margin: 0 0 20px;"><a href="/attendance/{{$attendance_id}}"><button class="btn btn-primary d-block progress-report-check-attendance-button" type="button" style="font-size: 14px;">Check Attendance</button></div></a>
         <form>
+            @csrf
             <div class="container">
                 <div class="form-row">
                     <div class="col-12 col-md-12 col-lg-12 col-xl-12">

@@ -45,6 +45,8 @@
     }
 
     dc.ProgressReportInput = function(){
+        var form = $('form')[0]; 
+        var formdata = new FormData(form);
         //To do :
         //Implement input empty error message
         let progressReportConfirm1 = "<div class=\"tada animated attendance-box\" style=\"background-color: #00c2cb;\">" +
@@ -56,7 +58,9 @@
             type : 'post',
             dataType : 'JSON',
             cache : false,
-            data : {
+            contentType : false,
+            processData : false,
+            /*data : {
                 "attendance_id" : $("#attendance_id").val(),
                 "level" : $("#level").val(),
                 "unit" : $("#unit").val(),
@@ -65,7 +69,8 @@
                 "documentation" : $("#file").val(),
                 "note" : $("#note").val(),
                 "_token" : $("meta[name='csrf-token']").attr("content")
-            },
+            },*/
+            data : formdata,
             success : function(response){
                 if (response.success){
                     replaceHtml("#attendance-box","");
