@@ -180,3 +180,49 @@
 .input-confirm-check {
 }
 
+@media (min-width: 992px) {
+  .teacher-profile-img-group {
+    margin-left: 20%;
+  }
+}
+
+.edit-button-bio-teacher {
+  margin-top: 20px;
+  display: block;
+}
+
+.btn.btn-warning.text-white.edit-button-bio-teacher {
+}
+
+.teacher-desc {
+  width: 200px;
+  text-align: center;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 25px;
+  font-size: 23px;
+}
+
+.teacher-desc-text {
+  background-color: #54dee4;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.teacher-desc-icon {
+  font-size: 45px;
+  margin-bottom: 20px;
+  background-color: #38b6ff;
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  padding-top: 16px;
+}
+
+.green {
+  color: #54dee4;
+}
+
