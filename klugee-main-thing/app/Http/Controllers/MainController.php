@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use ImageOptimizer;
+
 use App\Students;
 use App\Attendance;
 use App\Attendee;
@@ -135,10 +137,9 @@ class MainController extends Controller
         //Move the file to uploads\progress-reports
         $file = $request->file('documentation');
         $destinationPath = 'uploads/progress-reports';
-        
         $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
         $file->move($destinationPath,$documentation_file_name);
-
+        ImageOptimizer::optimize(public_path().'/uploads/progress-reports/'.$documentation_file_name);
 
         /*$progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
