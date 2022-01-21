@@ -41,14 +41,14 @@
             <div class="row" style="padding: 0 20px 0 20px;">
                 <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-1 text-center">
                     <div class="text-left d-inline-block teacher-profile-img-group">
-                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{asset('img/edgysul.png')}}"><button class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Attendance History</button></div>
+                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{asset('img/edgysul.png')}}"><a href="/students/{{$student->id}}/attendance-history"><button class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Attendance History</button></a></div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8 col-lg-7 col-xl-8 offset-lg-0 text-center">
                     <div class="d-inline-block">
-                        <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">Muhammad EmetiK</p>
+                        <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">{{$student->name}}</p>
                         <p class="green bold" style="font-size: 20px;">School</p>
-                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">SD Insan Amanah</p>
+                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">{{$student->school_name}}</p>
                     </div>
                 </div>
             </div>
@@ -58,15 +58,18 @@
     <div class="container student-card-container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/40.png')}}">
-                    <p class="student-program-name">Smartie</p>
-                    <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/41.png')}}">
-                    <p class="student-program-name">Science</p>
-                    <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{asset('img/42.png')}}">
-                    <p class="student-program-name">Speak Up</p>
-                    <p class="student-program-payment-late"><i class="fa fa-exclamation"></i>&nbsp;Late Payment</p><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></div>
+                @foreach ($programs as $p)
+                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{url('/img/'.$p->program.'-logo.png')}}">
+                    <p class="student-program-name">{{$p->program}}</p>
+                    @if ($p->quota>0)
+                        <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p>
+                    @else
+                        <p class="student-program-payment-late"><i class="fa fa-exclamation"></i>&nbsp;Late Payment</p>
+                    @endif
+                    
+                    <a href="/students/{{$student->id}}/progress-report/{{$p->program}}"><button class="btn btn-primary student-card-button" type="button">Progress Reports</button></a>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>

@@ -26,6 +26,9 @@ Route::get('attendance/progress-report/{attendance_id}','MainController@Attendan
 Route::get('/attendance/history','MainController@AttendanceHistory');
 Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
 Route::get('/students','MainController@Students');
+Route::get('/students/{student_id}','MainController@StudentsData');
+Route::get('/students/{student_id}/attendance-history','MainController@StudentsAttendanceHistory');
+Route::get('/students/{student_id}/progress-report/{program}','MainController@StudentsProgressReport');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

@@ -12,6 +12,8 @@ use App\Attendance;
 use App\Attendee;
 use App\Progress;
 use App\Program;
+use App\StudentProgram;
+use App\TuitionFee;
 
 class MainController extends Controller
 {
@@ -283,6 +285,7 @@ class MainController extends Controller
                 'score' => $request->input($score_id),
                 'note' => $request->input('note'),
                 'documentation' =>$documentation_file_name,
+                'filled' => true
             ]);
         }
 
@@ -303,8 +306,51 @@ class MainController extends Controller
         return $view->with('students',$students);
     }
 
+    public function StudentsData($student_id){
+        //get student data
+        $studentbio = Students::where('id',$student_id)->get()->first();
+        //get programs and payment status
+        $student_programs = StudentProgram::where('id_student',$student_id)->get();
+        $student_tuition_payment = array();
+        foreach ($student_programs as $sp){
+            $program_payment = TuitionFee::where([
+                'id_student' => $sp->id_student,
+                'program' => $sp->program
+            ])->get()->first();
+            array_push($student_tuition_payment, $program_payment);
+        }
+        $view = view('student');
+
+        return $view->with('student', $studentbio)->with('programs', $student_tuition_payment);
+    }
+
     public function AttendanceHistory(){
         $view = view('attendance-history');
+
+        return $view;
+    }
+
+    public function StudentsProgressReport($student_id, $program){
+        //get student data
+        $studentbio = Students::where('id',$student_id)->get()->first();
+        //get attendance id first based on program
+        $attendee_data = Attendee::where('id_student',$student_id)->get();
+        $attendance_ids = array();
+        foreach($attendee_data as $ad){
+            array_push($attendance_ids, Attendance::where([
+                ['id', $ad->id_attendance],
+                ['program', $program]
+                ])->first());
+        }
+
+        $progress_reports = array();
+        foreach($attendance_ids as $aids){
+            array_push($progress_reports, Progress::where([
+                ['id_student',$student_id],
+                ['id_attendance',$aids->id]
+            ])->first());
+        }
+        $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio);
 
         return $view;
     }

@@ -39,11 +39,11 @@
     <h2 class="bounce animated page-heading">PROGRESS REPORTS</h2>
     <div class="container">
         <div class="row">
-            <div class="col-md-3 text-center"><img src="{{asset('img/40.png')}}" style="width: 120px;"></div>
+            <div class="col-md-3 text-center"><img src="{{url('/img/'.$attendance[0]->program.'-logo.png')}}" style="width: 120px;"></div>
             <div class="col-md-9 text-center">
                 <div class="d-inline-block progress-report-text">
-                    <p class="text-center progress-report-student-name">Michelle Anatolia</p>
-                    <p class="text-center progress-report-program-name">SMARTIE</p>
+                    <p class="text-center progress-report-student-name">{{$student->name}}</p>
+                    <p class="text-center progress-report-program-name">{{$attendance[0]->program}}</p>
                 </div>
             </div>
         </div>
@@ -64,26 +64,22 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @for ($i = 0 ; $i < count($progress_report) ; $i++)
                     <tr>
-                        <td>1</td>
-                        <td>11-11-2012</td>
-                        <td>3rd grade math</td>
-                        <td>Multiplication</td>
-                        <td>Multiple by 8</td>
-                        <td>100</td>
+                        <td>{{$i+1}}</td>
+                        <td>{{$attendance[$i]->date}}</td>
+                        <td>{{$progress_report[$i]->level}}</td>
+                        <td>{{$progress_report[$i]->unit}}</td>
+                        <td>{{$progress_report[$i]->last_exercise}}</td>
+                        <td>{{$progress_report[$i]->score}}</td>
                         <td><button class="btn btn-primary" type="button">Edit</button></td>
+                        @if ($progress_report[$i]->filled)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>12-11-2021</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><button class="btn btn-primary" type="button">Edit</button></td>
+                        @else
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                        @endif              
                     </tr>
+                    @endfor
                 </tbody>
             </table>
         </div>
