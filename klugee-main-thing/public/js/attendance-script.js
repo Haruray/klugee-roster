@@ -141,12 +141,12 @@
     }
 
     dc.AttendanceInput = function(){
-        let studentsData = [];
-        let studentsPresent = [];
-        for (var i = 0 ; i < 3 ; i++){
-            studentsData[i] = $("#student"+(i+1)).val();
-            studentsPresent[i] = $("#student-attend-"+(i+1)).val();
-        }
+        //TO do :
+        // - check student duplicate so the attendanceConfirm dont have student duplicate
+
+        var form = $('form')[0]; 
+        var formdata = new FormData(form);
+        console.log(formdata);
 
         let attendanceConfirm1 = "<div class=\"tada animated attendance-box\">"+
         "<h3 class=\"page-sub-heading\">Student's attendance is&nbsp;<span class=\"yellow\">recorded</span></h3>"+
@@ -158,7 +158,9 @@
             type : 'post',
             dataType : 'JSON',
             cache : false,
-            data : {
+            contentType : false,
+            processData : false,
+            /*data : {
                 "date" : $("#date").val(),
                 "hour" : $("#attendance-form-hour").val(),
                 "program" : $("#attendance-form-program").val(),
@@ -171,7 +173,8 @@
                 "student3": studentsData[2],
                 "student-attend-3" : studentsPresent[2],
                 "_token" : $("meta[name='csrf-token']").attr("content")
-            },
+            },*/
+            data: formdata,
             success : function(response){
                 replaceHtml("#attendance-box","");
                 let formContainer = document.getElementById("attendance-box");
@@ -186,9 +189,10 @@
                             let attendanceConfirm2 = "<p class=\"input-confirm-description\">";
                             let _date = new Date(second_response['attendance']['date']);
                             let day = convertDay(_date.getDay());
-                            for (var j = 0 ; j < second_response['attendee'].length ; j++){
-                                attendanceConfirm2 += second_response['attendee'][j]['name'];
+                            for (var j = 0 ; j < second_response['attendee'].length-1 ; j++){
+                                attendanceConfirm2 += second_response['attendee'][j]['name']+", ";
                             }
+                            attendanceConfirm2 += second_response['attendee'][second_response['attendee'].length-1]['name'];
                             let attendanceConfirm3 = "<br>"+day+","+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+"<br>"+second_response['attendance']['location']+"</p>"+
                             "<div class=\"input-confirm-buttons\"><a href= \"/attendance/progress-report/"+response.attendance_id+"\"><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Progress Report</button></a><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Edit Attendance</button></div>"+
                         "</div>";

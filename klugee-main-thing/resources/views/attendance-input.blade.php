@@ -83,7 +83,8 @@
         </div>
     </nav>
     <h1 class="bounce animated page-heading">Attendance Input</h1>
-    <form id="attendance-form">
+    <form id="attendance-form" action="/attendance/input-process" method="post">
+        @csrf
     <div class="attendance-box" id="attendance-box">
         <div id="attendance-form-box">
             <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
@@ -113,12 +114,13 @@
                         </div>
                     </div>
                 </div>
+                <!--
                 <div class="container">
                     <div class="form-row">
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <div class="attendance-input-div">
                                 <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
-                                <!--<input class="form-control attendance-input" type="text" placeholder="Location" required=""> -->
+                                <input class="form-control attendance-input" type="text" placeholder="Location" required=""> 
                                 <select id="attendance-form-hour" class="required js-example-basic-single form-control attendance-input" name="hour" placeholder="hour" required="">
                                         <option></option>
                                         <option value="7AM-8AM">7AM - 8AM</option>
@@ -132,6 +134,17 @@
                                         <option value="3PM-4PM">3PM - 4PM</option>
                                         <option value="4PM-5PM">4PM - 5PM</option>
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    -->
+                <div class="container">
+                    <div class="form-row">
+                        <div class="col-md-12 col-lg-12 col-xl-12">
+                            <div class="attendance-input-div">
+                                <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
+                                <input class="form-control attendance-input" id="time" name="time" type="time" placeholder="Time" required=""> 
                             </div>
                         </div>
                     </div>
@@ -199,7 +212,7 @@
                 </a>
             </div>
                 <button class="btn btn-primary attendance-input-button" type="button" onclick="$dc.AttendanceInput()" value="submit">Submit</button></div>
-        </form>
+            </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 

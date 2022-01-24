@@ -53,7 +53,7 @@ class MainController extends Controller
         $new_attendance = new Attendance;
         $new_attendance->id_teacher = auth()->user()->id_teacher;
         $new_attendance->date = $request->input('date');
-        $new_attendance->time = $request->input('hour');
+        $new_attendance->time = $request->input('time');
         $new_attendance->program = $request->input('program');
         $new_attendance->location = $request->input('location');
         $new_attendance->class_type = $request->input('class-type');
@@ -126,7 +126,7 @@ class MainController extends Controller
         //UNTESTED
         $edited_attendance = Attendance::where('id',$request->input('attendance_id'))->update([
             'date' => $request->input('date'),
-            'time' => $request->input('hour'),
+            'time' => $request->input('time'),
             'program'=> $request->input('program'),
             'location' => $request->input('location'),
             'class_type' => $request->input('class-type')
