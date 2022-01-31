@@ -41,7 +41,7 @@
             <div class="row" style="padding: 0 20px 0 20px;">
                 <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-1 text-center">
                     <div class="text-left d-inline-block teacher-profile-img-group">
-                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{asset('img/edgysul.png')}}"><a href="/students/{{$student->id}}/attendance-history"><button class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Attendance History</button></a></div>
+                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{url('/uploads/students/'.$student->photo)}}"><a href="/students/{{$student->id}}/attendance-history"><button class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Attendance History</button></a></div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8 col-lg-7 col-xl-8 offset-lg-0 text-center">

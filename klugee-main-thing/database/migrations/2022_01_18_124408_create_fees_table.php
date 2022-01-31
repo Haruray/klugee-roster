@@ -16,7 +16,6 @@ class CreateFeesTable extends Migration
         Schema::create('fees', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("id_teach_presences");
-            $table->bigInteger("id_attendance");
             $table->bigInteger("fee_nominal");
             $table->bigInteger("lunch_nominal");
             $table->bigInteger("transport_nominal");

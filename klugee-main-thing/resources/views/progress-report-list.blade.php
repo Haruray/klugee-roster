@@ -12,6 +12,90 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
+
+    
+
+    <style>
+        #myImg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+        }
+
+        #myImg:hover {opacity: 0.7;}
+
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+        }
+
+        /* Modal Content (Image) */
+        .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        }
+
+        /* Caption of Modal Image (Image Text) - Same Width as the Image */
+        #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+        }
+
+        /* Add Animation - Zoom in the Modal */
+        .modal-content, #caption {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+        }
+
+        @keyframes zoom {
+        from {transform:scale(0)}
+        to {transform:scale(1)}
+        }
+
+        /* The Close Button */
+        .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+        }
+
+        /* 100% Image Width on Smaller Screens */
+        @media only screen and (max-width: 700px){
+        .modal-content {
+            width: 100%;
+        }
+        }
+    </style>
+    <script src="{{asset('js/progressreportlist-script.js')}}"></script>
 </head>
 
 <body>
@@ -47,18 +131,18 @@
                 </div>
             </div>
         </div>
-        <div class="progress-report-list-button-group"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></div><button class="btn btn-primary float-left attendance-input-button" type="button"
-            style="font-size: 13px;"><i class="fa fa-sort-up"></i>&nbsp;Sort by Newest</button>
+        <div class="progress-report-list-button-group"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></div>
+        <button id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
         <div class="table-responsive progress-report-table">
-            <table class="table">
+            <table id="progress-report-table" class="table">
                 <thead>
                     <tr>
-                        <th>Session</th>
                         <th>Date</th>
                         <th>Level</th>
                         <th>Unit</th>
                         <th>Last Exercise</th>
                         <th>Score</th>
+                        <th>Documentation</th>
                         <th>Action</th>
                         <th>Status</th>
                     </tr>
@@ -66,12 +150,16 @@
                 <tbody>
                     @for ($i = 0 ; $i < count($progress_report) ; $i++)
                     <tr>
-                        <td>{{$i+1}}</td>
                         <td>{{$attendance[$i]->date}}</td>
-                        <td>{{$progress_report[$i]->level}}</td>
-                        <td>{{$progress_report[$i]->unit}}</td>
-                        <td>{{$progress_report[$i]->last_exercise}}</td>
-                        <td>{{$progress_report[$i]->score}}</td>
+                        <td>{{$progress_report[$i]->level ?: ''}}</td>
+                        <td>{{$progress_report[$i]->unit ?: ''}}</td>
+                        <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
+                        <td>{{$progress_report[$i]->score ?: ''}}</td>
+                        @if (is_null($progress_report[$i]->documentation))
+                        <td></td>
+                        @else
+                        <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
+                        @endif
                         <td><button class="btn btn-primary" type="button">Edit</button></td>
                         @if ($progress_report[$i]->filled)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
@@ -84,6 +172,22 @@
             </table>
         </div>
     </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- The Close Button -->
+    <span onclick="$dc.DocumentationModalClose()" class="close">&times;</span>
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img01">
+
+    <!-- Modal Caption (Image Text) -->
+    <div id="caption"></div>
+    </div>
+
+    	
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>

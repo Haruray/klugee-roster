@@ -174,6 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Barryvdh\Debugbar\ServiceProvider::class,
         
         'Intervention\Image\ImageServiceProvider',
     ],
@@ -229,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Image' => 'Intervention\Image\Facades\Image',
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

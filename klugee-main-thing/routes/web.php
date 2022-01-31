@@ -29,11 +29,14 @@ Route::get('/students','MainController@Students');
 Route::get('/students/{student_id}','MainController@StudentsData');
 Route::get('/students/{student_id}/attendance-history','MainController@StudentsAttendanceHistory');
 Route::get('/students/{student_id}/progress-report/{program}','MainController@StudentsProgressReport');
+Route::get('/profile','MainController@CurrentUserProfile');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
 Route::post('/attendance/edit','MainController@AttendanceEdit');
 Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
+Route::post('/profile/upload','MainController@ProfilePictureChange');
 
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
+Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');

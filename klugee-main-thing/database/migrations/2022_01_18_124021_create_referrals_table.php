@@ -19,8 +19,7 @@ class CreateReferralsTable extends Migration
             $table->integer("registering_student_id");
             $table->integer("referrer_parent_student_id")->nullable();
             $table->string("referrer_name");
-            $table->integer("pic_id_teacher")->nullable();
-            $table->integer("pic_id_nonteacher")->nullable();
+            $table->bigInteger("pic_id_teacher")->nullable();
             $table->timestamps();
         });
     }

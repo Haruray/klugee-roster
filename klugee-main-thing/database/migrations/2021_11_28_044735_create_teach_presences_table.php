@@ -15,12 +15,9 @@ class CreateTeachPresencesTable extends Migration
     {
         Schema::create('teach_presences', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("id_teacher")->nullable();
-            $table->bigInteger("id_non_teach_staff")->nullable();
-            $table->bigInteger("id_attendance");
+            $table->bigInteger("id_teacher");
+            $table->bigInteger("id_attendance")->nullable();
             $table->date("date");
-            $table->boolean("approved");
-            $table->boolean("fee_paid");
             $table->timestamps();
         });
     }

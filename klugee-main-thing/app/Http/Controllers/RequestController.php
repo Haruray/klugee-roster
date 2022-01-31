@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Students;
 use App\Attendance;
 use App\Attendee;
+use App\Progress;
 
 class RequestController extends Controller
 {
@@ -31,5 +32,13 @@ class RequestController extends Controller
         $arr['attendance'] = $attendance;
         $arr['attendee'] = $students;
         return $arr;
+    }
+
+    public function GetDocumentation($attendance_id){
+        $documentation = Progress::where('id',$attendance_id)->first()->documentation;
+        return response()->json([
+            'success' => true,
+            'documentation' => $documentation
+        ],200);
     }
 }

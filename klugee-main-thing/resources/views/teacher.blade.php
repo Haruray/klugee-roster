@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Untitled</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,6 +14,47 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
+
+    <link rel="stylesheet" href="https://unpkg.com/dropzone/dist/dropzone.css" />
+	<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
+	<script src="https://unpkg.com/dropzone"></script>
+	<script src="https://unpkg.com/cropperjs"></script>
+    
+    <style>
+        .image_area:hover {
+		  height: 50%;
+		  cursor: pointer;
+		}
+
+		.text {
+		  color: #333;
+		  font-size: 20px;
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  -webkit-transform: translate(-50%, -50%);
+		  -ms-transform: translate(-50%, -50%);
+		  transform: translate(-50%, -50%);
+		  text-align: center;
+		}
+        .preview {
+  			overflow: hidden;
+  			width: 160px; 
+  			height: 160px;
+  			margin: 10px;
+  			border: 1px solid red;
+		}
+
+		.modal-lg{
+  			max-width: 1000px !important;
+		}
+
+        #modal{
+            overflow : auto;
+        }
+
+
+    </style>
 </head>
 
 <body>
@@ -41,22 +84,31 @@
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-0 text-center">
                     <div class="text-left d-inline-block teacher-profile-img-group">
-                        <div class="text-center teacher-profile-img-outline"><img class="student-profile-img" src="{{asset('img/edgysul.png')}}"><a href="#"><i class="fa fa-camera teacher-profile-camera" data-bs-hover-animate="pulse"></i></a></div>
+                        <div class="text-center teacher-profile-img-outline"><img id="profile-pic" class="student-profile-img" src="{{url('/uploads/profile-pictures/'.$profile->photo)}}">
+                            <a data-toggle="modal" data-target="#upload-modal"><i class="fa fa-camera teacher-profile-camera" data-bs-hover-animate="pulse"></i></a>
+                         </div>
                         <div class="teacher-fee">
                             <p>Fee up to day&nbsp;</p>
-                            <p class="bold teacher-fee-nominal">Rp1.500.000</p>
+                            <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">
                     <div class="d-inline-block">
-                        <p class="teacher-profile-name bold yellow">Muhammad EmetiK</p>
+                        <p class="teacher-profile-name bold yellow">{{$profile->name}}</p>
                         <p class="bold white" style="font-size: 20px;">Joined since</p>
-                        <p class="bold teacher-join-time yellow">October 2019</p>
+                        <p class="bold teacher-join-time yellow">{{date('F',strtotime($profile->join_date))}} {{date('Y',strtotime($profile->join_date))}}</p>
                         <div class="teacher-status">
-                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;Active</p>
-                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;Part Time</p>
-                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;Contract</p>
+                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;
+                            @if ($profile->status)
+                                Active
+                            @else
+                                Inactive
+                            @endif
+                            </p>
+                            @foreach ($position as $ps)
+                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
+                            @endforeach                            
                         </div>
                     </div>
                 </div>
@@ -68,7 +120,7 @@
             <div class="row">
                 <div class="col-md-6 col-lg-8 text-center">
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-user teacher-desc-icon"></i>
-                        <p class="teacher-desc-text">28 Students</p>
+                        <p class="teacher-desc-text">{{count($schedule)}} Students</p>
                     </div>
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-clock-o teacher-desc-icon"></i>
                         <p class="teacher-desc-text">Attendance</p>
@@ -78,18 +130,151 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;"><i class="fa fa-home" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp;Alamat</strong><br><i class="fa fa-phone" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp; No telp</strong><br><i class="fa fa-id-card"
-                            style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; NIK</strong><br><i class="fa fa-calendar" style="color: #54dee4;font-size: 30px;"></i>&nbsp; &nbsp;<strong>tanggal lahir</strong><button class="btn btn-warning text-white edit-button-bio-teacher"
+                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;"><i class="fa fa-home" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp;{{$profile->address}}</strong><br><i class="fa fa-phone" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp; {{$profile->phone_contact}}</strong><br><i class="fa fa-id-card"
+                            style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; {{$profile->nik}}</strong><br><i class="fa fa-calendar" style="color: #54dee4;font-size: 30px;"></i>&nbsp; &nbsp;<strong>{{$profile->birthdate}}</strong><button class="btn btn-warning text-white edit-button-bio-teacher"
                             type="button"><i class="fa fa-pencil"></i>&nbsp;Edit Biodata</button><br></p>
-                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;"><i class="fa fa-check" style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;Teaching MEthod 1</strong><br><i class="fa fa-check" style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;teaching method2</strong><br><i class="fa fa-check"
-                            style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;location 1</strong><br><i class="fa fa-check" style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;location 2</strong></p>
+                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;">
+                        @foreach ($method as $m)
+                            <i class="fa fa-check" style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;{{$m->method}}</strong><br>
+                        @endforeach
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-    <script src="{{asset('js/bs-init.js')}}"></script>
+
+    <!-- Modal -->
+<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Upload New Profile Picture</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <input type="file" name="image" id="upload_image">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--another modal for cropper -->
+
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+			  	<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title">Crop Image Before Upload</h5>
+			        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          			<span aria-hidden="true">×</span>
+			        		</button>
+			      		</div>
+			      		<div class="modal-body">
+			        		<div class="img-container">
+			            		<div class="row">
+			                		<div class="col-md-8">
+			                    		<img style="width:inherit;" src="" id="sample_image" />
+			                		</div>
+			                		<div class="col-md-4">
+			                    		<div class="preview"></div>
+			                		</div>
+			            		</div>
+			        		</div>
+			      		</div>
+			      		<div class="modal-footer">
+			      			<button type="button" id="crop" class="btn btn-primary">Crop</button>
+			        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			      		</div>
+			    	</div>
+			  	</div>
+			</div>	
+
+    
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+<script src="{{asset('js/bs-init.js')}}"></script>
+
+<script>
+
+$(document).ready(function(){
+
+	var $modal = $('#modal');
+
+    var another_modal = document.getElementById('upload-modal');
+
+	var image = document.getElementById('sample_image');
+
+	var cropper;
+
+	$('#upload_image').change(function(event){
+		var files = event.target.files;
+
+		var done = function(url){
+			image.src = url;
+			$modal.modal('show');
+            $('#upload-modal').modal('toggle');
+            
+		};
+
+		if(files && files.length > 0)
+		{
+			reader = new FileReader();
+			reader.onload = function(event)
+			{
+				done(reader.result);
+			};
+			reader.readAsDataURL(files[0]);
+		}
+	});
+
+	$modal.on('shown.bs.modal', function() {
+		cropper = new Cropper(image, {
+			aspectRatio: 1,
+			viewMode: 3,
+			preview:'.preview'
+		});
+	}).on('hidden.bs.modal', function(){
+		cropper.destroy();
+   		cropper = null;
+	});
+
+	$('#crop').click(function(){
+		canvas = cropper.getCroppedCanvas({
+			width:400,
+			height:400
+		});
+
+		canvas.toBlob(function(blob){
+			url = URL.createObjectURL(blob);
+			var reader = new FileReader();
+			reader.readAsDataURL(blob);
+			reader.onloadend = function(){
+				var base64data = reader.result;
+				$.ajax({
+					url:'/profile/upload',
+					method:'POST',
+					data:{"image":base64data,
+                        "_token" : $("meta[name='csrf-token']").attr("content")},
+					success:function(response)
+					{
+						$modal.modal('hide');
+						$('#profile-pic').attr('src', response.data);
+                        window.location.reload();
+					}
+				});
+			};
+		});
+	});
+	
+});
+</script>
 
 </html>

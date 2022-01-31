@@ -71,7 +71,7 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{asset('img/edgysul.png')}}"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
                 <div class="text-left nav-item-div">
                     <a class="login" href="#">
                         <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>

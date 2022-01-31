@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use ImageOptimizer;
 
 use App\Students;
 use App\Attendance;
@@ -14,6 +13,14 @@ use App\Progress;
 use App\Program;
 use App\StudentProgram;
 use App\TuitionFee;
+use App\Teachers;
+use App\TeachPosition;
+use App\TeachMethod;
+use App\TeachSchedule;
+use App\TeachPresence;
+use App\Schedule;
+use App\Fee;
+
 
 class MainController extends Controller
 {
@@ -47,6 +54,8 @@ class MainController extends Controller
         // - Check student duplicate
         // - If not present, don't make progress report
         // - dont forget about studentprensences database, about spp paid or nah
+        // - same about teacher presence and fees
+        // - If student not registered in a certain program, dont process the data and give warning
 
         $max_stud = 10; //max students for input
         //Save attendance data
@@ -248,7 +257,7 @@ class MainController extends Controller
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
-        // - update the score individually
+        
         if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
             return response()->json([
                 'success' => false,
@@ -260,7 +269,6 @@ class MainController extends Controller
         $destinationPath = 'uploads/progress-reports';
         $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
         $file->move($destinationPath,$documentation_file_name);
-        ImageOptimizer::optimize(public_path().'/uploads/progress-reports/'.$documentation_file_name);
 
         /*$progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
@@ -335,24 +343,73 @@ class MainController extends Controller
         $studentbio = Students::where('id',$student_id)->get()->first();
         //get attendance id first based on program
         $attendee_data = Attendee::where('id_student',$student_id)->get();
+        $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())->where('program',$program)->get();
+        /*
         $attendance_ids = array();
         foreach($attendee_data as $ad){
             array_push($attendance_ids, Attendance::where([
                 ['id', $ad->id_attendance],
                 ['program', $program]
                 ])->first());
-        }
+        }*/
 
+        /*
         $progress_reports = array();
         foreach($attendance_ids as $aids){
-            array_push($progress_reports, Progress::where([
+            $pr = Progress::where([
                 ['id_student',$student_id],
                 ['id_attendance',$aids->id]
-            ])->first());
-        }
+            ])->first();
+            array_push($progress_reports, $pr);
+        }*/
+        $progress_reports = Progress::where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->get();
         $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio);
 
         return $view;
+    }
+
+    public function CurrentUserProfile(){
+        //Basic data
+        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
+        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
+        
+        //Get teacher's schedule student count
+        $schedule_ids = TeachSchedule::where('id_teacher',auth()->user()->id_teacher)->get();
+        $schedules = array();
+        foreach($schedule_ids as $si){
+            array_push($schedules, Schedule::where('id', $si->id_schedule)->first());
+        }
+        //get this month's fee
+        $teachPresences = TeachPresence::whereMonth('date', date('m'))->get();
+        $fee1 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('fee_nominal');
+        $fee2 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('lunch_nominal');
+        $fee3 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('transport_nominal');
+        $fees = $fee1+$fee2+$fee3;
+        $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees);
+        return $view;
+    }
+
+    public function ProfilePictureChange(Request $request){
+        //PROSES UPLOAD KE SERVER
+        $data =  $request["image"];
+        $image_array_1 = explode(";", $data);
+        $image_array_2 = explode(",", $image_array_1[1]);
+        $data = base64_decode($image_array_2[1]);
+
+        $destinationPath = 'uploads/profile-pictures';
+        $image_name = auth()->user()->id_teacher.'_'.auth()->user()->name.'.png';
+
+        file_put_contents($destinationPath.'/'.$image_name,$data);
+        
+    
+        //PROSES PERUBAHAN DI DATABASE
+        $teacher = Teachers::where('id',auth()->user()->id_teacher)->update(['photo' => $image_name]);
+        
+        return response()->json([
+            'success' => true,
+            'data' => '/'.$destinationPath.'/'.$image_name
+        ],200);
     }
 
 }

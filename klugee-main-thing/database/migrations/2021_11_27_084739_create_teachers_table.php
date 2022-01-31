@@ -20,10 +20,13 @@ class CreateTeachersTable extends Migration
             $table->string("nickname");
             $table->string("birthplace");
             $table->date("birthdate");
+            $table->string("address");
             $table->string("phone_contact");
+            $table->string("emergency_contact")->nullable();
             $table->bigInteger("nik");
             $table->string("institution_name")->nullable();
             $table->date("join_date");
+            $table->boolean("is_teacher");
             $table->boolean("status");
             $table->string("photo")->nullable();
             $table->timestamps();
