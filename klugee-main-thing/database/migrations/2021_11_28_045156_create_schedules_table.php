@@ -20,6 +20,7 @@ class CreateSchedulesTable extends Migration
             $table->time("end");
             $table->string("classroom_type");
             $table->string("classroom_students");
+            $table->string("program");
             $table->string("subject");
             $table->timestamps();
         });

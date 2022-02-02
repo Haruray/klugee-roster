@@ -30,6 +30,9 @@ Route::get('/students/{student_id}','MainController@StudentsData');
 Route::get('/students/{student_id}/attendance-history','MainController@StudentsAttendanceHistory');
 Route::get('/students/{student_id}/progress-report/{program}','MainController@StudentsProgressReport');
 Route::get('/profile','MainController@CurrentUserProfile');
+Route::get('/profile/students','MainController@CurrentUserStudents');
+Route::get('/profile/attendance','MainController@CurrentUserAttendance');
+Route::get('/schedule','MainController@Schedule');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

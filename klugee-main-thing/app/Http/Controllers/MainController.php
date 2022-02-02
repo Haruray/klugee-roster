@@ -19,6 +19,7 @@ use App\TeachMethod;
 use App\TeachSchedule;
 use App\TeachPresence;
 use App\Schedule;
+use App\StudentSchedule;
 use App\Fee;
 
 
@@ -368,6 +369,15 @@ class MainController extends Controller
         return $view;
     }
 
+    private function CountCurrentUserFee(){
+        $teachPresences = TeachPresence::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        $fee1 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('fee_nominal');
+        $fee2 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('lunch_nominal');
+        $fee3 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('transport_nominal');
+        $fees = $fee1+$fee2+$fee3;
+        return $fees;
+    }
+
     public function CurrentUserProfile(){
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
@@ -375,20 +385,15 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         
         //Get teacher's schedule student count
-        $schedule_ids = TeachSchedule::where('id_teacher',auth()->user()->id_teacher)->get();
-        $schedules = array();
-        foreach($schedule_ids as $si){
-            array_push($schedules, Schedule::where('id', $si->id_schedule)->first());
-        }
+        $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
+
         //get this month's fee
-        $teachPresences = TeachPresence::whereMonth('date', date('m'))->get();
-        $fee1 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('fee_nominal');
-        $fee2 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('lunch_nominal');
-        $fee3 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('transport_nominal');
-        $fees = $fee1+$fee2+$fee3;
+        $fees = self::CountCurrentUserFee();
         $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees);
         return $view;
     }
+
+    
 
     public function ProfilePictureChange(Request $request){
         //PROSES UPLOAD KE SERVER
@@ -410,6 +415,58 @@ class MainController extends Controller
             'success' => true,
             'data' => '/'.$destinationPath.'/'.$image_name
         ],200);
+    }
+
+    public function CurrentUserStudents(){
+        //Basic data
+        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
+        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
+        
+        //Get teacher's schedule student count
+        $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
+        //Get students based on the schedule
+        //Method 1 : shitty
+        //$schedules_students_id = StudentSchedule::select('id_student')->whereIn('id_schedule',$schedule_ids->pluck('id_schedule')->toArray())->get();
+        //$students = Students::whereIn('id', $schedules_students_id)->get();
+        //student's program based on the schedule
+        //$students_program = Schedule::select('program')->whereIn('id',$schedule_ids->pluck('id_schedule')->toArray())->whereIn('id_student',  $schedules_students_id->pluck('id_student')->toArray())->get();
+        
+        //Method 2 : join
+        $schedules_detail = Schedule::join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->get();
+        //return $schedules_detail;
+
+        //fees
+        //get this month's fee
+        $fees = self::CountCurrentUserFee();
+
+        $view = view('teacher-students-list')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule_details',$schedules_detail)->with('schedule',$schedules)->with('fees',$fees);
+        return $view;
+    }
+
+    public function CurrentUserAttendance(){
+        //Basic data
+        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
+        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
+        
+        //Get attendance detail
+        $teach_presence = TeachPresence::join('attendances','teach_presences.id_attendance','=','attendances.id')->join('attendees','teach_presences.id_attendance','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','teach_presences.id','=','fees.id_teach_presences')->get();
+        
+        //fees
+        //get this month's fee
+        $fees = self::CountCurrentUserFee();
+
+        $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence);
+        return $view;
+    }
+
+    public function Schedule(){
+        $schedule = Schedule::join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->get();
+        
+        $view = view('schedule')->with('schedule',$schedule);
+
+        return $view;
     }
 
 }
