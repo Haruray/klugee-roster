@@ -15,6 +15,7 @@ class CreateSalariesTable extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->bigInteger("id_teacher")->nullable();
             $table->bigInteger("nominal");
             $table->text("note")->nullable();

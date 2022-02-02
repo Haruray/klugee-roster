@@ -15,9 +15,9 @@ class CreateIncentivesTable extends Migration
     {
         Schema::create('incentives', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->bigInteger("id_referral")->nullable();
             $table->bigInteger("id_teacher")->nullable();
-            $table->bigInteger("id_non_teacher")->nullable();
             $table->bigInteger("nominal");
             $table->text("note");
             $table->boolean("approved");

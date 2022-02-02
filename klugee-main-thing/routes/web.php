@@ -33,6 +33,7 @@ Route::get('/profile','MainController@CurrentUserProfile');
 Route::get('/profile/students','MainController@CurrentUserStudents');
 Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
+Route::get('/earnings','MainController@Earnings');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

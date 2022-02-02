@@ -21,6 +21,8 @@ use App\TeachPresence;
 use App\Schedule;
 use App\StudentSchedule;
 use App\Fee;
+use App\Salary;
+use App\Incentive;
 
 
 class MainController extends Controller
@@ -466,6 +468,23 @@ class MainController extends Controller
         
         $view = view('schedule')->with('schedule',$schedule);
 
+        return $view;
+    }
+
+    public function Earnings(){
+        //Basic data
+        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
+        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
+
+        $teachPresences = TeachPresence::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        $fee = Fee::join('teach_presences','fees.id_teach_presences','=','teach_presences.id')->join('attendances','teach_presences.id_attendance','=','attendances.id')->whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->get();
+        $salary = Salary::whereYear('date',date('y'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        $total_fee = self::CountCurrentUserFee();
+        $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        
+        
+        $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
         return $view;
     }
 

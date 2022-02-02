@@ -55,7 +55,6 @@
 
 
     </style>
-    <script src="{{asset('js/progressreportlist-script.js')}}"></script>
 </head>
 
 <body>
@@ -69,7 +68,7 @@
                                 href="/earnings">Earnings</a></div>
                     </li>
                 </ul>
-                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{$profile->nickname}}</p></a></div>
                 <div class="text-left nav-item-div">
                     <a class="login" href="#">
                         <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
@@ -118,53 +117,113 @@
     </div>
     <div>
         <div class="container">
-        <h1 style="margin-top:30px;" class="bounce animated page-heading">Attendance History</h1>
-        <button style="margin-bottom:10px;" id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
-        <table style="margin-top:20px;" id="progress-report-table" class="table">
+        <h1 style="margin-top:30px;" class="bounce animated page-heading">Earnings</h1>
+        <h4 class="bold green">This Month's</h3>
+        <h2 class="bold blue">FEES</h2>
+        <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
                 <thead>
                     <tr>
-                        <th>No</th>
                         <th>Date</th>
-                        @if ($profile->is_teacher)
-                            <th>Student</th>
-                            <th>Location</th>
-                            <th>Class Type</th>
-                            <th>Action</th>
-                            <th>Fee Status</th>
-                        @endif
-                        
+                        <th>Teaching Info</th>
+                        <th>Fee</th>
+                        <th>Lunch Incentive</th>
+                        <th>Transport Incentive</th>
+                        <th>Total</th>
+                        <th>Payment Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for ($i = 0 ; $i < count($teach_presence) ; $i+=$teach_presence->where('id', $teach_presence[$i]->id)->count())
                     <tr>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$i+1}}</td>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->date}}</td>
-                        @if ($profile->is_teacher)
-                        <td>{{$teach_presence[$i]->name}}</td>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->class_type}}</td>
-                        <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
-                        @if ($teach_presence[$i]->approved)
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
-                        @else
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        @endif     
-                        
-                    </tr>
-                        @for ($j=$i+1 ; $j < $teach_presence->where('id_attendance', $teach_presence[$i]->id_attendance)->count() ; $j++)
-                        <tr>
-                            <td>{{$teach_presence[$j]->name}}</td>
-                            <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
-                        </tr>  
-                            
-                        @endfor
-                        @endif  
-                    @endfor
-                    
-
-                    
+                        @foreach ($fee as $f)
+                            <td>{{$f->date}}</td>
+                            <td>button</td>
+                            <td>{{$f->fee_nominal}}</td>
+                            <td>{{$f->lunch_nominal}}</td>
+                            <td>{{$f->transport_nominal}}</td>
+                            <td>{{$f->fee_nominal + $f->lunch_nominal + $f->transport_nominal}}</td>
+                            @if ($f->approved)
+                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                            @else
+                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                            @endif
+                        @endforeach
+                    </tr>         
                 </tbody>
+                <tfoot style="background-color:#fff5cc; text-align:right;">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total : Rp{{$fees ?:'0'}}</th>
+                </tfoot>
+            </table>
+
+        <h4 class="bold green">This Year's</h3>
+        <h2 class="bold blue">SALARY</h2>
+        <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Nominal</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach ($salary as $s)
+                            <td>{{$s->date}}</td>
+                            <td>{{$s->note}}</td>
+                            <td>{{$s->nominal}}</td>
+                            @if ($s->approved)
+                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                            @else
+                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                            @endif
+                        @endforeach
+                    </tr>         
+                </tbody>
+                <tfoot style="background-color:#fff5cc; text-align:right;">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total : Rp{{$salary->count('nominal') ?: '0'}}</th>
+                </tfoot>
+            </table>
+
+            <h4 class="bold green">This Months's</h3>
+            <h2 class="bold blue">INCENTIVES (outside of lunch and transport)</h2>
+            <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Nominal</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    @foreach ($salary as $s)
+                            <td>{{$i->date}}</td>
+                            <td>{{$i->note}}</td>
+                            <td>{{$i->nominal}}</td>
+                            @if ($s->approved)
+                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                            @else
+                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                            @endif
+                        @endforeach
+                    </tr>         
+                </tbody>
+                <tfoot style="background-color:#fff5cc; text-align:right;">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total : Rp{{$salary->count('nominal') ?: '0'}}</th>
+                </tfoot>
             </table>
         </div>
     </div>
