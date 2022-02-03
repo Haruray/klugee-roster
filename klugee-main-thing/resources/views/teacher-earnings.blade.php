@@ -133,8 +133,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
                         @foreach ($fee as $f)
+                        <tr>
                             <td>{{$f->date}}</td>
                             <td>button</td>
                             <td>{{$f->fee_nominal}}</td>
@@ -146,8 +146,9 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
+                            </tr> 
                         @endforeach
-                    </tr>         
+                            
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>
@@ -172,8 +173,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    
                         @foreach ($salary as $s)
+                        <tr>
                             <td>{{$s->date}}</td>
                             <td>{{$s->note}}</td>
                             <td>{{$s->nominal}}</td>
@@ -182,8 +184,9 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
+                            </tr> 
                         @endforeach
-                    </tr>         
+                            
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>
@@ -205,8 +208,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    
                     @foreach ($salary as $s)
+                    <tr>
                             <td>{{$i->date}}</td>
                             <td>{{$i->note}}</td>
                             <td>{{$i->nominal}}</td>
@@ -215,8 +219,9 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
+                            </tr> 
                         @endforeach
-                    </tr>         
+                            
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>

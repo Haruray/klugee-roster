@@ -123,11 +123,11 @@
     <h2 class="bounce animated page-heading">PROGRESS REPORTS</h2>
     <div class="container">
         <div class="row">
-            <div class="col-md-3 text-center"><img src="{{url('/img/'.$attendance[0]->program.'-logo.png')}}" style="width: 120px;"></div>
+            <div class="col-md-3 text-center"><img src="{{url('/img/'.$program.'-logo.png')}}" style="width: 120px;"></div>
             <div class="col-md-9 text-center">
                 <div class="d-inline-block progress-report-text">
                     <p class="text-center progress-report-student-name">{{$student->name}}</p>
-                    <p class="text-center progress-report-program-name">{{$attendance[0]->program}}</p>
+                    <p class="text-center progress-report-program-name">{{$program}}</p>
                 </div>
             </div>
         </div>

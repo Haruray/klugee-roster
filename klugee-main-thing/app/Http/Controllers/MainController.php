@@ -23,6 +23,9 @@ use App\StudentSchedule;
 use App\Fee;
 use App\Salary;
 use App\Incentive;
+use App\StudentPresence;
+use App\FeeList;
+use App\IncentiveList;
 
 
 class MainController extends Controller
@@ -55,12 +58,11 @@ class MainController extends Controller
     public function AttendanceInputProcess(Request $request){
         //TO DO :
         // - Check student duplicate
-        // - If not present, don't make progress report
-        // - dont forget about studentprensences database, about spp paid or nah
         // - same about teacher presence and fees
         // - If student not registered in a certain program, dont process the data and give warning
 
         $max_stud = 10; //max students for input
+        $should_pay_teach_fee = false;
         //Save attendance data
         $new_attendance = new Attendance;
         $new_attendance->id_teacher = auth()->user()->id_teacher;
@@ -76,6 +78,7 @@ class MainController extends Controller
                 'message' => 'Fail to save data. Please reload and re-enter the data.'
             ], 401);
         }
+
         for ($i = 1 ; $i < $max_stud ; $i++){
             //Search for every student input form
             $string_search = "student".$i;
@@ -98,22 +101,46 @@ class MainController extends Controller
                         'message' => 'Fail to save data. Please reload and re-enter the data.'
                     ], 401);
                 }
-                //Create progress report
-                $new_progress = new Progress;
-                $new_progress->id_teacher = $new_attendance->id_teacher;
-                $new_progress->id_student = $new_attendee->id_student;
-                $new_progress->id_attendance = $new_attendance->id;
-                $new_progress->filled = false;
-                $new_progress->save();
-                if (!$new_progress->save()){
-                    //If it doesn't success, then return error message
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Fail to create progress report. Please contact the developer for this problem.'
-                    ], 401);
+                if ($new_attendee->present){
+                    $should_pay_teach_fee = true;
+                    //Create progress report
+                    $new_progress = new Progress;
+                    $new_progress->id_teacher = $new_attendance->id_teacher;
+                    $new_progress->id_student = $new_attendee->id_student;
+                    $new_progress->id_attendance = $new_attendance->id;
+                    $new_progress->filled = false;
+                    $new_progress->save();
+                    if (!$new_progress->save()){
+                        //If it doesn't success, then return error message
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Fail to create progress report. Please contact the developer for this problem.'
+                        ], 401);
+                    }
+                    //Student presences
+                    $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->first();
+
+                    $new_student_presence = new StudentPresence;
+                    $new_student_presence->id_student = $new_attendee->id_student;
+                    $new_student_presence->id_attendance = $new_attendance->id;
+                    $new_student_presence->spp_paid = $student_fee->quote > 0 ? true:false;
+
+                    //update spp
+                    $initial_quota = $student_fee->quota;
+                    $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
+                        'quota' => $initial_quota-1
+                    ]);
                 }
             }
+
+            //Save teacher's attendance
+            $new_presence = new TeachPresence;
+            $new_presence->id_teacher = auth()->user()->id_teacher;
+            $new_presence->date = date("Y-m-d");
+            $new_presence->save();
         }
+
+
 
         return response()->json([
             'success' => true,
@@ -302,7 +329,38 @@ class MainController extends Controller
 
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
+        
+        //PAYMENT TIME
+        $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
 
+        $payment = new Fee;
+        $payment->id_attendance = $attendance->id;
+        $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
+        
+        //Incentives
+        //lunch : syarat adalah mengajar dua kali sesi
+        $sessions = Attendance::whereDay('date',date('d'))->where('id_teacher', auth()->user()->id_teacher)->count();
+        if ($sessions>=2){
+            //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
+            $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d'))->sum('lunch_nominal');
+            if ($check_lunch == 0){
+                //artinya belum dibayar untuk hari ini
+                $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
+            }
+            else{
+                $payment->lunch_nominal = 0;
+            }
+        }
+        else{
+            $payment->lunch_nominal = 0;
+        }
+
+        //transport
+        $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
+        $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
+        $payment->approved = false;
+        $payment->save();
+        
         return response()->json([
             'success' => true,
             'attendance_id' => $request->input('attendance_id'),
@@ -366,16 +424,16 @@ class MainController extends Controller
             array_push($progress_reports, $pr);
         }*/
         $progress_reports = Progress::where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->get();
-        $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio);
+        $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio)->with('program',$program);
 
         return $view;
     }
 
     private function CountCurrentUserFee(){
-        $teachPresences = TeachPresence::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
-        $fee1 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('fee_nominal');
-        $fee2 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('lunch_nominal');
-        $fee3 = Fee::whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->where('approved',1)->sum('transport_nominal');
+        $teachPresences = Attendance::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        $fee1 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('fee_nominal');
+        $fee2 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('lunch_nominal');
+        $fee3 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('transport_nominal');
         $fees = $fee1+$fee2+$fee3;
         return $fees;
     }
@@ -453,7 +511,7 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         
         //Get attendance detail
-        $teach_presence = TeachPresence::join('attendances','teach_presences.id_attendance','=','attendances.id')->join('attendees','teach_presences.id_attendance','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','teach_presences.id','=','fees.id_teach_presences')->get();
+        $teach_presence = Attendance::join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->get();
         
         //fees
         //get this month's fee
@@ -477,8 +535,8 @@ class MainController extends Controller
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
-        $teachPresences = TeachPresence::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
-        $fee = Fee::join('teach_presences','fees.id_teach_presences','=','teach_presences.id')->join('attendances','teach_presences.id_attendance','=','attendances.id')->whereIn('id_teach_presences', $teachPresences->pluck('id')->toArray())->get();
+        $teachPresences = Attendance::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
+        $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->get();
         $salary = Salary::whereYear('date',date('y'))->where('id_teacher',auth()->user()->id_teacher)->get();
         $total_fee = self::CountCurrentUserFee();
         $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
