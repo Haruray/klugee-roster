@@ -17,7 +17,7 @@
     text-align: center;
     margin-bottom: 20px;
     border-radius: 5px;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
     padding: 40% 0;
     position: relative;
@@ -31,7 +31,7 @@
     text-align: center;
     margin-bottom: 20px;
     border-radius: 5px;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: bold;
     padding: 20% 0;
     position: relative;
@@ -72,6 +72,15 @@ body {
   width: 50px;
 }
 
+.nav-img {
+  border-radius: 50%;
+  width: 50px;
+  font-size: 38px;
+  padding-left: 8px;
+  padding-top: 8px;
+  vertical-align: middle;
+}
+
 .notif-img {
   border-radius: 50%;
   width: 50px;
@@ -79,6 +88,7 @@ body {
   font-size: 38px;
   padding-left: 5px;
   padding-top: 8px;
+  vertical-align: middle;
 }
 
 .nav-center-pad {
@@ -332,7 +342,8 @@ body {
   width: 20px;
   float: right;
   position: relative;
-  right: 24px;
+  right: 26px;
+  top: 9px;
   margin-right: -20px;
   padding-right: 0px;
 }
@@ -669,10 +680,12 @@ td {
   .nav-item-text {
     color: #fff5cc;
     font-weight: bold;
-    margin-left: 10px;
+    margin-left: 15px;
     width: inherit;
     visibility: visible;
     display: block;
+    font-size: 1.2rem;
+    vertical-align: sub;
   }
 }
 

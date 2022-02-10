@@ -58,7 +58,6 @@ class MainController extends Controller
     public function AttendanceInputProcess(Request $request){
         //TO DO :
         // - Check student duplicate
-        // - same about teacher presence and fees
         // - If student not registered in a certain program, dont process the data and give warning
 
         $max_stud = 10; //max students for input
@@ -124,12 +123,15 @@ class MainController extends Controller
                     $new_student_presence->id_student = $new_attendee->id_student;
                     $new_student_presence->id_attendance = $new_attendance->id;
                     $new_student_presence->spp_paid = $student_fee->quote > 0 ? true:false;
+                    $new_student_presence->save();
 
                     //update spp
                     $initial_quota = $student_fee->quota;
-                    $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
-                        'quota' => $initial_quota-1
-                    ]);
+                    if ($initial_quota>0){
+                        $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
+                            'quota' => $initial_quota-1
+                        ]); 
+                    }
                 }
             }
 
@@ -380,14 +382,8 @@ class MainController extends Controller
         $studentbio = Students::where('id',$student_id)->get()->first();
         //get programs and payment status
         $student_programs = StudentProgram::where('id_student',$student_id)->get();
-        $student_tuition_payment = array();
-        foreach ($student_programs as $sp){
-            $program_payment = TuitionFee::where([
-                'id_student' => $sp->id_student,
-                'program' => $sp->program
-            ])->get()->first();
-            array_push($student_tuition_payment, $program_payment);
-        }
+        $student_tuition_payment = TuitionFee::whereIn('id_student',$student_programs->pluck('id_student')->toArray())->get();
+
         $view = view('student');
 
         return $view->with('student', $studentbio)->with('programs', $student_tuition_payment);

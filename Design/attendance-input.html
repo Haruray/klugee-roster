@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Untitled</title>
+    <title>klugee-roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -24,14 +24,19 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/edgysul.png"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
-                <div data-bs-hover-animate="jello" class="nav-item-div">
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/edgysul.png"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
                     <a class="login" href="#">
-                        <div class="d-inline-block"><img class="notif-img" src="assets/img/13.png"><img class="warning-sign" src="assets/img/15.png"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="assets/img/15.png"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
-                <div data-bs-hover-animate="jello" class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/sign%20out.png"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
+                <div class="text-left nav-item-div">
+                    <a class="login" href="#">
+                        <div class="d-inline-block"><i class="fa fa-sign-out notif-img yellow"></i></div>
+                        <p class="d-inline-block nav-item-text">Sign Out</p>
+                    </a>
+                </div>
         </div>
         </div>
     </nav>
@@ -51,7 +56,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input class="form-control attendance-input" type="date" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input class="form-control attendance-input" type="datetime-local" required=""></div>
                     </div>
                 </div>
             </div>

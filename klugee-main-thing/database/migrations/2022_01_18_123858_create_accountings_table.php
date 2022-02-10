@@ -15,6 +15,7 @@ class CreateAccountingsTable extends Migration
     {
         Schema::create('accountings', function (Blueprint $table) {
             $table->id();
+            $table->string("name");
             $table->date("date");
             $table->string("description");
             $table->bigInteger("nominal");
