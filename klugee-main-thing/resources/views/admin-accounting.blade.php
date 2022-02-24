@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Untitled</title>
+    <title>klugee-roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -15,7 +15,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
         <div class="container"><a class="navbar-brand navbar-logo" href="#"><img class="d-inline-block" src="assets/img/2.png"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
@@ -25,7 +25,8 @@
                                 href="#">Earnings</a></div>
                     </li>
                 </ul>
-                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>                <div class="text-left nav-item-div">
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/edgysul.png"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
                     <a class="login" href="#">
                         <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="assets/img/15.png"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
@@ -40,81 +41,43 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">WELCOME!</h1>
+    <h1 class="bounce animated page-heading">ACCOUNTING</h1>
     <div>
         <div class="container">
-            @if (auth()->user()->user_type=='teacher')
             <div class="row">
                 <div class="col-md-3 col-sm-6">
-                    <a href="/attendance">
+                    <a href="admin-acccounting-input.html">
                         <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
-                            <p class="button-content">Attendance</p>
+                            <p><i class="fa fa-money button-content-icon"></i></p>
+                            <p class="button-content">Input Transaction</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="/students">
+                    <a href="admin-financial.html">
                         <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-user"></i></p>
-                            <p class="button-content">Students</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <a href="/schedule">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-table"></i></p>
-                            <p class="button-content">Schedule</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <a href="/earnings">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-money"></i></p>
-                            <p class="button-content">Earnings</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            @else
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <a href="#">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
-                            <p class="button-content">Attendance</p>
+                            <p><i class="fa fa-database button-content-icon"></i></p>
+                            <p class="button-content">Financial Data</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <a href="#">
                         <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-users"></i></p>
-                            <p class="button-content">Profiles</p>
+                            <p><i class="fa fa-money button-content-icon"></i></p>
+                            <p class="button-content">SPP</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="admin-schedule.html">
+                    <a href="#">
                         <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-table"></i></p>
-                            <p class="button-content">Schedule</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <a href="admin-accounting.html">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-money"></i></p>
-                            <p class="button-content">Accounting</p>
+                            <p><i class="fa fa-money button-content-icon"></i></p>
+                            <p class="button-content">Teacher's Fees</p>
                         </div>
                     </a>
                 </div>
             </div>
-            @endif
-            
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

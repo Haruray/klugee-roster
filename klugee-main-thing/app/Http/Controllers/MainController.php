@@ -30,7 +30,6 @@ use App\IncentiveList;
 
 class MainController extends Controller
 {
-    public $user_type;
     public function __construct()
     {
         $this->middleware('auth');
@@ -38,7 +37,6 @@ class MainController extends Controller
     
     public function index()
     {
-        $user_type = auth()->user()->user_type;
         $view = view('index');
         return $view;
     }
