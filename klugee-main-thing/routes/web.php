@@ -20,8 +20,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/', 'MainController@index')->name('home');
-Route::get('/attendance', 'MainController@AttendanceMenu');
+Route::get('/attendance', 'TeacherController@AttendanceMenu');
 Route::get('/attendance/input','MainController@AttendanceInput');
+Route::get('/attendance/teacher-input','AdminController@TeacherAttendanceInput');
 Route::get('attendance/progress-report/{attendance_id}','MainController@AttendanceProgressReport');
 Route::get('/attendance/history','MainController@AttendanceHistory');
 Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
@@ -34,6 +35,13 @@ Route::get('/profile/students','MainController@CurrentUserStudents');
 Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
 Route::get('/earnings','MainController@Earnings');
+
+Route::get('/attendance-admin','AdminController@AttendanceAdmin');
+Route::get('/user-profiles','AdminController@UserProfiles');
+Route::get('/users','AdminController@UserList');
+Route::get('/schedule-admin','AdminController@ScheduleAdmin');
+Route::get('/accounting','AdminController@Accounting');
+Route::get('/accounting/input-transaction','AdminController@InputTransaction');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

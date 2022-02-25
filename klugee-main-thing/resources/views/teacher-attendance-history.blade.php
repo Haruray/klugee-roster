@@ -65,18 +65,47 @@
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
                 <ul class="nav navbar-nav text-left mr-auto nav-item-dropdown">
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="color: white;"><i class="fa fa-search nav-item-icon"></i>&nbsp; &nbsp; Explore</a>
-                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="/attendance">Attendance</a><a class="dropdown-item" role="presentation" href="/students">Students</a><a class="dropdown-item" role="presentation" href="/schedule">Schedule</a><a class="dropdown-item" role="presentation"
-                                href="/earnings">Earnings</a></div>
+                        @if (auth()->user()->user_type=="teacher")
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" role="presentation" href="/attendance">Attendance</a>
+                            <a class="dropdown-item" role="presentation" href="/students">Students</a>
+                            <a class="dropdown-item" role="presentation" href="/schedule">Schedule</a>
+                            <a class="dropdown-item" role="presentation" href="/earnings">Earnings</a>
+                        </div>
+                        @else
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" role="presentation" href="/attendance-admin">Attendance</a>
+                            <a class="dropdown-item" role="presentation" href="/user-profiles">Profiles</a>
+                            <a class="dropdown-item" role="presentation" href="/schedule-admin">Schedule</a>
+                            <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
+                        </div>
+                        @endif
+                        
                     </li>
                 </ul>
-                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
+                
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
+                @if (auth()->user()->user_type == "admin")
+                    <div class="text-left nav-item-div">
+                        <a class="login" href="/management">
+                            <div class="d-inline-block"><i class="fa fa-cog nav-img yellow"></i></div>
+                            <p class="d-inline-block nav-item-text">Management</p>
+                        </a>
+                    </div>
+                @endif
                 <div class="text-left nav-item-div">
-                    <a class="login" href="#">
-                        <div class="d-inline-block"><i class="fa fa-bell notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
+                    <a class="login" href="/notification">
+                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
-                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="{{asset('img/sign out.png')}}"><p class="d-inline-block nav-item-text">Sign out</p></a></div>
+                <div class="text-left nav-item-div">
+                    <a class="login" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form></li>
+                        <div class="d-inline-block"><i class="fa fa-sign-out notif-img yellow"></i></div>
+                        <p class="d-inline-block nav-item-text">Sign Out</p>
+                    </a>
+                </div>
         </div>
         </div>
     </nav>
