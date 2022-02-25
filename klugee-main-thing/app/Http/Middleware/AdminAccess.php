@@ -18,5 +18,6 @@ class AdminAccess
         if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'teacher_manager'){
             return $next($request);
         }
+        return redirect('/');
     }
 }
