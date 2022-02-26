@@ -42,6 +42,8 @@ Route::get('/users','AdminController@UserList');
 Route::get('/schedule-admin','AdminController@ScheduleAdmin');
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
+Route::get('/user-attendances','AdminController@UserAttendances');
+Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

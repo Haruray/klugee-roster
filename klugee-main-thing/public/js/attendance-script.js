@@ -144,7 +144,8 @@
         //TO do :
         // - check student duplicate so the attendanceConfirm dont have student duplicate
 
-        var form = $('form')[0]; 
+        var form = $('form')[1]; 
+        console.log(form);
         var formdata = new FormData(form);
         console.log(formdata);
 

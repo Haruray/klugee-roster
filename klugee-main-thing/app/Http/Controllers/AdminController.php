@@ -66,4 +66,15 @@ class AdminController extends Controller
         $view = view('admin-acccounting-input');
         return $view;
     }
+
+    public function UserAttendances(){
+        $view = view('admin-attendance-list');
+        $attendances = TeachPresence::select('teach_presences.id', 'teach_presences.id_teacher','teach_presences.date','teachers.name','teachers.is_teacher')->join('teachers','teachers.id','=','teach_presences.id_teacher')->where('approved',false)->orderBy('date','DESC')->get();
+        return $view->with('attendance',$attendances);
+    }
+
+    public function UserAttendanceApproval($id){
+        $attendance = TeachPresence::where('id',$id)->update(['approved' => true]);
+        return redirect('/user-attendances');
+    }
 }

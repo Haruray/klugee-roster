@@ -159,6 +159,7 @@
                             <th>Location</th>
                             <th>Class Type</th>
                             <th>Action</th>
+                            <th>Presence Approval</th>
                             <th>Fee Status</th>
                         @endif
                         
@@ -174,14 +175,19 @@
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->class_type}}</td>
                         <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
-                        @if ($teach_presence[$i]->approved)
+                        @if ($teach_presence[$i]->presence_approval)
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        @endif     
+                        @endif
+                        @if ($teach_presence[$i]->fee_approval)
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                        @else
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                        @endif  
                         
                     </tr>
-                        @for ($j=$i+1 ; $j < $teach_presence->where('id_attendance', $teach_presence[$i]->id_attendance)->count() ; $j++)
+                        @for ($j=$i+1 ; $j < $teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
                         <tr>
                             <td>{{$teach_presence[$j]->name}}</td>
                             <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>

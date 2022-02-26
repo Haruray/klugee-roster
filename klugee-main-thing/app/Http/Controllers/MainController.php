@@ -134,10 +134,15 @@ class MainController extends Controller
             }
 
             //Save teacher's attendance
-            $new_presence = new TeachPresence;
-            $new_presence->id_teacher = auth()->user()->id_teacher;
-            $new_presence->date = date("Y-m-d");
-            $new_presence->save();
+            $presence_check = TeachPresence::where('date', $request->input('date'))->get()->first();
+
+            if (is_null($presence_check)){
+                $new_presence = new TeachPresence;
+                $new_presence->id_teacher = auth()->user()->id_teacher;
+                $new_presence->date = date("Y-m-d");
+                $new_presence->save();
+            }
+            
         }
 
 
@@ -505,13 +510,12 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         
         //Get attendance detail
-        $teach_presence = Attendance::join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->get();
-        
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->get();
+        $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees
         //get this month's fee
         $fees = self::CountCurrentUserFee();
-
-        $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence);
+        $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence)->with('approval',$teach_presence_approval);
         return $view;
     }
 
