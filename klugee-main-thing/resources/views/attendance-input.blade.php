@@ -21,32 +21,13 @@
 
     <script>
         $(document).ready(function() {
-            $('select').select2({
-            width: '90%'
+            $('.select').select2({
+            width: '90%',
+            height: '130%'
         });
 
             $('#student1').select2({
             placeholder: "Select a student",
-            allowClear: true
-        });
-
-        $('#attendance-form-program').select2({
-            placeholder: "Select a program",
-            allowClear: true
-        });
-
-        $('#attendance-form-location').select2({
-            placeholder: "Select location",
-            allowClear: true
-        });
-
-        $('#attendance-form-hour').select2({
-            placeholder: "Select hour",
-            allowClear: true
-        });
-
-        $('#attendance-form-classtype').select2({
-            placeholder: "Select classtype",
             allowClear: true
         });
 
@@ -124,7 +105,7 @@
                                 <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div>
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Program" required=""> -->
                                 <select id="attendance-form-program" class="required js-placeholder-program js-example-basic-single form-control attendance-input" name="program" placeholder="Program" required>
-                                        <option></option>
+                                        <option value="" disabled selected>Program</option>
                                         @foreach ($programs as $program)
                                             <option value="{{$program->program}}">{{$program->program}}</option>
                                         @endforeach
@@ -185,7 +166,7 @@
                                 <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Location" required=""> -->
                                 <select id="attendance-form-location" class="required js-example-basic-single form-control attendance-input" name="location" placeholder="Location" required="">
-                                        <option></option>
+                                        <option value="" disabled selected>Location</option>
                                         <option value="Studio">Studio</option>
                                         <option value="Online">Online</option>
                                         <option value="Visit-Near">Visit-Near (0-5KM)</option>
@@ -202,7 +183,7 @@
                                 <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div>
                                 <!--<input class="form-control attendance-input" type="text" placeholder="Class Type" required="">-->
                                 <select id="attendance-form-classtype" class="required js-example-basic-single form-control attendance-input" name="class-type" placeholder="Program" required="">
-                                        <option></option>
+                                        <option value="" disabled selected>Class Type</option>
                                         <option value="Exclusive">Exclusive</option>
                                         <option value="Semi-Private">Semi-Private</option>
                                         <option value="School Group">School Group</option>
@@ -217,7 +198,7 @@
                             <div class="attendance-input-div">
                                 <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
                                     <!--<input class="form-control attendance-input attendance-input-student" type="text" placeholder="Student's Name" required="">-->
-                                    <select class="required js-example-basic-single form-control attendance-input attendance-input-student" name="student1" id="student1" required>
+                                    <select class="select required js-example-basic-single form-control attendance-input attendance-input-student" name="student1" id="student1" required>
                                         <option></option>
                                         @foreach ($students as $s)
                                             <option value='{{$s->name}}'>{{$s->name}}</option>
@@ -237,7 +218,7 @@
             <div class="attendance-input-button-box">
             <div class="attendance-plus">
                 <a onclick = "$dc.addStudentInput()">
-                    <i class="fa fa-plus"></i>
+                    <i style="width:50px;height:50px;" class="fa fa-plus"></i>
                 </a>
             </div>
                 <button class="btn btn-primary attendance-input-button" type="button" onclick="$dc.AttendanceInput()" value="submit">Submit</button></div>

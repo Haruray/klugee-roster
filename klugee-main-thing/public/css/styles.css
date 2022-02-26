@@ -851,6 +851,9 @@ td {
   margin-left: 20px;
   border-radius: 5px;
 }
+a{
+  cursor: pointer;
+}
 .select2-selection { overflow: hidden; }
 .select2-selection__rendered { white-space: normal; word-break: break-all; }
 

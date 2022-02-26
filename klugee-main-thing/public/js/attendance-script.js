@@ -72,7 +72,7 @@
         "<div class=\"col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11\">"+
             "<div class=\"attendance-input-div\">"+
                 "<div class=\"attendance-icon align-middle\"><i class=\"fa fa-user\"></i></div>"+
-                    "<select class=\"required js-placeholder-student js-example-basic-single form-control attendance-input attendance-input-student\" name=\"student"+studentFormsCount+"\" id=\"student"+studentFormsCount+"\">"+
+                    "<select class=\"select required js-placeholder-student js-example-basic-single form-control attendance-input attendance-input-student\" name=\"student"+studentFormsCount+"\" id=\"student"+studentFormsCount+"\">"+
                         "<option></option>";
 
         let studentInputForm2 = "</select>"+

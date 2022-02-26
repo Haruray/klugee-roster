@@ -120,7 +120,7 @@ class MainController extends Controller
                     $new_student_presence = new StudentPresence;
                     $new_student_presence->id_student = $new_attendee->id_student;
                     $new_student_presence->id_attendance = $new_attendance->id;
-                    $new_student_presence->spp_paid = $student_fee->quote > 0 ? true:false;
+                    $new_student_presence->spp_paid = $student_fee->quota > 0 ? true:false;
                     $new_student_presence->save();
 
                     //update spp
@@ -139,10 +139,9 @@ class MainController extends Controller
             if (is_null($presence_check)){
                 $new_presence = new TeachPresence;
                 $new_presence->id_teacher = auth()->user()->id_teacher;
-                $new_presence->date = date("Y-m-d");
+                $new_presence->date = $request->input('date');
                 $new_presence->save();
             }
-            
         }
 
 
