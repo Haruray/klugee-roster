@@ -162,21 +162,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach ($fee as $f)
-                        <tr>
-                            <td>{{$f->date}}</td>
+                    <tr>
+                        @for ($i = 0 ; $i < count($fee) ; $i+=$fee->where('date',$fee[$i]->date)->count())
+                            <td rowspan="{{$fee->where('date',$fee[$i]->date)->count()}}">{{date('l',strtotime($fee[$i]->date))}}, {{date('d/m/Y',strtotime($fee[$i]->date))}}</td>
                             <td>button</td>
-                            <td>{{$f->fee_nominal}}</td>
-                            <td>{{$f->lunch_nominal}}</td>
-                            <td>{{$f->transport_nominal}}</td>
-                            <td>{{$f->fee_nominal + $f->lunch_nominal + $f->transport_nominal}}</td>
-                            @if ($f->approved)
+                            <td>{{$fee[$i]->fee_nominal}}</td>
+                            <td>{{$fee[$i]->lunch_nominal}}</td>
+                            <td>{{$fee[$i]->transport_nominal}}</td>
+                            <td>{{$fee[$i]->fee_nominal + $fee[$i]->lunch_nominal + $fee[$i]->transport_nominal}}</td>
+                            @if ($fee[$i]->approved)
                             <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
-                            </tr> 
-                        @endforeach
+                    </tr>
+                            @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count() ; $j++)
+                            <tr>
+                                <td>button</td>
+                                <td>{{$fee[$j]->fee_nominal}}</td>
+                                <td>{{$fee[$j]->lunch_nominal}}</td>
+                                <td>{{$fee[$j]->transport_nominal}}</td>
+                                <td>{{$fee[$j]->fee_nominal + $fee[$j]->lunch_nominal + $fee[$j]->transport_nominal}}</td>
+                                @if ($fee[$j]->approved)
+                                <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                                @else
+                                <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                                @endif
+                            </tr>
+                            @endfor
+                        @endfor
                             
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
@@ -205,7 +219,7 @@
                     
                         @foreach ($salary as $s)
                         <tr>
-                            <td>{{$s->date}}</td>
+                            <td>{{date('l',strtotime($s->date))}}, {{date('d/m/Y',strtotime($s->date))}}</td>
                             <td>{{$s->note}}</td>
                             <td>{{$s->nominal}}</td>
                             @if ($s->approved)
@@ -238,9 +252,9 @@
                 </thead>
                 <tbody>
                     
-                    @foreach ($salary as $s)
+                    @foreach ($incentive as $i)
                     <tr>
-                            <td>{{$i->date}}</td>
+                            <td>{{date('l',strtotime($i->date))}}, {{date('d/m/Y',strtotime($i->date))}}</td>
                             <td>{{$i->note}}</td>
                             <td>{{$i->nominal}}</td>
                             @if ($s->approved)
@@ -256,7 +270,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th>Total : Rp{{$salary->count('nominal') ?: '0'}}</th>
+                    <th>Total : Rp{{$incentive->count('nominal') ?: '0'}}</th>
                 </tfoot>
             </table>
         </div>

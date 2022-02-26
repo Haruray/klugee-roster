@@ -15,7 +15,7 @@ class AdminAccess
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'teacher_manager'){
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'teacher manager'){
             return $next($request);
         }
         return redirect('/');
