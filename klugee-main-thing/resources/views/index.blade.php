@@ -129,7 +129,6 @@
                         </div>
                     </a>
                 </div>
-                @if (auth()->user()->user_type=="admin")
                 <div class="col-md-3 col-sm-6">
                     <a href="accounting">
                         <div data-bs-hover-animate="bounce" class="button">
@@ -138,18 +137,6 @@
                         </div>
                     </a>
                 </div>
-                @else
-                <div class="col-md-3 col-sm-6">
-                    <a href="/earnings">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p class="button-content-icon"><i class="fa fa-money"></i></p>
-                            <p class="button-content">Earnings</p>
-                        </div>
-                    </a>
-                </div>
-                    
-                @endif
-                
             </div>
             @endif
             
