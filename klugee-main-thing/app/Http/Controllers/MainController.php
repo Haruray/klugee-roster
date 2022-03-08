@@ -477,6 +477,7 @@ class MainController extends Controller
     }
 
     public function CurrentUserStudents(){
+        $user_id = auth()->user()->teacher_id;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -493,10 +494,11 @@ class MainController extends Controller
         $fees = self::CountCurrentUserFee();
 
         $view = view('teacher-students-list')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule_details',$schedules_detail)->with('schedule',$schedules)->with('fees',$fees);
-        return $view;
+        return $view->with('user_id',$user_id);
     }
 
     public function CurrentUserAttendance(){
+        $user_id = auth()->user()->teacher_id;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -509,11 +511,11 @@ class MainController extends Controller
         //get this month's fee
         $fees = self::CountCurrentUserFee();
         $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence)->with('approval',$teach_presence_approval);
-        return $view;
+        return $view->with('user_id',$user_id);
     }
 
     public function Schedule(){
-
+        $user_id = auth()->user()->teacher_id;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -523,10 +525,11 @@ class MainController extends Controller
 
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
 
-        return $view;
+        return $view->with('user_id',$user_id);
     }
 
     public function Earnings(){
+        $user_id = auth()->user()->teacher_id;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -540,7 +543,7 @@ class MainController extends Controller
         
         
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
-        return $view;
+        return $view->with('user_id',$user_id);
     }
 
 }

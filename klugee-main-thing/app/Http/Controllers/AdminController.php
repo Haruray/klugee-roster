@@ -121,7 +121,7 @@ class AdminController extends Controller
             $fees = self::CountCurrentUserFee($user_id);
     
             $view = view('teacher-students-list')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule_details',$schedules_detail)->with('schedule',$schedules)->with('fees',$fees);
-            return $view;
+            return $view->with('user_id',$user_id);
 
     }
     public function UserSelectAttendance($user_id){
@@ -137,7 +137,7 @@ class AdminController extends Controller
         //get this month's fee
         $fees = self::CountCurrentUserFee($user_id);
         $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence)->with('approval',$teach_presence_approval);
-        return $view;
+        return $view->with('user_id',$user_id);
 
     }
     public function UserSelectSchedule($user_id){
@@ -151,7 +151,7 @@ class AdminController extends Controller
         
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
 
-        return $view;
+        return $view->with('user_id',$user_id);
 
     }
     public function UserSelectProfilePictureChange(Request $request){
@@ -193,6 +193,6 @@ class AdminController extends Controller
         
         
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
-        return $view;
+        return $view->with('user_id',$user_id);
     }
 }
