@@ -148,17 +148,32 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-8 text-center">
-                    <a href="/profile/students">
+                    @if ($user_id != auth()->user()->teacher_id)
+                        <a href="/users/{{$user_id}}/students">
+                    @else
+                        <a href="/profile/students">
+                    @endif
+                    
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-user teacher-desc-icon"></i>
                         <p class="teacher-desc-text">{{count($schedule)}} Students</p>
                     </div>
                     </a>
-                    <a href="profile/attendance">
+                    @if ($user_id != auth()->user()->teacher_id)
+                        <a href="/users/{{$user_id}}/attendance">
+                    @else
+                        <a href="profile/attendance">
+                    @endif
+                    
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-clock-o teacher-desc-icon"></i>
                         <p class="teacher-desc-text">Attendance</p>
                     </div>
                     </a>
-                    <a href="/schedule">
+                    @if ($user_id != auth()->user()->teacher_id)
+                        <a href="/users/{{$user_id}}/schedule">
+                    @else
+                        <a href="/schedule">
+                    @endif
+                    
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-calendar-check-o teacher-desc-icon"></i>
                         <p class="teacher-desc-text">Schedule</p>
                     </div>
@@ -225,6 +240,12 @@
 			      		</div>
 			      		<div class="modal-footer">
 			      			<button type="button" id="crop" class="btn btn-primary">Crop</button>
+                            <button id="user_id" style="display:none;" name="user_id" value="{{$user_id}}">
+                            @if ($user_id != auth()->user()->teacher_id)
+                            <button id="view_type" style="display:none;" name="view_type" value="admin">
+                            @else
+                            <button id="view_type" style="display:none;" name="view_type" value="normal">
+                            @endif
 			        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 			      		</div>
 			    	</div>
@@ -246,6 +267,10 @@ $(document).ready(function(){
     var another_modal = document.getElementById('upload-modal');
 
 	var image = document.getElementById('sample_image');
+
+    var user_id = document.getElementById("user_id").value;
+
+    var view_type = document.getElementById("view_type").value;
 
 	var cropper;
 
@@ -293,7 +318,9 @@ $(document).ready(function(){
 			reader.readAsDataURL(blob);
 			reader.onloadend = function(){
 				var base64data = reader.result;
-				$.ajax({
+                if (view_type == "normal"){
+
+                    $.ajax({
 					url:'/profile/upload',
 					method:'POST',
 					data:{"image":base64data,
@@ -305,6 +332,24 @@ $(document).ready(function(){
                         window.location.reload();
 					}
 				});
+
+                }
+                else{
+                    $.ajax({
+					url:'/profile/select/upload',
+					method:'POST',
+					data:{"image":base64data,
+                        "user_id" : user_id,
+                        "_token" : $("meta[name='csrf-token']").attr("content")},
+					success:function(response)
+					{
+						$modal.modal('hide');
+						$('#profile-pic').attr('src', response.data);
+                        window.location.reload();
+					}
+				});
+                }
+				
 			};
 		});
 	});

@@ -140,6 +140,7 @@
         replaceHtml(selector,studentCheckUndoneHTML);
     }
 
+
     dc.AttendanceInput = function(){
         //TO do :
         // - check student duplicate so the attendanceConfirm dont have student duplicate

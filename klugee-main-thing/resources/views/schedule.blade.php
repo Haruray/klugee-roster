@@ -65,7 +65,43 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">Schedule</h1>
+    <div class="text-center">
+        <div class="container teacher-profile-img-div">
+            <div class="row">
+                <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-0 text-center">
+                    <div class="text-left d-inline-block teacher-profile-img-group">
+                        <div class="text-center teacher-profile-img-outline"><img id="profile-pic" class="student-profile-img" src="{{url('/uploads/profile-pictures/'.$profile->photo)}}">
+                            <a data-toggle="modal" data-target="#upload-modal"><i class="fa fa-camera teacher-profile-camera" data-bs-hover-animate="pulse"></i></a>
+                         </div>
+                        <div class="teacher-fee">
+                            <p>Fee up to day&nbsp;</p>
+                            <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-xl-8 text-center">
+                    <div class="d-inline-block">
+                        <p class="teacher-profile-name bold yellow">{{$profile->name}}</p>
+                        <p class="bold white" style="font-size: 20px;">Joined since</p>
+                        <p class="bold teacher-join-time yellow">{{date('F',strtotime($profile->join_date))}} {{date('Y',strtotime($profile->join_date))}}</p>
+                        <div class="teacher-status">
+                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;
+                            @if ($profile->status)
+                                Active
+                            @else
+                                Inactive
+                            @endif
+                            </p>
+                            @foreach ($position as $ps)
+                            <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
+                            @endforeach                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="bounce animated page-heading" style="margin-top:20px;">Schedule</h1>
 
     <div class="container">
         @for ($i = 0 ; $i < count($schedule) ; $i+= $schedule->where('day',$schedule[$i]->day)->count())

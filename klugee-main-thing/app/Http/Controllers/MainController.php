@@ -336,7 +336,7 @@ class MainController extends Controller
         
         //PAYMENT TIME
         $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
-
+        $cunt = $new_pr[0]->level;
         $payment = new Fee;
         $payment->id_attendance = $attendance->id;
         $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
@@ -437,6 +437,7 @@ class MainController extends Controller
     }
 
     public function CurrentUserProfile(){
+        $user_id = auth()->user()->teacher_id;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -447,7 +448,7 @@ class MainController extends Controller
 
         //get this month's fee
         $fees = self::CountCurrentUserFee();
-        $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees);
+        $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees)->with('user_id',$user_id);
         return $view;
     }
 
@@ -483,13 +484,6 @@ class MainController extends Controller
         
         //Get teacher's schedule student count
         $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
-        //Get students based on the schedule
-        //Method 1 : shitty
-        //$schedules_students_id = StudentSchedule::select('id_student')->whereIn('id_schedule',$schedule_ids->pluck('id_schedule')->toArray())->get();
-        //$students = Students::whereIn('id', $schedules_students_id)->get();
-        //student's program based on the schedule
-        //$students_program = Schedule::select('program')->whereIn('id',$schedule_ids->pluck('id_schedule')->toArray())->whereIn('id_student',  $schedules_students_id->pluck('id_student')->toArray())->get();
-        
         //Method 2 : join
         $schedules_detail = Schedule::join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->get();
         //return $schedules_detail;
@@ -509,7 +503,7 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->get();
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees
         //get this month's fee
@@ -519,9 +513,15 @@ class MainController extends Controller
     }
 
     public function Schedule(){
+
+        //Basic data
+        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
+        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         $schedule = Schedule::join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->get();
-        
-        $view = view('schedule')->with('schedule',$schedule);
+        $fees = self::CountCurrentUserFee();
+
+        $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
 
         return $view;
     }

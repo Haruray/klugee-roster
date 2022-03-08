@@ -53,9 +53,9 @@
     }
 
     dc.ProgressReportInput = function(){
-        var form = $('form')[0]; 
+        var form = $('form')[1]; 
         var formdata = new FormData(form);
-
+        //---VALIDATION---
         //Image validation
         var file = document.getElementById("documentation").files[0];
         var t = file.type.split('/').pop().toLowerCase();
@@ -68,7 +68,18 @@
             document.getElementById("documentation").value = '';
             return false;
         }
+        //level
 
+        if (!$("#level").val()){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Level is empty. Please enter a number.'
+            });
+            return false;
+        }
+
+        //---VALIDATION---
         let progressReportConfirm1 = "<div class=\"tada animated attendance-box\" style=\"background-color: #00c2cb;\">" +
         "<h3 class=\"page-sub-heading\">Progress report is&nbsp;<span class=\"yellow\">filled</span></h3>"+
         "<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>"

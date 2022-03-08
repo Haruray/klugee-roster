@@ -39,6 +39,11 @@ Route::get('/earnings','MainController@Earnings');
 Route::get('/attendance-admin','AdminController@AttendanceAdmin');
 Route::get('/user-profiles','AdminController@UserProfiles');
 Route::get('/users','AdminController@UserList');
+Route::get('/users/{user_id}','AdminController@UserSelectProfile');
+Route::get('/users/{user_id}/students','AdminController@UserSelectStudents');
+Route::get('/users/{user_id}/attendance','AdminController@UserSelectAttendance');
+Route::get('/users/{user_id}/schedule','AdminController@UserSelectSchedule');
+
 Route::get('/schedule-admin','AdminController@ScheduleAdmin');
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
@@ -50,6 +55,7 @@ Route::post('/attendance/input-process','MainController@AttendanceInputProcess')
 Route::post('/attendance/edit','MainController@AttendanceEdit');
 Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
 Route::post('/profile/upload','MainController@ProfilePictureChange');
+Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
 
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
