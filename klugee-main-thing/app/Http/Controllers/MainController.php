@@ -34,7 +34,7 @@ class MainController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $view = view('index');
@@ -128,7 +128,7 @@ class MainController extends Controller
                     if ($initial_quota>0){
                         $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
                             'quota' => $initial_quota-1
-                        ]); 
+                        ]);
                     }
                 }
             }
@@ -209,7 +209,7 @@ class MainController extends Controller
                             ], 401);
                         }
                     }
-                    
+
                 }
                 else{
                     //Save attendee data
@@ -244,8 +244,8 @@ class MainController extends Controller
                         ], 401);
                     }
                 }
-                
-                
+
+
             }
         }
 
@@ -291,7 +291,7 @@ class MainController extends Controller
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
-        
+
         if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
             return response()->json([
                 'success' => false,
@@ -333,14 +333,14 @@ class MainController extends Controller
 
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
-        
+
         //PAYMENT TIME
         $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
         $cunt = $new_pr[0]->level;
         $payment = new Fee;
         $payment->id_attendance = $attendance->id;
         $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
-        
+
         //Incentives
         //lunch : syarat adalah mengajar dua kali sesi
         $sessions = Attendance::whereDay('date',date('d'))->where('id_teacher', auth()->user()->id_teacher)->count();
@@ -364,7 +364,7 @@ class MainController extends Controller
         $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
         $payment->approved = false;
         $payment->save();
-        
+
         return response()->json([
             'success' => true,
             'attendance_id' => $request->input('attendance_id'),
@@ -442,7 +442,7 @@ class MainController extends Controller
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
-        
+
         //Get teacher's schedule student count
         $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
 
@@ -452,7 +452,7 @@ class MainController extends Controller
         return $view;
     }
 
-    
+
 
     public function ProfilePictureChange(Request $request){
         //PROSES UPLOAD KE SERVER
@@ -465,11 +465,11 @@ class MainController extends Controller
         $image_name = auth()->user()->id_teacher.'_'.auth()->user()->name.'.png';
 
         file_put_contents($destinationPath.'/'.$image_name,$data);
-        
-    
+
+
         //PROSES PERUBAHAN DI DATABASE
         $teacher = Teachers::where('id',auth()->user()->id_teacher)->update(['photo' => $image_name]);
-        
+
         return response()->json([
             'success' => true,
             'data' => '/'.$destinationPath.'/'.$image_name
@@ -482,7 +482,7 @@ class MainController extends Controller
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
-        
+
         //Get teacher's schedule student count
         $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
         //Method 2 : join
@@ -503,7 +503,7 @@ class MainController extends Controller
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
-        
+
         //Get attendance detail
         $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
@@ -520,11 +520,10 @@ class MainController extends Controller
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
-        $schedule = Schedule::select('schedules.day','schedules.begin','schedules.end','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->orderByRaw('mod(schedules.day + 5, 7)')->get();
+        $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
         $fees = self::CountCurrentUserFee();
-
+        //return $schedule;
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
-
         return $view->with('user_id',$user_id);
     }
 
@@ -540,8 +539,8 @@ class MainController extends Controller
         $salary = Salary::whereYear('date',date('y'))->where('id_teacher',auth()->user()->id_teacher)->get();
         $total_fee = self::CountCurrentUserFee();
         $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',auth()->user()->id_teacher)->get();
-        
-        
+
+
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
         return $view->with('user_id',$user_id);
     }

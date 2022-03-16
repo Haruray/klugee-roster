@@ -60,10 +60,10 @@ class RequestController extends Controller
     }
 
     public function GetSchedule($teacher_id){
-        $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','schedules.end','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',$teacher_id)->orderByRaw('mod(schedules.day + 5, 7)')->get();
+        $schedule = Schedule::select('teachers.nickname','schedules.id','schedules.day','schedules.begin','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','teach_schedules.id_teacher')->where('id_teacher',$teacher_id)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
         return response()->json([
             'success' => true,
-            'schedule' => $schedule
+            'schedule' => $schedule,
         ],200);
     }
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
     <link rel="stylesheet" href="{{asset('css/Login-Form-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
@@ -21,11 +22,20 @@
         $(document).ready(function() {
             $('.select').select2({
             width: 'style',
+            theme: "bootstrap"
         });
 
             $('#teacher-name').select2({
             placeholder: "Select a teacher",
-            allowClear: true
+            allowClear: true,
+            theme: "bootstrap"
+        });
+
+        $('#students').select2({
+            placeholder: "Select students",
+            allowClear: true,
+            width: '100%',
+            theme: "bootstrap"
         });
 
         });
@@ -54,10 +64,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -86,16 +96,16 @@
     <h2 class="text-center bounce animated page-heading">Manage Schedules</h2>
     <div id="main-content" class="container">
         <div class="schedule-teacher-search-div">
-            <form>
                 <select style="display:inline-block;"class="select required form-control schedule-teacher-search-bar" name="teacher-name" id="teacher-name" required>
                     <option></option>
                     @foreach ($teachers as $t)
                         <option value='{{$t->id}}'>{{$t->name}}</option>
                     @endforeach
-                    
+
                 </select>
                 <button onclick="$dc.ScheduleSearch()" class="btn btn-success text-center" type="button" style=""><i class="fa fa-search"></i>&nbsp;Search</button>
-            </form>
+        </div>
+        <div id="schedules">
         </div>
     </div>
 
@@ -110,11 +120,53 @@
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <div class="container">
+            <form action="">
+                @csrf
+                <select name="day" id="day" class="form-control">
+                    <option value="" disabled selected>Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+                <input id="time" name="time" type="time" class="form-control" placeholder="Time">
+                <select name="location" id="location" class="form-control">
+                    <option value="" disabled selected>Location</option>
+                    <option value="Studio">Studio</option>
+                    <option value="Online">Online</option>
+                    <option value="Visit-Near">Visit-Near</option>
+                    <option value="Visit-Far">Visit-Far</option>
+                </select>
+                <select name="class-type" id="class-type" class="form-control">
+                    <option value="" disabled selected>Class Type</option>
+                    <option value="Exclusive">Exclusive</option>
+                    <option value="Semiprivate">Semi Private</option>
+                    <option value="School">School</option>
+                </select>
+                <select name="program" id="program" class="form-control">
+                    <option value="" disabled selected>Program</option>
+                    @foreach ($program as $p)
+                        <option value="{{$p->program }}">{{ $p->program }}</option>
+                    @endforeach
+                </select>
+
+                <input name="subject" id="subject" type="text" class="form-control" placeholder="Subject">
+                <select id="students" class="students select" name="students[]" multiple="multiple">
+                    @foreach ($student as $s)
+                        <option value="{{ $s->id }}">{{ $s->name }}</option>
+                    @endforeach
+                  </select>
+                <input type="hidden" id="teacher-id" name="teacher-id" value="">
+            </form>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button onclick="$dc.ScheduleAdd()" type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

@@ -58,6 +58,8 @@ Route::post('/attendance/progress-report/input-process','MainController@Progress
 Route::post('/profile/upload','MainController@ProfilePictureChange');
 Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
 
+Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
+
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');

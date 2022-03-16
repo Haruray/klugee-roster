@@ -36,10 +36,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -94,7 +94,7 @@
                             </p>
                             @foreach ($position as $ps)
                             <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
-                            @endforeach                            
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -120,25 +120,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{{$schedule[$i]->name}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->begin}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->classroom_type}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->classroom_students}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->program}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->subject}}</td>
-                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}"><a href="/attendance/input"><button class="btn btn-primary" type="button">Attendance Input</button></a></td>
-                    </tr>
-                    @for ($j = $i+1 ; $j < $schedule->where('day',$schedule[$i]->day)->count() ; $j++)
+                    @for ($k = $i ; $k < $schedule->where('day',$schedule[$i]->day)->count()+$i ; $k+= $schedule->where('id',$schedule[$i]->id)->count())
                         <tr>
-                            <td>{{$schedule[$j]->name}}</td>
+                            <td>{{$schedule[$k]->name}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}">{{$schedule[$k]->begin}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}">{{$schedule[$k]->classroom_type}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}">{{$schedule[$k]->classroom_students}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}">{{$schedule[$k]->program}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}">{{$schedule[$k]->subject}}</td>
+                            <td rowspan="{{$schedule->where('id',$schedule[$k]->id)->count()}}"><a href="/attendance/input"><button class="btn btn-primary" type="button">Attendance Input</button></a></td>
                         </tr>
+                        @for ($j = $k+1 ; $j < $schedule->where('id',$schedule[$k]->id)->count()+$k ; $j++)
+                            <tr>
+                                <td>{{$schedule[$j]->name}}</td>
+                            </tr>
+                        @endfor
                     @endfor
                 </tbody>
             </table>
         </div>
         @endfor
-        
+
     </div>
 
         <!-- Modal -->
@@ -198,9 +200,9 @@
 			      		</div>
 			    	</div>
 			  	</div>
-			</div>	
+			</div>
 
-    
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
@@ -229,7 +231,7 @@ $(document).ready(function(){
 			image.src = url;
 			$modal.modal('show');
             $('#upload-modal').modal('toggle');
-            
+
 		};
 
 		if(files && files.length > 0)
@@ -297,15 +299,15 @@ $(document).ready(function(){
 					}
 				});
                 }
-				
+
 			};
 		});
 	});
-	
+
 });
 </script>
-    
-    
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>

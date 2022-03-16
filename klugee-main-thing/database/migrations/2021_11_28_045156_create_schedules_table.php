@@ -17,7 +17,6 @@ class CreateSchedulesTable extends Migration
             $table->id();
             $table->string("day");
             $table->time("begin");
-            $table->time("end");
             $table->string("classroom_type");
             $table->string("classroom_students");
             $table->string("program");

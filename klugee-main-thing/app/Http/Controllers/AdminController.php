@@ -94,7 +94,7 @@ class AdminController extends Controller
         $profile = Teachers::where('id',$user_id)->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
-        
+
         //Get teacher's schedule student count
         $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',$user_id)->distinct()->get();
 
@@ -109,17 +109,17 @@ class AdminController extends Controller
             $profile = Teachers::where('id',$user_id)->first();
             $position = TeachPosition::where('id_teacher', $user_id)->get();
             $method = TeachMethod::where('id_teacher', $user_id)->get();
-            
+
             //Get teacher's schedule student count
             $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',$user_id)->distinct()->get();
             //Method 2 : join
             $schedules_detail = Schedule::join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->get();
             //return $schedules_detail;
-    
+
             //fees
             //get this month's fee
             $fees = self::CountCurrentUserFee($user_id);
-    
+
             $view = view('teacher-students-list')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule_details',$schedules_detail)->with('schedule',$schedules)->with('fees',$fees);
             return $view->with('user_id',$user_id);
 
@@ -129,7 +129,7 @@ class AdminController extends Controller
         $profile = Teachers::where('id',$user_id)->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
-        
+
         //Get attendance detail
         $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',$user_id)->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',$user_id)->get();
@@ -148,7 +148,7 @@ class AdminController extends Controller
         $fees = self::CountCurrentUserFee($user_id);
 
         $schedule = Schedule::join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',$user_id)->get();
-        
+
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
 
         return $view->with('user_id',$user_id);
@@ -168,11 +168,11 @@ class AdminController extends Controller
         $image_name = $user_id.'_'.$name.'.png';
 
         file_put_contents($destinationPath.'/'.$image_name,$data);
-        
-    
+
+
         //PROSES PERUBAHAN DI DATABASE
         $teacher = Teachers::where('id',$user_id)->update(['photo' => $image_name]);
-        
+
         return response()->json([
             'success' => true,
             'data' => '/'.$destinationPath.'/'.$image_name
@@ -184,14 +184,14 @@ class AdminController extends Controller
         $profile = Teachers::where('id',$user_id)->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
-    
+
         $teachPresences = Attendance::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
         $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->get();
         $salary = Salary::whereYear('date',date('y'))->where('id_teacher',$user_id)->get();
         $total_fee = self::CountCurrentUserFee($user_id);
         $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
-        
-        
+
+
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
         return $view->with('user_id',$user_id);
     }
@@ -199,6 +199,35 @@ class AdminController extends Controller
     public function ScheduleAdminManage(){
         $view = view('admin-schedule-manage');
         $teachers = Teachers::select('teachers.name', 'teachers.id', 'teachers.is_teacher')->join('users','users.id_teacher','=','teachers.id')->where('teachers.is_teacher',true)->get();
-        return $view->with('teachers',$teachers);
+        $programs = Program::get();
+        $students = Students::get();
+        return $view->with('teachers',$teachers)->with('program',$programs)->with('student',$students);
+    }
+
+    public function ScheduleAdd(Request $request){
+        $new_sched = new Schedule;
+        $new_sched->day = $request->input('day');
+        $new_sched->begin = $request->input('time');
+        $new_sched->classroom_type = $request->input('location');
+        $new_sched->classroom_students = $request->input('class-type');
+        $new_sched->program = $request->input('program');
+        $new_sched->subject = $request->input('subject');
+        $new_sched->save();
+
+
+        foreach ($request->input('students') as $s){
+            $sched_studs = new StudentSchedule;
+            $sched_studs->id_student = $s;
+            $sched_studs->id_schedule = $new_sched->id;
+            $sched_studs->save();
+        }
+        $teach_sched = new TeachSchedule;
+        $teach_sched->id_teacher = $request->input('teacher-id');
+        $teach_sched->id_schedule = $new_sched->id;
+        $teach_sched->save();
+
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 }
