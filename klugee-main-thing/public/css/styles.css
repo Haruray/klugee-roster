@@ -851,11 +851,24 @@ td {
   margin-left: 20px;
   border-radius: 5px;
 }
+
 a{
   cursor: pointer;
 }
 .select2-selection { overflow: hidden; }
-.select2-selection__rendered { white-space: normal; word-break: break-all; }
+.select2-dropdown {
+  margin: auto;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.select2-selection__rendered { 
+  white-space: normal;
+  word-break: break-all;
+  margin: auto;
+  margin-bottom: 15px;
+  display: inline-block;
+
+}
 
 .loader {
   border: 16px solid #f3f3f3; /* Light grey /

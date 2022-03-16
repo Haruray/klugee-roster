@@ -49,6 +49,7 @@ Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
+Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
 
 
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
@@ -60,3 +61,4 @@ Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureCh
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');
+Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');

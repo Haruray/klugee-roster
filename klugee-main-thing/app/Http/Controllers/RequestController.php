@@ -9,6 +9,23 @@ use App\Students;
 use App\Attendance;
 use App\Attendee;
 use App\Progress;
+use App\Program;
+use App\StudentProgram;
+use App\TuitionFee;
+use App\Teachers;
+use App\TeachPosition;
+use App\TeachMethod;
+use App\TeachSchedule;
+use App\TeachPresence;
+use App\Schedule;
+use App\StudentSchedule;
+use App\Fee;
+use App\Salary;
+use App\Incentive;
+use App\StudentPresence;
+use App\FeeList;
+use App\IncentiveList;
+use App\User;
 
 class RequestController extends Controller
 {
@@ -39,6 +56,22 @@ class RequestController extends Controller
         return response()->json([
             'success' => true,
             'documentation' => $documentation
+        ],200);
+    }
+
+    public function GetSchedule($teacher_id){
+        $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','schedules.end','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',$teacher_id)->orderByRaw('mod(schedules.day + 5, 7)')->get();
+        return response()->json([
+            'success' => true,
+            'schedule' => $schedule
+        ],200);
+    }
+
+    public function GetTeachers(){
+        $teachers = Teachers::join('users','users.teachers.id_teacher','=','teacher.id')->get();
+        return response()->json([
+            'success' => true,
+            'teachers' => $teachers
         ],200);
     }
 }

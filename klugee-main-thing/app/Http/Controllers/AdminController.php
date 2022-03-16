@@ -195,4 +195,10 @@ class AdminController extends Controller
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
         return $view->with('user_id',$user_id);
     }
+
+    public function ScheduleAdminManage(){
+        $view = view('admin-schedule-manage');
+        $teachers = Teachers::select('teachers.name', 'teachers.id', 'teachers.is_teacher')->join('users','users.id_teacher','=','teachers.id')->where('teachers.is_teacher',true)->get();
+        return $view->with('teachers',$teachers);
+    }
 }

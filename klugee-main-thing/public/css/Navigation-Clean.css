@@ -226,3 +226,17 @@
   color: #54dee4;
 }
 
+.schedule-teacher-search-div {
+  background-color: #2dafff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.schedule-teacher-search-bar {
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 15px;
+}
+

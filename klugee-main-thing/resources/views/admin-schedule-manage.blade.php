@@ -12,6 +12,24 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
+    <script src="{{asset('js/schedulemanage-script.js')}}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" />
+    <script>
+        $(document).ready(function() {
+            $('.select').select2({
+            width: 'style',
+        });
+
+            $('#teacher-name').select2({
+            placeholder: "Select a teacher",
+            allowClear: true
+        });
+
+        });
+    </script>
 </head>
 
 <body>
@@ -65,32 +83,44 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">SCHEDULE</h1>
-    <div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 offset-md-3 col-sm-6">
-                    <a href="/schedule">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p><i class="fa fa-calendar button-content-icon"></i></p>
-                            <p class="button-content">My Schedule</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 offset-md-0 col-sm-6">
-                    <a href="/schedule-admin/manage">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p><i class="fa fa-pencil button-content-icon"></i></p>
-                            <p class="button-content">Manage Schedules<br></p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
-            </div>
+    <h2 class="text-center bounce animated page-heading">Manage Schedules</h2>
+    <div id="main-content" class="container">
+        <div class="schedule-teacher-search-div">
+            <form>
+                <select style="display:inline-block;"class="select required form-control schedule-teacher-search-bar" name="teacher-name" id="teacher-name" required>
+                    <option></option>
+                    @foreach ($teachers as $t)
+                        <option value='{{$t->id}}'>{{$t->name}}</option>
+                    @endforeach
+                    
+                </select>
+                <button onclick="$dc.ScheduleSearch()" class="btn btn-success text-center" type="button" style=""><i class="fa fa-search"></i>&nbsp;Search</button>
+            </form>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 </body>

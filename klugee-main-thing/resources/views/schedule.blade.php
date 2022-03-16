@@ -122,14 +122,14 @@
                 <tbody>
                     <tr>
                         <td>{{$schedule[$i]->name}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}">{{$schedule[$i]->begin}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}">{{$schedule[$i]->classroom_type}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}">{{$schedule[$i]->classroom_students}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}">{{$schedule[$i]->program}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}">{{$schedule[$i]->subject}}</td>
-                        <td rowspan="{{$schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count()}}"><a href="/attendance/input"><button class="btn btn-primary" type="button">Attendance Input</button></a></td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->begin}}</td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->classroom_type}}</td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->classroom_students}}</td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->program}}</td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}">{{$schedule[$i]->subject}}</td>
+                        <td rowspan="{{$schedule->where('day',$schedule[$i]->day)->count()}}"><a href="/attendance/input"><button class="btn btn-primary" type="button">Attendance Input</button></a></td>
                     </tr>
-                    @for ($j = $i+1 ; $j < $schedule->where('id_student',$schedule[$i]->id_student)->where('id_schedule',$schedule[$i]->id_schedule)->count() ; $j++)
+                    @for ($j = $i+1 ; $j < $schedule->where('day',$schedule[$i]->day)->count() ; $j++)
                         <tr>
                             <td>{{$schedule[$j]->name}}</td>
                         </tr>

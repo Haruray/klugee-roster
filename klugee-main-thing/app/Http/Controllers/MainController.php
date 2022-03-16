@@ -520,7 +520,7 @@ class MainController extends Controller
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
-        $schedule = Schedule::join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->get();
+        $schedule = Schedule::select('schedules.day','schedules.begin','schedules.end','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->orderByRaw('mod(schedules.day + 5, 7)')->get();
         $fees = self::CountCurrentUserFee();
 
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
