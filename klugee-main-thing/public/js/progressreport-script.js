@@ -10,7 +10,7 @@
         var targetElem = document.querySelector(selector);
         targetElem.innerHTML=html;
       };
-    
+
     var show_loading = function (selector) {
         var loadingHTML="<div class=\"loader\"></div>"
         replaceHtml(selector,loadingHTML);
@@ -19,7 +19,7 @@
         var HTML="";
         replaceHtml(selector,HTML);
     }
-    
+
     let convertDay = function(number){
         if (number == 0){
             return "Sunday";
@@ -53,7 +53,7 @@
     }
 
     dc.ProgressReportInput = function(){
-        var form = $('form')[1]; 
+        var form = $('form')[1];
         var formdata = new FormData(form);
         //---VALIDATION---
         //Image validation

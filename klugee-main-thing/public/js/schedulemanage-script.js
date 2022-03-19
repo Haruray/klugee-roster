@@ -1,3 +1,4 @@
+
 (function (global){
     let dc={};
 
@@ -12,7 +13,7 @@
       };
     var show_loading = function (selector) {
 
-    var loadingHTML="<div class=\"loader\"></div>"
+        var loadingHTML="<div class=\"loader\" style=\"margin-top:20px;\"></div>"
         replaceHtml(selector,loadingHTML);
         };
     var erase_loading = function(selector){
@@ -48,8 +49,14 @@
         let input_hidden = document.getElementById("teacher-id").value = teacher_id;
         if (teacher_id===""){
             //warning
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Please select a teacher'
+            });
             return;
         }
+        show_loading("#schedules");
         $.ajax({
             url:'/get/schedule/'+teacher_id,
             type : 'get',
@@ -90,7 +97,7 @@
                             allHTML+= "<td rowspan=\""+rowspan+"\">"+students+"</td>"
                             allHTML+= "<td rowspan=\""+rowspan+"\">"+program+"</td>"
                             allHTML+= "<td rowspan=\""+rowspan+"\">"+subject+"</td>"
-                            allHTML += "<td rowspan=\""+rowspan+"\">"+"<div class=\"btn-group\" role=\"group\"><a class=\"btn btn-warning\" role=\"button\">Edit</a><a class=\"btn btn-danger\" role=\"button\">Delete</a></div>"+"</td></tr>"
+                            allHTML += "<td rowspan=\""+rowspan+"\">"+"<div class=\"btn-group\" role=\"group\"><a onclick=\"$dc.ScheduleEdit("+response.schedule[i].id+")\" class=\"btn btn-warning\" role=\"button\">Edit</a><a onclick=\"$dc.ScheduleDelete("+response.schedule[i].id+")\" class=\"btn btn-danger\" role=\"button\">Delete</a></div>"+"</td></tr>"
 
                             //print name
                             if (parseInt(rowspan) > 1){
@@ -119,6 +126,11 @@
                 }
                 else{
                     //swal thingy
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Request failed. Please try again.'
+                    });
                 }
             }
         })
@@ -139,16 +151,160 @@
             success : function(response){
                 if (response.success){
                     //swal
+                    Swal.fire({
+                        icon : 'success',
+                        title: 'Success!',
+                        text: 'Schedule successfully added'
+                    });
                     console.log("success");
                     $('#formModal').modal('toggle');
                     dc.ScheduleSearch();
                 }
                 else{
                     //swal
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Adding schedule failed. Please try again.'
+                    });
                 }
             }
         });
     }
 
+    dc.ScheduleDelete = function(schedule_id){
+        if (!confirm("Are you sure to delete this schedule?")){
+            return;
+        }
+        else{
+            $.ajax({
+                url : '/schedule-admin/manage/delete/'+schedule_id,
+                type : 'get',
+                success : function(response){
+                    if (response.success){
+                        //swal
+                        Swal.fire({
+                            icon : 'success',
+                            title: 'Success!',
+                            text: 'Schedule successfully deleted'
+                        });
+                        dc.ScheduleSearch();
+                    }
+                    else{
+                        Swal.fire({
+                            icon : 'error',
+                            title: 'Oops...',
+                            text: 'Deleting schedule failed. Please try again.'
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    dc.ScheduleEdit = function(schedule_id){
+        $.ajax({
+            url:'/get/schedule/id/'+schedule_id,
+            type : 'get',
+            dataType : 'json',
+            success:function(response){
+                if (response.success){
+                    $('#scheduleEdit').modal('toggle');
+                    //modify things in modal
+                    let mainmodal = document.getElementById("scheduleEdit");
+                    mainmodal.querySelector("#schedule-id").value = schedule_id;
+                    //day edit
+                    let dayselect = mainmodal.querySelector("#day").options;
+                    for (i = 0 ; i < dayselect.length ; i++){
+                        if (dayselect[i].value == response.schedule[0].day){
+                            dayselect[i].selected = "selected";
+                        }
+                    }
+                    //clock edit
+                    let timeedit = mainmodal.querySelector("#time").value = response.schedule[0].begin;
+                    //location edit
+                    let locationedit = mainmodal.querySelector("#location").options;
+                    for (i = 0 ; i < locationedit.length ; i++){
+                        if (locationedit[i].value == response.schedule[0].classroom_type){
+                            locationedit[i].selected = "selected";
+                        }
+                    }
+                    //classtype edit
+                    let classedit = mainmodal.querySelector("#class-type").options;
+                    for (i = 0 ; i < classedit.length ; i++){
+                        if (classedit[i].value == response.schedule[0].classroom_students){
+                            classedit[i].selected = "selected";
+                        }
+                    }
+                    //program edit
+                    let programedit = mainmodal.querySelector("#program").options;
+                    for (i = 0 ; i < programedit.length ; i++){
+                        if (programedit[i].value == response.schedule[0].program){
+                            programedit[i].selected = "selected";
+                        }
+                    }
+                    //subject edit
+                    let subjectedit = mainmodal.querySelector("#subject").value = response.schedule[0].subject;
+
+                    //students edit
+                    //let studentedit = mainmodal.querySelector("#students2").select2('data');
+                    let studentedit = $('#students2');
+                    //id student masukin array
+                    let students = []
+                    for (i = 0 ; i < response.schedule.length ; i++){
+                        students.push(response.schedule[i].student_id);
+
+                    }
+                    studentedit.val(students).trigger('change');
+                    let editbutton = document.getElementById("schedule-edit-submit");
+                    editbutton.setAttribute("onclick","$dc.ScheduleEditSubmit("+schedule_id+")");
+
+                }
+                else{
+                    //swal thingy
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Request failed. Please try again.'
+                    });
+                }
+            }
+        });
+    }
+
+    dc.ScheduleEditSubmit = function(schedule_id){
+        var form = $('form')[2];
+        var formdata = new FormData(form);
+
+        $.ajax({
+            url : '/schedule-admin/manage/edit',
+            type : 'post',
+            dataType : 'JSON',
+            cache : false,
+            contentType : false,
+            processData : false,
+            data : formdata,
+            success : function(response){
+                if (response.success){
+                    //swal
+                    Swal.fire({
+                        icon : 'success',
+                        title: 'Success!',
+                        text: 'Schedule successfully edited'
+                    });
+                    $('#scheduleEdit').modal('toggle');
+                    dc.ScheduleSearch();
+                }
+                else{
+                    //swal
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Oops...',
+                        text: 'Editing schedule failed. Please try again.'
+                    });
+                }
+            }
+        });
+    }
     global.$dc = dc;
 })(window);

@@ -17,7 +17,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" />
+
     <script>
         $(document).ready(function() {
             $('.select').select2({
@@ -32,6 +34,12 @@
         });
 
         $('#students').select2({
+            placeholder: "Select students",
+            allowClear: true,
+            width: '100%',
+            theme: "bootstrap"
+        });
+        $('#students2').select2({
             placeholder: "Select students",
             allowClear: true,
             width: '100%',
@@ -114,7 +122,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Schedule Add</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -123,7 +131,7 @@
         <div class="container">
             <form action="">
                 @csrf
-                <select name="day" id="day" class="form-control">
+                <select style="margin-top:10px;" name="day" id="day" class="form-control">
                     <option value="" disabled selected>Day</option>
                     <option value="Monday">Monday</option>
                     <option value="Tuesday">Tuesday</option>
@@ -133,29 +141,29 @@
                     <option value="Saturday">Saturday</option>
                     <option value="Sunday">Sunday</option>
                 </select>
-                <input id="time" name="time" type="time" class="form-control" placeholder="Time">
-                <select name="location" id="location" class="form-control">
+                <input style="margin-top:10px;" id="time" name="time" type="time" class="form-control" placeholder="Time">
+                <select style="margin-top:10px;" name="location" id="location" class="form-control">
                     <option value="" disabled selected>Location</option>
                     <option value="Studio">Studio</option>
                     <option value="Online">Online</option>
                     <option value="Visit-Near">Visit-Near</option>
                     <option value="Visit-Far">Visit-Far</option>
                 </select>
-                <select name="class-type" id="class-type" class="form-control">
+                <select style="margin-top:10px;" name="class-type" id="class-type" class="form-control">
                     <option value="" disabled selected>Class Type</option>
                     <option value="Exclusive">Exclusive</option>
                     <option value="Semiprivate">Semi Private</option>
                     <option value="School">School</option>
                 </select>
-                <select name="program" id="program" class="form-control">
+                <select style="margin-top:10px;" name="program" id="program" class="form-control">
                     <option value="" disabled selected>Program</option>
                     @foreach ($program as $p)
                         <option value="{{$p->program }}">{{ $p->program }}</option>
                     @endforeach
                 </select>
 
-                <input name="subject" id="subject" type="text" class="form-control" placeholder="Subject">
-                <select id="students" class="students select" name="students[]" multiple="multiple">
+                <input style="margin-top:10px; margin-bottom:10px;" name="subject" id="subject" type="text" class="form-control" placeholder="Subject">
+                <select style="margin-top:15px;" id="students" class="students select" name="students[]" multiple="multiple">
                     @foreach ($student as $s)
                         <option value="{{ $s->id }}">{{ $s->name }}</option>
                     @endforeach
@@ -165,12 +173,72 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button onclick="$dc.ScheduleAdd()" type="button" class="btn btn-primary">Save changes</button>
+        <button onclick="$dc.ScheduleAdd()" type="button" class="btn btn-primary">Add</button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="scheduleEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Schedule Edit</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+              <form id="scheduleEditForm" action="">
+                  @csrf
+                  <select style="margin-top:10px;" name="day" id="day" class="form-control">
+                      <option value="" disabled selected>Day</option>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                  </select>
+                  <input style="margin-top:10px;" id="time" name="time" type="time" class="form-control" placeholder="Time">
+                  <select style="margin-top:10px;" name="location" id="location" class="form-control">
+                      <option value="" disabled selected>Location</option>
+                      <option value="Studio">Studio</option>
+                      <option value="Online">Online</option>
+                      <option value="Visit-Near">Visit-Near</option>
+                      <option value="Visit-Far">Visit-Far</option>
+                  </select>
+                  <select style="margin-top:10px;" name="class-type" id="class-type" class="form-control">
+                      <option value="" disabled selected>Class Type</option>
+                      <option value="Exclusive">Exclusive</option>
+                      <option value="Semiprivate">Semi Private</option>
+                      <option value="School">School</option>
+                  </select>
+                  <select style="margin-top:10px;" name="program" id="program" class="form-control">
+                      <option value="" disabled selected>Program</option>
+                      @foreach ($program as $p)
+                          <option value="{{$p->program }}">{{ $p->program }}</option>
+                      @endforeach
+                  </select>
+
+                  <input style="margin-top:10px; margin-bottom:10px;" name="subject" id="subject" type="text" class="form-control" placeholder="Subject">
+                  <select style="margin-top:15px;" id="students2" class="students2 select" name="students[]" multiple="multiple">
+                      @foreach ($student as $s)
+                          <option value="{{ $s->id }}">{{ $s->name }}</option>
+                      @endforeach
+                    </select>
+                  <input type="hidden" id="schedule-id" name="schedule-id" value="">
+              </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="schedule-edit-submit" type="button" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>

@@ -67,6 +67,14 @@ class RequestController extends Controller
         ],200);
     }
 
+    public function GetScheduleWithId($schedule_id){
+        $schedule = Schedule::select('students.id as student_id','teachers.nickname','schedules.id','schedules.day','schedules.begin','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','teach_schedules.id_teacher')->where('schedules.id',$schedule_id)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
+        return response()->json([
+            'success' => true,
+            'schedule' => $schedule,
+        ],200);
+    }
+
     public function GetTeachers(){
         $teachers = Teachers::join('users','users.teachers.id_teacher','=','teacher.id')->get();
         return response()->json([

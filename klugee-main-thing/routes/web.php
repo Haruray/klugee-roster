@@ -59,8 +59,12 @@ Route::post('/profile/upload','MainController@ProfilePictureChange');
 Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
 
 Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
+Route::post('/schedule-admin/manage/edit','AdminController@ScheduleEdit');
+
+Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
 
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');
 Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
+Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');

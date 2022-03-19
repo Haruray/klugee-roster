@@ -147,7 +147,7 @@ class AdminController extends Controller
         $method = TeachMethod::where('id_teacher', $user_id)->get();
         $fees = self::CountCurrentUserFee($user_id);
 
-        $schedule = Schedule::join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',$user_id)->get();
+        $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',$user_id)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
 
         $view = view('schedule')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedule)->with('fees',$fees);
 
@@ -226,6 +226,38 @@ class AdminController extends Controller
         $teach_sched->id_schedule = $new_sched->id;
         $teach_sched->save();
 
+        return response()->json([
+            'success' => true,
+        ], 200);
+    }
+
+    public function ScheduleDelete($schedule_id){
+        $sched_studs = StudentSchedule::where('id_schedule',$schedule_id)->delete();
+        $teach_sched = TeachSchedule::where('id_schedule',$schedule_id)->delete();
+        $sched = Schedule::where('id',$schedule_id)->delete();
+
+        return response()->json([
+            'success' => true,
+        ], 200);
+    }
+
+    public function ScheduleEdit(Request $request){
+        $sched = Schedule::where('id',$request->input('schedule-id'))->update([
+            'day' => $request->input('day'),
+            'begin' => $request->input('time'),
+            'classroom_type' => $request->input('location'),
+            'classroom_students' => $request->input('class-type'),
+            'program' => $request->input('program'),
+            'subject' => $request->input('subject')
+        ]);
+
+        $sched_studs = StudentSchedule::where('id_schedule',$request->input('schedule-id'))->delete();
+        foreach ($request->input('students') as $s){
+            $sched_studs = new StudentSchedule;
+            $sched_studs->id_student = $s;
+            $sched_studs->id_schedule = $request->input('schedule-id');
+            $sched_studs->save();
+        }
         return response()->json([
             'success' => true,
         ], 200);
