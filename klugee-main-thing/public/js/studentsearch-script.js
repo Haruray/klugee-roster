@@ -19,7 +19,7 @@
         var HTML="";
         replaceHtml(selector,HTML);
     };
-    
+
     dc.StudentSearch = function(){
         var input, filter, ul, li, a, i, txtValue;
         input = document.getElementById('student-search');
@@ -27,11 +27,12 @@
         student_list = document.getElementById("student-list");
         student_cards = document.getElementsByClassName("student-card")
         students = student_list.getElementsByClassName("student-card-name");
-        
+
 
         // Loop through all list items, and hide those who don't match the search query
         for (i = 0; i < students.length; i++) {
             p = students[i].innerHTML;
+            console.log(p);
             txtValue = p;
             console.log(student_cards[i]);
             if (txtValue.toUpperCase().indexOf(filter) > -1) {

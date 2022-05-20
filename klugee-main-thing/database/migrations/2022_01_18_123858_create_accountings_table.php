@@ -15,10 +15,14 @@ class CreateAccountingsTable extends Migration
     {
         Schema::create('accountings', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
             $table->date("date");
-            $table->string("description");
+            $table->string("transaction_type");
+            $table->string("sub_transaction");
+            $table->string("detail");
             $table->bigInteger("nominal");
+            $table->string("notes");
+            $table->bigInteger("pic");
+            $table->string("payment_method");
             $table->timestamps();
         });
     }

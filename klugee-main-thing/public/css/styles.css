@@ -382,7 +382,12 @@ body {
   text-align: center;
   font-size: 25px;
 }
-
+.student-card-desc {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 25px;
+  }
 .student-program-payment-paid {
   color: #6ce679;
   text-align: center;

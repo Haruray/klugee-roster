@@ -37,10 +37,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -79,7 +79,7 @@
                 @foreach ($users as $u)
                 <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{url('/uploads/profile-pictures/'.$u->photo)}}">
                     <p class="student-card-name" style="margin: 0 0 ;">{{$u->teachername}}</p>
-                    <p class="student-card-name yellow" style="font-size: 15px;">{{ ucfirst($u->user_type) }}</p><a href="/users/{{$u->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a></div>
+                    <p class="student-card-desc yellow" style="font-size: 15px;">{{ ucfirst($u->user_type) }}</p><a href="/users/{{$u->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a></div>
                 @endforeach
             </div>
         </div>
