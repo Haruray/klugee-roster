@@ -19,7 +19,7 @@
 	<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
 	<script src="https://unpkg.com/dropzone"></script>
 	<script src="https://unpkg.com/cropperjs"></script>
-    
+
     <style>
         .image_area:hover {
 		  height: 50%;
@@ -39,7 +39,7 @@
 		}
         .preview {
   			overflow: hidden;
-  			width: 160px; 
+  			width: 160px;
   			height: 160px;
   			margin: 10px;
   			border: 1px solid red;
@@ -79,10 +79,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -137,7 +137,7 @@
                             </p>
                             @foreach ($position as $ps)
                             <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
-                            @endforeach                            
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -173,12 +173,12 @@
                             <td>{{$schedule_details[$j]->program}}</td>
                             <td>{{$schedule_details[$j]->day}}</td>
                             <td>{{$schedule_details[$j]->begin}}</td>
-                        </tr>        
+                        </tr>
                         @endfor
                     @endfor
-                    
 
-                    
+
+
                 </tbody>
             </table>
         </div>
@@ -241,9 +241,9 @@
 			      		</div>
 			    	</div>
 			  	</div>
-			</div>	
+			</div>
 
-    
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
@@ -272,7 +272,7 @@ $(document).ready(function(){
 			image.src = url;
 			$modal.modal('show');
             $('#upload-modal').modal('toggle');
-            
+
 		};
 
 		if(files && files.length > 0)
@@ -340,11 +340,11 @@ $(document).ready(function(){
 					}
 				});
                 }
-				
+
 			};
 		});
 	});
-	
+
 });
 </script>
 

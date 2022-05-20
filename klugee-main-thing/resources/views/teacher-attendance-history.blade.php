@@ -19,7 +19,7 @@
 	<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
 	<script src="https://unpkg.com/dropzone"></script>
 	<script src="https://unpkg.com/cropperjs"></script>
-    
+
     <style>
         .image_area:hover {
 		  height: 50%;
@@ -39,7 +39,7 @@
 		}
         .preview {
   			overflow: hidden;
-  			width: 160px; 
+  			width: 160px;
   			height: 160px;
   			margin: 10px;
   			border: 1px solid red;
@@ -80,10 +80,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -138,7 +138,7 @@
                             </p>
                             @foreach ($position as $ps)
                             <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
-                            @endforeach                            
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,6 @@
         <table style="margin-top:20px;" id="progress-report-table" class="table">
                 <thead>
                     <tr>
-                        <th>No</th>
                         <th>Date</th>
                         @if ($profile->is_teacher)
                             <th>Student</th>
@@ -162,14 +161,13 @@
                             <th>Presence Approval</th>
                             <th>Fee Status</th>
                         @endif
-                        
+
                     </tr>
                 </thead>
                 <tbody>
                     @for ($i = 0 ; $i < count($teach_presence) ; $i+=$teach_presence->where('id', $teach_presence[$i]->id)->count())
                     <tr>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$i+1}}</td>
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->date}}</td>
+                        <td id="date" rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->date}}</td>
                         @if ($profile->is_teacher)
                         <td>{{$teach_presence[$i]->name}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
@@ -184,21 +182,21 @@
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        @endif  
-                        
+                        @endif
+
                     </tr>
-                        @for ($j=$i+1 ; $j < $teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
+                        @for ($j=$i+1 ; $j < $i+$teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
                         <tr>
                             <td>{{$teach_presence[$j]->name}}</td>
                             <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
-                        </tr>  
-                            
-                        @endfor
-                        @endif  
-                    @endfor
-                    
+                        </tr>
 
-                    
+                        @endfor
+                        @endif
+                    @endfor
+
+
+
                 </tbody>
             </table>
         </div>
@@ -261,9 +259,9 @@
 			      		</div>
 			    	</div>
 			  	</div>
-			</div>	
+			</div>
 
-    
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
@@ -292,7 +290,7 @@ $(document).ready(function(){
 			image.src = url;
 			$modal.modal('show');
             $('#upload-modal').modal('toggle');
-            
+
 		};
 
 		if(files && files.length > 0)
@@ -360,11 +358,11 @@ $(document).ready(function(){
 					}
 				});
                 }
-				
+
 			};
 		});
 	});
-	
+
 });
 </script>
 

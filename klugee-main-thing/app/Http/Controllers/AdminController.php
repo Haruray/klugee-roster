@@ -113,7 +113,7 @@ class AdminController extends Controller
             //Get teacher's schedule student count
             $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',$user_id)->distinct()->get();
             //Method 2 : join
-            $schedules_detail = Schedule::join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->get();
+            $schedules_detail = Schedule::join('teach_schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->where('id_teacher',$user_id)->get();
             //return $schedules_detail;
 
             //fees
@@ -131,8 +131,10 @@ class AdminController extends Controller
         $method = TeachMethod::where('id_teacher', $user_id)->get();
 
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress','attendances.id','=','progress.id_attendance')->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',$user_id)->get();
-        $teach_presence_approval=TeachPresence::where('id_teacher',$user_id)->get();
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress', function($join){
+            $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
+        })->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
+           $teach_presence_approval=TeachPresence::where('id_teacher',$user_id)->get();
         //fees
         //get this month's fee
         $fees = self::CountCurrentUserFee($user_id);

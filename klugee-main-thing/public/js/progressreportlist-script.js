@@ -19,7 +19,7 @@
         var HTML="";
         replaceHtml(selector,HTML);
     };
-    
+
     dc.DocumentationModal = function(attendance_id){
         var modal = document.getElementById("myModal");
 
@@ -28,7 +28,7 @@
         var modalImg = document.getElementById("img01");
         var captionText = document.getElementById("caption");
 
-        
+
 
         //Get attendance_id documentation with fucking ajax
         $.ajax({
@@ -40,7 +40,7 @@
                 console.log(response);
                 modalImg.src = '/uploads/progress-reports/'+response.documentation;
                 captionText.innerHTML = response.documentation;
-                
+
             }
         })
 
@@ -99,7 +99,7 @@
             sortButton = document.getElementById("sort-newest");
             sortButton.innerHTML = "<i class=\"fa fa-sort-down\"></i>&nbsp;Sort by Oldest";
             sortButton.setAttribute('onclick','$dc.SortTableOldest()')
-            
+
         }
       }
 
@@ -144,7 +144,7 @@
             sortButton = document.getElementById("sort-newest");
             sortButton.innerHTML = "<i class=\"fa fa-sort-up\"></i>&nbsp;Sort by Newest";
             sortButton.setAttribute('onclick','$dc.SortTable()')
-            
+
         }
       }
 
