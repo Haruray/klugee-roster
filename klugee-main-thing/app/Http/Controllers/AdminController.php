@@ -26,6 +26,9 @@ use App\StudentPresence;
 use App\FeeList;
 use App\IncentiveList;
 use App\User;
+use App\Accounting;
+
+use Session;
 
 class AdminController extends Controller
 {
@@ -263,5 +266,39 @@ class AdminController extends Controller
         return response()->json([
             'success' => true,
         ], 200);
+    }
+
+    public function IncomeInputTransaction(){
+        $user_id = auth()->user()->id;
+        $teachers = Teachers::select('id','name')->get();
+        $view = view('admin-transaction-input-income');
+        return $view->with('user_id',$user_id)->with('teachers',$teachers);
+    }
+
+    public function ExpenseInputTransaction(){
+        $user_id = auth()->user()->id;
+        $teachers = Teachers::select('id','name')->get();
+        $view = view('admin-transaction-input-expense');
+        return $view->with('user_id',$user_id)->with('teachers',$teachers);
+    }
+
+    public function IncomeProcess(Request $request){
+        $new_income = new Accounting;
+        $new_income->date = $request->input('date');
+        $new_income->transaction_type = $request->input('transaction_type');
+        $new_income->sub_transaction = $request->input('sub_transaction');
+        $new_income->detail = $request->input('detail');
+        $new_income->nominal = $request->input('nominal');
+        $new_income->notes = $request->input('notes');
+        $new_income->pic = $request->input('pic');
+        $new_income->payment_method = $request->input('payment_method');
+        if ($new_income->save()){
+            Session::flash('sukses','Data successfully recorded.');
+        }
+        else{
+            Session::flash('gagal','Error has occured. Failed to record. data.');
+        }
+
+        return redirect('/accounting/input-transaction/');
     }
 }

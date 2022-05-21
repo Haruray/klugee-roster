@@ -48,6 +48,10 @@ Route::get('/users/{user_id}/schedule','AdminController@UserSelectSchedule');
 Route::get('/schedule-admin','AdminController@ScheduleAdmin');
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
+Route::get('/accounting/input-transaction/income','AdminController@IncomeInputTransaction');
+Route::get('/accounting/input-transaction/expense','AdminController@ExpenseInputTransaction');
+
+
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
 Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
@@ -60,8 +64,10 @@ Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureCh
 //admin post route
 Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
 Route::post('/schedule-admin/manage/edit','AdminController@ScheduleEdit');
+Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
 
 Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
+
 //requests route
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
