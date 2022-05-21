@@ -52,6 +52,9 @@ Route::get('/accounting/input-transaction/income','AdminController@IncomeInputTr
 Route::get('/accounting/input-transaction/expense','AdminController@ExpenseInputTransaction');
 Route::get('/accounting/financial-data','AdminController@FinancialData');
 Route::get('/accounting/financial-data/report/{month}/{year}','AdminController@FinancialReport');
+Route::get('/accounting/financial-data/recap','AdminController@FinancialRecap');
+Route::get('/accounting/financial-data/recap/income/{month}/{year}','AdminController@FinancialRecapIncome');
+Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminController@FinancialRecapExpense');
 
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');

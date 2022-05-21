@@ -337,4 +337,28 @@ class AdminController extends Controller
         $view = view('admin-monthly-report');
         return $view->with('years',$years)->with('income_spp',$income_spp)->with('income_regis',$income_regis)->with('income_other',$income_other)->with('expense',$expense)->with('selected_year',$year)->with('selected_month',$month);
     }
+
+    public function FinancialRecap(){
+        $view = view('admin-accounting-recap');
+        return $view;
+    }
+
+    public function FinancialRecapIncome($month, $year){
+        $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
+
+        $income = Accounting::select('accountings.*','teachers.name')->join('teachers','accountings.pic','=','teachers.id')->where('nominal','>','0')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+
+        $view = view('admin-monthly-recap-income');
+        return $view->with('years',$years)->with('income',$income)->with('selected_year',$year)->with('selected_month',$month);
+    }
+
+    public function FinancialRecapExpense($month, $year){
+        $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
+
+        $income = Accounting::select('accountings.*','teachers.name')->join('teachers','accountings.pic','=','teachers.id')->where('nominal','<','0')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+
+        $view = view('admin-monthly-recap-expense');
+        return $view->with('years',$years)->with('income',$income)->with('selected_year',$year)->with('selected_month',$month);
+    }
+
 }
