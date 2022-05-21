@@ -36,10 +36,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -78,7 +78,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="admin-financial.html">
+                    <a href="/accounting/financial-data">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p><i class="fa fa-database button-content-icon"></i></p>
                             <p class="button-content">Financial Data</p>

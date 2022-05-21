@@ -50,7 +50,8 @@ Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
 Route::get('/accounting/input-transaction/income','AdminController@IncomeInputTransaction');
 Route::get('/accounting/input-transaction/expense','AdminController@ExpenseInputTransaction');
-
+Route::get('/accounting/financial-data','AdminController@FinancialData');
+Route::get('/accounting/financial-data/report/{month}/{year}','AdminController@FinancialReport');
 
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');

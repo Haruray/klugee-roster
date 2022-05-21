@@ -98,7 +98,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="transaction_type" class="form-control attendance-input"><optgroup label="Transaction Type"><option value="monthly expense">Registrasi</option><option value="other">Other (Merchandise, Buku, etc)</option></optgroup></select></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="transaction_type" class="form-control attendance-input"><optgroup label="Transaction Type"><option value="Registration">Registration</option><option value="Other">Other (Merchandise, Buku, etc)</option></optgroup></select></div>
                     </div>
                 </div>
             </div>
@@ -154,9 +154,9 @@
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
                             <select name="payment_method" class="form-control attendance-input">
-                                <option value="cash">Cash</option>
-                                <option value="atm">ATM</option>
-                                <option value="other">Other</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Atm">ATM</option>
+                                <option value="Other">Other</option>
                             </select></div>
                     </div>
                 </div>

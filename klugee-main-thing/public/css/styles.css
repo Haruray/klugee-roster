@@ -890,3 +890,11 @@ a{
   100% { transform: rotate(360deg); }
 }
 
+.select-box-single {
+    background-color: #089c9c;
+    color: white;
+    font-weight: bold;
+    border: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }

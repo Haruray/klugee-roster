@@ -301,4 +301,20 @@ class AdminController extends Controller
 
         return redirect('/accounting/input-transaction/');
     }
+
+    public function FinancialData(){
+        $view = view('admin-financial');
+        return $view;
+    }
+
+    public function FinancialReport($month, $year){
+        $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
+        $income_spp = Accounting::select('id','transaction_type','nominal')->where('transaction_type','SPP')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $income_regis = Accounting::select('id','transaction_type','nominal')->where('transaction_type','Registration')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $income_other = Accounting::select('id','transaction_type','sub_transaction','nominal')->where('transaction_type','Other')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+
+        $expense = Accounting::selectRaw('transaction_type, SUM(nominal)*-1 as total')->where('nominal','<','0')->groupBy('transaction_type')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $view = view('admin-monthly-report');
+        return $view->with('years',$years)->with('income_spp',$income_spp)->with('income_regis',$income_regis)->with('income_other',$income_other)->with('expense',$expense)->with('selected_year',$year)->with('selected_month',$month);
+    }
 }

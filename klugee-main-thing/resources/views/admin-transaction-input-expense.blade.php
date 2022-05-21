@@ -98,7 +98,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="transaction_type" class="form-control attendance-input"><optgroup label="Transaction Type"><option value="monthly expense">Monthly Expense</option><option value="investmen">Investment</option><option value="other">Other</option></optgroup></select></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="transaction_type" class="form-control attendance-input"><optgroup label="Transaction Type"><option value="Monthly Expense">Monthly Expense</option><option value="Investment">Investment</option><option value="Other">Other</option></optgroup></select></div>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="sub_transaction" class="form-control attendance-input"><optgroup label="Sub-Transaction"><option value="electricity">Electricity</option><option value="internet">Internet</option><option value="other">Other</option></optgroup></select></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="sub_transaction" class="form-control attendance-input"><optgroup label="Sub-Transaction"><option value="Electricity">Electricity</option><option value="Internet">Internet</option><option value="Other">Other</option></optgroup></select></div>
                     </div>
                 </div>
             </div>
@@ -154,9 +154,9 @@
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
                             <select name="payment_method" class="form-control attendance-input">
-                                <option value="cash">Cash</option>
-                                <option value="atm">ATM</option>
-                                <option value="other">Other</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Atm">ATM</option>
+                                <option value="Other">Other</option>
                             </select></div>
                     </div>
                 </div>
