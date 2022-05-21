@@ -66,6 +66,8 @@ Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureCh
 Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
 Route::post('/schedule-admin/manage/edit','AdminController@ScheduleEdit');
 Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
+Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
+
 
 Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
 

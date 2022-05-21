@@ -81,7 +81,7 @@
                     <a href="/accounting/input-transaction/expense">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p><i class="fa fa-minus-square-o button-content-icon"></i></p>
-                            <p class="button-content">Input Outcome</p>
+                            <p class="button-content">Input Expense</p>
                         </div>
                     </a>
                 </div>

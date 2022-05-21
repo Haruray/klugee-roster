@@ -299,7 +299,27 @@ class AdminController extends Controller
             Session::flash('gagal','Error has occured. Failed to record. data.');
         }
 
-        return redirect('/accounting/input-transaction/');
+        return redirect('/accounting/input-transaction/income');
+    }
+
+    public function ExpenseProcess(Request $request){
+        $new_income = new Accounting;
+        $new_income->date = $request->input('date');
+        $new_income->transaction_type = $request->input('transaction_type');
+        $new_income->sub_transaction = $request->input('sub_transaction');
+        $new_income->detail = $request->input('detail');
+        $new_income->nominal = $request->input('nominal') * -1;
+        $new_income->notes = $request->input('notes');
+        $new_income->pic = $request->input('pic');
+        $new_income->payment_method = $request->input('payment_method');
+        if ($new_income->save()){
+            Session::flash('sukses','Data successfully recorded.');
+        }
+        else{
+            Session::flash('gagal','Error has occured. Failed to record. data.');
+        }
+
+        return redirect('/accounting/input-transaction/expense');
     }
 
     public function FinancialData(){

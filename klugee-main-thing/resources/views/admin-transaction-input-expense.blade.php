@@ -84,7 +84,7 @@
         @endif
 
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-        <form name="income-form" method="POST" action="/accounting/input-transaction/income/process">
+        <form name="income-form" method="POST" action="/accounting/input-transaction/expense/process">
             @csrf
             <div class="container">
                 <div class="form-row">
@@ -140,9 +140,11 @@
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
                             <select name="pic" class="form-control attendance-input">
-                                @foreach ($teachers as $t)
+                                <optgroup label="PIC">
+                                    @foreach ($teachers as $t)
                                     <option value="{{$t->id}}">{{ $t->name }}</option>
                                 @endforeach
+                                </optgroup>
                             </select>
                             </div>
                     </div>
@@ -154,9 +156,11 @@
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
                             <select name="payment_method" class="form-control attendance-input">
-                                <option value="Cash">Cash</option>
-                                <option value="Atm">ATM</option>
-                                <option value="Other">Other</option>
+                                <optgroup label="Payment Method">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Atm">ATM</option>
+                                    <option value="Other">Other</option>
+                                </optgroup>
                             </select></div>
                     </div>
                 </div>
