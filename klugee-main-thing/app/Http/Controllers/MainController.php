@@ -141,6 +141,7 @@ class MainController extends Controller
                 $new_presence = new TeachPresence;
                 $new_presence->id_teacher = auth()->user()->id_teacher;
                 $new_presence->date = $request->input('date');
+                $new_presence->id_attendance = $new_attendance->id;
                 $new_presence->save();
             }
         }
@@ -292,7 +293,7 @@ class MainController extends Controller
 
     public function ProgressReportInputProcess(Request $request){
         //get all progress report with $attendance_id
-
+        // TODO : Level input validation
         if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
             return response()->json([
                 'success' => false,
@@ -300,10 +301,18 @@ class MainController extends Controller
             ],401);
         }
         //Move the file to uploads\progress-reports
-        $file = $request->file('documentation');
-        $destinationPath = 'uploads/progress-reports';
-        $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
-        $file->move($destinationPath,$documentation_file_name);
+        //if there's a documentation image
+        if (!is_null($request->file('documentation'))){
+            $file = $request->file('documentation');
+            $destinationPath = 'uploads/progress-reports';
+            $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
+            $file->move($destinationPath,$documentation_file_name);
+        }
+        else{
+            $documentation_file_name = null;
+
+        }
+
 
         /*$progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
             'level' => $request->input('level'),
@@ -549,7 +558,7 @@ class MainController extends Controller
         //Get attendance detail
         $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
-        })->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.date','=','attendances.date')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
+        })->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.id_attendance','=','attendances.id')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees
         //get this month's fee

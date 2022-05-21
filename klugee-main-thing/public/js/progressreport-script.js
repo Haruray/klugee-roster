@@ -58,16 +58,19 @@
         //---VALIDATION---
         //Image validation
         var file = document.getElementById("documentation").files[0];
-        var t = file.type.split('/').pop().toLowerCase();
-        if (t != "jpeg" && t != "jpg" && t != "png" && t != "bmp" && t != "gif") {
-            Swal.fire({
-                icon : 'error',
-                title: 'Oops...',
-                text: 'Please select a valid image.'
-            });
-            document.getElementById("documentation").value = '';
-            return false;
+        if (file){
+            var t = file.type.split('/').pop().toLowerCase();
+            if (t != "jpeg" && t != "jpg" && t != "png" && t != "bmp" && t != "gif") {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Please select a valid image.'
+                });
+                document.getElementById("documentation").value = '';
+                return false;
+            }
         }
+
         //level
 
         if (!$("#level").val()){

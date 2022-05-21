@@ -40,10 +40,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -86,7 +86,7 @@
                 <div class="form-row">
                     <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input id="level" name="level" class="form-control attendance-input" type="text" placeholder="Level" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input id="level" name="level" class="form-control attendance-input" type="text" placeholder="Level"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required></div>
                     </div>
                 </div>
             </div>
@@ -111,12 +111,12 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score-{{$student->id}}" name="score-{{$student->id}}" class="form-control attendance-input" type="text" placeholder="{{$student->nickname}}'s Score" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score-{{$student->id}}" name="score-{{$student->id}}" class="form-control attendance-input" type="text" placeholder="{{$student->nickname}}'s Score"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required></div>
                     </div>
                 </div>
             </div>
             @endforeach
-            
+
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
@@ -139,9 +139,12 @@
         </form>
     </div>
     @else
-        nothing to fill, cunt
+        <div style="text-align: center;" class="container">
+            <h3 class="bounce animated page-heading">Nothing to fill because no one is present.</h3>
+            <a href="/attendance/{{ $attendance_id }}"><button class="btn btn-primary" >Go back to attendance details</button></a>
+        </div>
     @endif
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
