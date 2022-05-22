@@ -316,7 +316,7 @@ class AdminController extends Controller
             Session::flash('sukses','Data successfully recorded.');
         }
         else{
-            Session::flash('gagal','Error has occured. Failed to record. data.');
+            Session::flash('gagal','Error has occured. Failed to record data.');
         }
 
         return redirect('/accounting/input-transaction/expense');
@@ -359,6 +359,56 @@ class AdminController extends Controller
 
         $view = view('admin-monthly-recap-expense');
         return $view->with('years',$years)->with('income',$income)->with('selected_year',$year)->with('selected_month',$month);
+    }
+
+    public function SPP(){
+        $user_id = auth()->user()->id;
+        $teachers = Teachers::select('id','name')->get();
+        $students = Students::select('id','name')->get();
+        $programs = Program::get();
+        $view = view('admin-transaction-spp');
+
+        return $view->with('user_id',$user_id)->with('teachers',$teachers)->with('students',$students)->with('programs',$programs);
+    }
+
+    public function SPPProcess(Request $request){
+        //TODO :
+        // - mengurangi kuota berdasarkan progress report yg belum dibayar
+        $tuition =  TuitionFee::where('id_student', $request->input('student'))->where('program',$request->input('program'))->get()->first();
+        if (is_null($tuition)){
+            $tuition = new TuitionFee;
+            $tuition->id_student = $request->input('student');
+            $tuition->program = $request->input('program');
+            $tuition->quota = $request->input('quota');
+            if ($tuition->save()){
+                Session::flash('sukses','Data successfully recorded.');
+            }
+            else{
+                Session::flash('gagal','Error has occured. Failed to record data.');
+            }
+        }
+        else{
+            $tuition->quota += $request->input('quota');
+            if ($tuition->save()){
+                Session::flash('sukses','Data successfully recorded.');
+            }
+            else{
+                Session::flash('gagal','Error has occured. Failed to record data.');
+            }
+        }
+
+        //Saving it to accounting
+        $accounting = new Accounting;
+        $accounting->date = $request->input('date');
+        $accounting->transaction_type = "SPP";
+        $accounting->sub_transaction = $request->input('program')." Program";
+        $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+        $accounting->nominal = $request->input('nominal');
+        $accounting->pic = $request->input('pic');
+        $accounting->payment_method = $request->input('payment_method');
+        $accounting->notes = $request->input('notes');
+        $accounting->approved = false;
+        $accounting->save();
     }
 
 }

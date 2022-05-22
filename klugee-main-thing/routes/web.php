@@ -55,6 +55,7 @@ Route::get('/accounting/financial-data/report/{month}/{year}','AdminController@F
 Route::get('/accounting/financial-data/recap','AdminController@FinancialRecap');
 Route::get('/accounting/financial-data/recap/income/{month}/{year}','AdminController@FinancialRecapIncome');
 Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminController@FinancialRecapExpense');
+Route::get('/accounting/spp','AdminController@SPP');
 
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
@@ -70,7 +71,7 @@ Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
 Route::post('/schedule-admin/manage/edit','AdminController@ScheduleEdit');
 Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
 Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
-
+Route::post('/accounting/spp/process','AdminController@SPPProcess');
 
 Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
 
