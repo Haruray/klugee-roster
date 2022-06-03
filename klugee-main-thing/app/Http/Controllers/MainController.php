@@ -56,9 +56,9 @@ class MainController extends Controller
 
     public function AttendanceInputProcess(Request $request){
         //TO DO :
-        // - Check student duplicate
+        // - Check student duplicate (done, untested)
         // - If student not registered in a certain program, dont process the data and give warning
-
+        $students = array();
         $max_stud = 10; //max students for input
         $should_pay_teach_fee = false;
         //Save attendance data
@@ -81,7 +81,8 @@ class MainController extends Controller
             //Search for every student input form
             $string_search = "student".$i;
             $string_search_2 = "student-attend-".$i;
-            if ($request->input($string_search) != NULL){
+            if ($request->input($string_search) != NULL && array_search($request->input($string_search), $students)){
+                array_push($students, $request->input($string_search));
                 //Save attendee data
                 $new_attendee = new Attendee;
                 $new_attendee->id_attendance = $new_attendance->id;
