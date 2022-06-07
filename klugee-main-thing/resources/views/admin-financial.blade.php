@@ -86,7 +86,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/accounting/referral/{{ date('m') }}/{{ date('Y') }}">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p><i class="fa fa-database button-content-icon"></i></p>
                             <p class="button-content">Referral Report</p>

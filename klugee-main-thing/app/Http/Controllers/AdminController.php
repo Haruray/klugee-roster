@@ -27,6 +27,7 @@ use App\FeeList;
 use App\IncentiveList;
 use App\User;
 use App\Accounting;
+use App\Referral;
 
 use Session;
 
@@ -412,6 +413,13 @@ class AdminController extends Controller
         $accounting->notes = $request->input('notes');
         $accounting->approved = false;
         $accounting->save();
+    }
+
+    public function ReferralReport($month, $year){
+        $years = Referral::selectRaw('YEAR(date) as year')->distinct()->get();
+        $referrals = Referral::whereMonth('date','=',$month)->whereYear('date','=',$year)->join('students','students.id','=','referrals.registering_student_id');
+        $view = view('admin-referrals-report');
+        return $view->with('referrals',$referrals)->with('selected_year',$year)->with('selected_month',$month)->with('years',$years);
     }
 
 }

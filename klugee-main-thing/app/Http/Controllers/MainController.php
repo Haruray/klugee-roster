@@ -271,6 +271,7 @@ class MainController extends Controller
         //TO DO :
         // - Check if progress report is filled or no
         // - If no one is present, then give warning
+        // - FIX THIS
 
         //Get every student on current attendance
         $students = self::GetAttendee($attendance_id);

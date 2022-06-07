@@ -44,7 +44,7 @@ Route::get('/users/{user_id}','AdminController@UserSelectProfile');
 Route::get('/users/{user_id}/students','AdminController@UserSelectStudents');
 Route::get('/users/{user_id}/attendance','AdminController@UserSelectAttendance');
 Route::get('/users/{user_id}/schedule','AdminController@UserSelectSchedule');
-//
+
 Route::get('/schedule-admin','AdminController@ScheduleAdmin');
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
@@ -56,10 +56,15 @@ Route::get('/accounting/financial-data/recap','AdminController@FinancialRecap');
 Route::get('/accounting/financial-data/recap/income/{month}/{year}','AdminController@FinancialRecapIncome');
 Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminController@FinancialRecapExpense');
 Route::get('/accounting/spp','AdminController@SPP');
+Route::get('/accounting/referral/{month}/{year}','AdminController@ReferralReport');
 
 Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
 Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
+
+//Super Admin route
+Route::get('/accounting/approvals','SuperAdminController@Approvals');
+
 //teacher post route
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
 Route::post('/attendance/edit','MainController@AttendanceEdit');
