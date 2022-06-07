@@ -19,7 +19,7 @@
 	<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>
 	<script src="https://unpkg.com/dropzone"></script>
 	<script src="https://unpkg.com/cropperjs"></script>
-    
+
     <style>
         .image_area:hover {
 		  height: 50%;
@@ -39,7 +39,7 @@
 		}
         .preview {
   			overflow: hidden;
-  			width: 160px; 
+  			width: 160px;
   			height: 160px;
   			margin: 10px;
   			border: 1px solid red;
@@ -79,10 +79,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -137,7 +137,7 @@
                             </p>
                             @foreach ($position as $ps)
                             <p class="d-inline-block white bold teacher-status-individual"><i class="fa fa-check-circle" style="color: #38b6ff;font-size: 35px;"></i>&nbsp;{{$ps->position}}</p>
-                            @endforeach                            
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                             </tr>
                             @endfor
                         @endfor
-                            
+
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>
@@ -216,7 +216,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                         @foreach ($salary as $s)
                         <tr>
                             <td>{{date('l',strtotime($s->date))}}, {{date('d/m/Y',strtotime($s->date))}}</td>
@@ -227,9 +227,9 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
-                            </tr> 
+                            </tr>
                         @endforeach
-                            
+
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>
@@ -251,7 +251,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     @foreach ($incentive as $i)
                     <tr>
                             <td>{{date('l',strtotime($i->date))}}, {{date('d/m/Y',strtotime($i->date))}}</td>
@@ -262,9 +262,9 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
-                            </tr> 
+                            </tr>
                         @endforeach
-                            
+
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
                     <th></th>
@@ -333,9 +333,9 @@
 			      		</div>
 			    	</div>
 			  	</div>
-			</div>	
+			</div>
 
-    
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
@@ -364,7 +364,7 @@ $(document).ready(function(){
 			image.src = url;
 			$modal.modal('show');
             $('#upload-modal').modal('toggle');
-            
+
 		};
 
 		if(files && files.length > 0)
@@ -432,11 +432,11 @@ $(document).ready(function(){
 					}
 				});
                 }
-				
+
 			};
 		});
 	});
-	
+
 });
 </script>
 

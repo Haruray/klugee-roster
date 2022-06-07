@@ -94,7 +94,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/accounting/approvals">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p><i class="fa fa-check-square-o button-content-icon"></i></p>
                             <p class="button-content">Approvals</p>

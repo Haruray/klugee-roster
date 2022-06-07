@@ -37,6 +37,7 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('admin');
+        //$this->middleware('superadmin');
     }
 
     public function AttendanceAdmin(){
@@ -375,14 +376,14 @@ class AdminController extends Controller
     public function SPPProcess(Request $request){
         //TODO :
         // - mengurangi kuota berdasarkan progress report yg belum dibayar (DONE)
-        $quota_remainder = StudentPresence::where('id_student',$request->input('student'))->where('spp_paid',0)->count();
+        $quota_remainder = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendances')->where('id_student',$request->input('student'))->where('spp_paid',0)->where('program',$request->input('program'))->count();
         $tuition =  TuitionFee::where('id_student', $request->input('student'))->where('program',$request->input('program'))->get()->first();
         if (is_null($tuition)){
             //belum ada tuition fee terbayar
             $tuition = new TuitionFee;
             $tuition->id_student = $request->input('student');
             $tuition->program = $request->input('program');
-            $tuition->quota = $request->input('quota')-$quota_remainder;
+            $tuition->quota = $request->input('quota')-$quota_remainder < 0 ? 0 : $request->input('quota')-$quota_remainder;
             if ($tuition->save()){
                 Session::flash('sukses','Data successfully recorded.');
             }
@@ -392,7 +393,7 @@ class AdminController extends Controller
         }
         else{
             //sudah ada fee terdaftar
-            $tuition->quota += $request->input('quota') - $quota_remainder;
+            $tuition->quota = $tuition->quota + $request->input('quota') - $quota_remainder < 0? 0 : $tuition->quota + $request->input('quota') - $quota_remainder;
             if ($tuition->save()){
                 Session::flash('sukses','Data successfully recorded.');
             }

@@ -64,6 +64,8 @@ Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
 
 //Super Admin route
 Route::get('/accounting/approvals','SuperAdminController@Approvals');
+Route::get('/accounting/approvals/approve/{accounting_id}','SuperAdminController@AccountingApproval');
+Route::get('/accounting/approvals/delete/{accounting_id}','SuperAdminController@AccountingDeletion');
 
 //teacher post route
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
