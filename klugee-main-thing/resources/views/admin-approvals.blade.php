@@ -80,7 +80,7 @@
                             <th>Lunch Incentive</th>
                             <th>Transport Incentive</th>
                             <th>Total</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,6 +125,133 @@
 
     <div class="container">
         <div style="margin: 0 10px 0 10px;">
+            <h2 class="page-heading" style="text-align:left;">Salary Approvals</h2>
+            <div class="table-responsive">
+                <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Teacher Name</th>
+                            <th>Description</th>
+                            <th>Nominal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            @foreach ($salary as $s)
+                            <tr>
+                                <td>{{date('l',strtotime($s->date))}}, {{date('d/m/Y',strtotime($s->date))}}</td>
+                                <td>{{$s->note}}</td>
+                                <td>{{$s->nominal}}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-success" type="button">Approve</button>
+                                        <button class="btn btn-danger" type="button">Delete</button>
+                                    </div>
+                                </td>
+                                </tr>
+                            @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="margin: 0 10px 0 10px;">
+            <h2 class="page-heading" style="text-align:left;">Incentives Approvals</h2>
+            <div class="table-responsive">
+                <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Nominal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach ($incentive as $i)
+                        <tr>
+                                <td>{{date('l',strtotime($i->date))}}, {{date('d/m/Y',strtotime($i->date))}}</td>
+                                <td>{{$i->note}}</td>
+                                <td>{{$i->nominal}}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-success" type="button">Approve</button>
+                                        <button class="btn btn-danger" type="button">Delete</button>
+                                    </div>
+                                </td>
+                                </tr>
+                            @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="margin: 0 10px 0 10px;">
+            <h2 class="page-heading" style="text-align:left;">Referrals Approvals</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Date of join</th>
+                            <th rowspan="2">Student</th>
+                            <th style="text-align: center;" colspan="3">Bonus Referral Parents</th>
+                            <th rowspan="2">PIC Front Admin</th>
+                            <th rowspan="2">Actions</th>
+                            <th rowspan="2">PIC Scheduling</th>
+                            <th rowspan="2">Actions</th>
+                        </tr>
+                        <tr>
+                            <th>Parents</th>
+                            <th>Referral</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($referrals as $r)
+                        <tr>
+                            <td>{{ $r->date }}</td>
+                            <td>{{ $r->registering_student_name }}</td>
+                            <td>{{ $r->referrer_name }}</td>
+                            <td>{{ $r->referral_nominal }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-success" type="button">Approve</button>
+                                    <button class="btn btn-danger" type="button">Delete</button>
+                                </div>
+                            </td>
+                            <td>{{ $r->pic_front_admin }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-success" type="button">Approve</button>
+                                    <button class="btn btn-danger" type="button">Delete</button>
+                                </div>
+                            </td>
+                            <td>{{ $r->pic_scheduling }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-success" type="button">Approve</button>
+                                    <button class="btn btn-danger" type="button">Delete</button>
+                                </div>
+                            </td>
+
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="margin: 0 10px 0 10px;">
             <h2 class="page-heading" style="text-align:left;">Accountings</h2>
             <div class="table-responsive">
                 <table class="table">
@@ -139,7 +266,7 @@
                             <th>PIC</th>
                             <th>Payment Method</th>
                             <th>Notes</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>

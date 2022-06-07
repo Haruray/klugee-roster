@@ -45,7 +45,8 @@ class SuperAdminController extends Controller
         $fees_approvals = Fee::where('approved','=','0')->join('attendances','attendances.id','=','fees.id_attendance')->join('teachers','teachers.id','=','attendances.id_teacher')->get();
         $referrals_approvals = Referral::where('status_referral','=','0')->orWhere('status_front_admin','=','0')->orWhere('status_scheduling')->join('students','students.id','=','referrals.registering_student_id')->get();
         $salary_approvals = Salary::where('approved','=','0')->join('teachers','teachers.id','=','salaries.id_teacher')->get();
-        return $view->with('income',$income_approvals)->with('expense',$expense_approvals)->with('fee',$fees_approvals);
+        $incentives = Incentive::where('approved','=','0')->get();
+        return $view->with('income',$income_approvals)->with('expense',$expense_approvals)->with('fee',$fees_approvals)->with('salary',$salary_approvals)->with('incentive',$incentives)->with('referrals',$referrals_approvals);
     }
 
     public function AccountingApproval($accounting_id){
