@@ -59,7 +59,6 @@ class MainController extends Controller
         //TO DO :
         // - Check student duplicate (done, untested)
         // - If student not registered in a certain program, dont process the data and give warning
-        $students = array();
         $max_stud = 10; //max students for input
         $should_pay_teach_fee = false;
         //Save attendance data
@@ -82,8 +81,16 @@ class MainController extends Controller
             //Search for every student input form
             $string_search = "student".$i;
             $string_search_2 = "student-attend-".$i;
-            if ($request->input($string_search) != NULL && array_search($request->input($string_search), $students)){
-                array_push($students, $request->input($string_search));
+
+            if ($request->input($string_search) != NULL){
+                //check if attendee a duplicate or not
+                $attendee_check = Attendee::where([
+                    ['id_attendance',$new_attendance->id],
+                    ['id_student',Students::where('name',$request->input($string_search))->first()['id']]
+                ])->first();
+                if ($attendee_check!=NULL){
+                    continue;
+                }
                 //Save attendee data
                 $new_attendee = new Attendee;
                 $new_attendee->id_attendance = $new_attendance->id;

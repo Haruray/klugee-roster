@@ -148,7 +148,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-8 text-center">
-                    @if ($user_id != auth()->user()->teacher_id)
+                    @if ($user_id != auth()->user()->id_teacher)
                         <a href="/users/{{$user_id}}/students">
                     @else
                         <a href="/profile/students">
@@ -158,17 +158,17 @@
                         <p class="teacher-desc-text">{{count($schedule)}} Students</p>
                     </div>
                     </a>
-                    @if ($user_id != auth()->user()->teacher_id)
+                    @if ($user_id != auth()->user()->id_teacher)
                         <a href="/users/{{$user_id}}/attendance">
                     @else
-                        <a href="profile/attendance">
+                        <a href="/profile/attendance">
                     @endif
 
                     <div class="d-inline-block teacher-desc" data-bs-hover-animate="bounce"><i class="fa fa-clock-o teacher-desc-icon"></i>
                         <p class="teacher-desc-text">Attendance</p>
                     </div>
                     </a>
-                    @if ($user_id != auth()->user()->teacher_id)
+                    @if ($user_id != auth()->user()->id_teacher)
                         <a href="/users/{{$user_id}}/schedule">
                     @else
                         <a href="/schedule">
@@ -249,7 +249,7 @@
 			      		<div class="modal-footer">
 			      			<button type="button" id="crop" class="btn btn-primary">Crop</button>
                             <button id="user_id" style="display:none;" name="user_id" value="{{$user_id}}">
-                            @if ($user_id != auth()->user()->teacher_id)
+                            @if ($user_id != auth()->user()->id_teacher)
                             <button id="view_type" style="display:none;" name="view_type" value="admin">
                             @else
                             <button id="view_type" style="display:none;" name="view_type" value="normal">
