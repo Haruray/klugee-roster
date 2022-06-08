@@ -65,7 +65,7 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading" style="color: rgb(48,121,200);">EXPENSE HISTORY</h1>
+    <h1 class="bounce animated page-heading" style="color: rgb(48,121,200);">REFERRALS HISTORY</h1>
     <div class="container">
         <div style="margin: 0 0 15px 10px;">
             <select id="report-month" class="form-control-lg select-box-single" onchange="changeReport()">
@@ -201,7 +201,8 @@
     function changeReport(){
         var month = document.getElementById("report-month").value;
         var year = document.getElementById("report-year").value;
-        location.replace("/accounting/financial-data/recap/expense/"+month+"/"+year);
+        if (!year){year = 0;}
+        location.replace("/accounting/referral/"+month+"/"+year);
     }
 </script>
 

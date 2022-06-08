@@ -205,6 +205,7 @@
     function changeReport(){
         var month = document.getElementById("report-month").value;
         var year = document.getElementById("report-year").value;
+        if (!year){year = 0;}
         location.replace("/accounting/financial-data/report/"+month+"/"+year);
     }
 </script>
