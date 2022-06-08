@@ -64,8 +64,20 @@ Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
 
 //Super Admin route
 Route::get('/accounting/approvals','SuperAdminController@Approvals');
-Route::get('/accounting/approvals/approve/{accounting_id}','SuperAdminController@AccountingApproval');
-Route::get('/accounting/approvals/delete/{accounting_id}','SuperAdminController@AccountingDeletion');
+Route::get('/accounting/approvals/approve-fee/{fee_id}','SuperAdminController@FeeApproval');
+Route::get('/accounting/approvals/delete-fee/{fee_id}','SuperAdminController@FeeDeletion');
+Route::get('/accounting/approvals/approve-salary/{salary_id}','SuperAdminController@SalaryApproval');
+Route::get('/accounting/approvals/delete-salary/{salary_id}','SuperAdminController@SalaryDeletion');
+Route::get('/accounting/approvals/approve-incentive/{incentive_id}','SuperAdminController@IncentiveApproval');
+Route::get('/accounting/approvals/delete-incentive/{incentive_id}','SuperAdminController@IncentiveDeletion');
+Route::get('/accounting/approvals/approve-accounting/{accounting_id}','SuperAdminController@AccountingApproval');
+Route::get('/accounting/approvals/delete-accounting/{accounting_id}','SuperAdminController@AccountingDeletion');
+Route::get('/accounting/approvals/approve-referral/{referral_id}','SuperAdminController@ReferralApproval');
+Route::get('/accounting/approvals/delete-referral/{referral_id}','SuperAdminController@ReferralDeletion');
+Route::get('/accounting/approvals/approve-referral-front/{referral_id}','SuperAdminController@ReferralFrontApproval');
+Route::get('/accounting/approvals/delete-referral-front/{referral_id}','SuperAdminController@ReferralFrontDeletion');
+Route::get('/accounting/approvals/approve-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingApproval');
+Route::get('/accounting/approvals/delete-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingDeletion');
 
 //teacher post route
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

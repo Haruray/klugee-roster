@@ -95,8 +95,8 @@
                                 <td>{{$fee[$i]->fee_nominal + $fee[$i]->lunch_nominal + $fee[$i]->transport_nominal}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button class="btn btn-success" type="button">Approve</button>
-                                        <button class="btn btn-danger" type="button">Delete</button>
+                                        <a href="/accounting/approvals/approve-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                        <a href="/accounting/approvals/delete-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                     </div>
                                 </td>
                         </tr>
@@ -109,8 +109,8 @@
                                     <td>{{$fee[$j]->fee_nominal + $fee[$j]->lunch_nominal + $fee[$j]->transport_nominal}}</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-success" type="button">Approve</button>
-                                            <button class="btn btn-danger" type="button">Delete</button>
+                                            <a href="/accounting/approvals/approve-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                            <a href="/accounting/approvals/delete-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -146,8 +146,8 @@
                                 <td>{{$s->nominal}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button class="btn btn-success" type="button">Approve</button>
-                                        <button class="btn btn-danger" type="button">Delete</button>
+                                        <a href="/accounting/approvals/approve-salary/{{  $s->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                        <a href="/accounting/approvals/delete-salary/{{  $s->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                     </div>
                                 </td>
                                 </tr>
@@ -180,8 +180,8 @@
                                 <td>{{$i->nominal}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button class="btn btn-success" type="button">Approve</button>
-                                        <button class="btn btn-danger" type="button">Delete</button>
+                                        <a href="/accounting/approvals/approve-incentive/{{  $i->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                        <a href="/accounting/approvals/delete-incentive/{{  $i->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                     </div>
                                 </td>
                                 </tr>
@@ -223,22 +223,22 @@
                             <td>{{ $r->referral_nominal }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-success" type="button">Approve</button>
-                                    <button class="btn btn-danger" type="button">Delete</button>
+                                    <a href="/accounting/approvals/approve-referral/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                    <a href="/accounting/approvals/delete-referral/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
                             <td>{{ $r->pic_front_admin }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-success" type="button">Approve</button>
-                                    <button class="btn btn-danger" type="button">Delete</button>
+                                    <a href="/accounting/approvals/approve-referral-front/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                    <a href="/accounting/approvals/delete-referral-front/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
                             <td>{{ $r->pic_scheduling }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-success" type="button">Approve</button>
-                                    <button class="btn btn-danger" type="button">Delete</button>
+                                    <a href="/accounting/approvals/approve-referral-scheduling/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                    <a href="/accounting/approvals/delete-referral-scheduling/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
 
@@ -283,9 +283,9 @@
                                 <td>{{ $i->notes }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <button class="btn btn-success" type="button">Approve</button>
-                                        <button class="btn btn-danger" type="button">Delete</button>
-                                    </div>
+                                        <a href="/accounting/approvals/approve-accounting/{{  $i->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                        <a href="/accounting/approvals/delete-accounting/{{  $i->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
+                                   </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -302,8 +302,8 @@
                             <td>{{ $e->notes }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-success" type="button">Approve</button>
-                                    <button class="btn btn-danger" type="button">Delete</button>
+                                    <a href="/accounting/approvals/approve-accounting/{{  $e->id }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                    <a href="/accounting/approvals/delete-accounting/{{  $e->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
                         </tr>
