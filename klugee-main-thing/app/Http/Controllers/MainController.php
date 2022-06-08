@@ -27,6 +27,7 @@ use App\StudentPresence;
 use App\FeeList;
 use App\IncentiveList;
 use App\Accounting;
+use App\SalaryList;
 
 
 class MainController extends Controller
@@ -599,5 +600,19 @@ class MainController extends Controller
 
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
         return $view->with('user_id',$user_id);
+    }
+
+    public function Management(){
+        $programs = Program::select('program')->get();
+        $feelist = FeeList::get();
+        $incentives = IncentiveList::get();
+        $salary = SalaryList::get();
+        $view = view('management');
+        return $view->with([
+            'programs'=>$programs,
+            'feelist' => $feelist,
+            'incentive' =>$incentives,
+            'salary' => $salary
+        ]);
     }
 }

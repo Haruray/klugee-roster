@@ -898,3 +898,7 @@ a{
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
+.management-box{padding:20px 30px;background-color:#fff5cc;border-radius:10px}
+.management-heading{color:#3079c8}
+.management-sub-box{margin-bottom:20px}

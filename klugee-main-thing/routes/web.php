@@ -36,6 +36,7 @@ Route::get('/profile/students','MainController@CurrentUserStudents');
 Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
 Route::get('/earnings','MainController@Earnings');
+Route::get('/management','MainController@Management');
 //admin route
 Route::get('/attendance-admin','AdminController@AttendanceAdmin');
 Route::get('/user-profiles','AdminController@UserProfiles');
