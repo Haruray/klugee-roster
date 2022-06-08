@@ -124,7 +124,7 @@
                 </div>
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">
                     <div class="d-inline-block">
-                        <p class="teacher-profile-name bold yellow">{{$profile->name}}</p>
+                        <p id="teacher-name" class="teacher-profile-name bold yellow">{{$profile->name}}</p>
                         <p class="bold white" style="font-size: 20px;">Joined since</p>
                         <p class="bold teacher-join-time yellow">{{date('F',strtotime($profile->join_date))}} {{date('Y',strtotime($profile->join_date))}}</p>
                         <div class="teacher-status">
@@ -180,9 +180,17 @@
                     </a>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;"><i class="fa fa-home" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp;{{$profile->address}}</strong><br><i class="fa fa-phone" style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; &nbsp; {{$profile->phone_contact}}</strong><br><i class="fa fa-id-card"
-                            style="color: #54dee4;font-size: 30px;"></i><strong>&nbsp; {{$profile->nik}}</strong><br><i class="fa fa-calendar" style="color: #54dee4;font-size: 30px;"></i>&nbsp; &nbsp;<strong>{{$profile->birthdate}}</strong><button class="btn btn-warning text-white edit-button-bio-teacher"
-                            type="button"><i class="fa fa-pencil"></i>&nbsp;Edit Biodata</button><br></p>
+                    <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;">
+                        <i class="fa fa-home" style="color: #54dee4;font-size: 30px;"></i>
+                        <strong id="alamat">&nbsp; &nbsp;{{$profile->address}}</strong><br>
+                        <i class="fa fa-phone" style="color: #54dee4;font-size: 30px;"></i>
+                        <strong id="telp">&nbsp; &nbsp; {{$profile->phone_contact}}</strong><br>
+                        <i class="fa fa-id-card" style="color: #54dee4;font-size: 30px;"></i>
+                        <strong id="nik">&nbsp; {{$profile->nik}}</strong><br>
+                        <i class="fa fa-calendar" style="color: #54dee4;font-size: 30px;"></i>&nbsp; &nbsp;
+                        <strong id="tanggal-lahir">{{$profile->birthdate}}</strong>
+                            <button class="btn btn-warning text-white edit-button-bio-teacher" type="button" onclick="biodataEdit()"><i class="fa fa-pencil"></i>&nbsp;Edit Biodata</button>
+                            <br></p>
                     <p class="text-uppercase" style="font-size: 20px;color: #a6a6a6;margin: 20px;">
                         @foreach ($method as $m)
                             <i class="fa fa-check" style="color: #38b6ff;font-size: 30px;"></i><strong>&nbsp;{{$m->method}}</strong><br>
@@ -254,6 +262,36 @@
 
 
 </body>
+
+<!--modal for biodata edit -->
+<div class="modal fade" id="biodataEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Schedule Edit</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+              <form id="biodataEditForm" method="post" action="/profile/edit">
+                  @csrf
+                  <input style="margin-bottom: 10px;" name="nama" id="nama-edit" type="text" class="form-control" placeholder="Nama">
+                  <input style="margin-bottom: 10px;" name="alamat" id="alamat-edit" type="text" class="form-control" placeholder="Alamat">
+                  <input style="margin-bottom: 10px;" name="telp" id="telp-edit" type="text" class="form-control" placeholder="Nomor Telepon" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                  <input style="margin-bottom: 10px;" name="nik" id="nik-edit" type="text" class="form-control" placeholder="NIK" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                  <input style="margin-bottom: 10px;" name="tanggal-lahir" id="tanggal-lahir-edit" type="date" class="form-control">
+                  <input type="hidden" name="id_teacher" value="{{ $user_id }}">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('js/bs-init.js')}}"></script>
@@ -355,6 +393,17 @@ $(document).ready(function(){
 	});
 
 });
+
+function biodataEdit(){
+        $('#biodataEdit').modal('toggle');
+        let modal = document.getElementById("biodataEdit");
+        modal.querySelector("#nama-edit").value = $('#teacher-name')[0].innerText.trim();
+        modal.querySelector("#alamat-edit").value = $('#alamat')[0].innerText.trim();
+        modal.querySelector("#telp-edit").value = $('#telp')[0].innerText.trim();
+        modal.querySelector("#nik-edit").value = $('#nik')[0].innerText.trim();
+        modal.querySelector("#tanggal-lahir-edit").value = $('#tanggal-lahir')[0].innerText.trim();
+
+    }
 </script>
 
 </html>

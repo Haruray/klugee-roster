@@ -491,7 +491,7 @@ class MainController extends Controller
     }
 
     public function CurrentUserProfile(){
-        $user_id = auth()->user()->teacher_id;
+        $user_id = auth()->user()->id_teacher;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -531,7 +531,7 @@ class MainController extends Controller
     }
 
     public function CurrentUserStudents(){
-        $user_id = auth()->user()->teacher_id;
+        $user_id = auth()->user()->id_teacher;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -552,7 +552,7 @@ class MainController extends Controller
     }
 
     public function CurrentUserAttendance(){
-        $user_id = auth()->user()->teacher_id;
+        $user_id = auth()->user()->id_teacher;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -572,7 +572,7 @@ class MainController extends Controller
     }
 
     public function Schedule(){
-        $user_id = auth()->user()->teacher_id;
+        $user_id = auth()->user()->id_teacher;
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
@@ -614,5 +614,16 @@ class MainController extends Controller
             'incentive' =>$incentives,
             'salary' => $salary
         ]);
+    }
+
+    public function ProfileEdit(Request $request){
+        $teacher = Teachers::where('id',$request->input('id_teacher'))->first();
+        $teacher->address = $request->input('alamat');
+        $teacher->phone_contact = $request->input('telp');
+        $teacher->name=$request->input('nama');
+        $teacher->nik = $request->input('nik');
+        $teacher->birthdate = $request->input('tanggal-lahir');
+        $teacher->save();
+        return redirect('/profile');
     }
 }
