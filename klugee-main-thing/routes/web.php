@@ -41,6 +41,7 @@ Route::get('/management','MainController@Management');
 Route::get('/attendance-admin','AdminController@AttendanceAdmin');
 Route::get('/user-profiles','AdminController@UserProfiles');
 Route::get('/users','AdminController@UserList');
+Route::get('/users/add','AdminController@AddTeacherMenu');
 Route::get('/users/{user_id}','AdminController@UserSelectProfile');
 Route::get('/users/{user_id}/students','AdminController@UserSelectStudents');
 Route::get('/users/{user_id}/attendance','AdminController@UserSelectAttendance');
@@ -93,6 +94,7 @@ Route::post('/accounting/input-transaction/income/process','AdminController@Inco
 Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
 Route::post('/accounting/spp/process','AdminController@SPPProcess');
 Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
+Route::post('/users/add/process','AdminController@AddTeacherProcess');
 
 
 Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');

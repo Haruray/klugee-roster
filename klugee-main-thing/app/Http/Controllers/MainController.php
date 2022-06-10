@@ -631,6 +631,6 @@ class MainController extends Controller
         $teacher->nik = $request->input('nik');
         $teacher->birthdate = $request->input('tanggal-lahir');
         $teacher->save();
-        return redirect('/profile');
+        return redirect()->back();
     }
 }

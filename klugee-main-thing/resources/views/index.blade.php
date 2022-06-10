@@ -36,11 +36,11 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
-                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
+
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->photo)}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
                         <a class="login" href="/management">
@@ -139,7 +139,7 @@
                 </div>
             </div>
             @endif
-            
+
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
