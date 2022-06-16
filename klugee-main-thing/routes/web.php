@@ -48,6 +48,7 @@ Route::get('/users/{user_id}/attendance','AdminController@UserSelectAttendance')
 Route::get('/users/{user_id}/schedule','AdminController@UserSelectSchedule');
 
 Route::get('/schedule-admin','AdminController@ScheduleAdmin');
+Route::get('/schedule-admin/detailed/{teacher}','AdminController@ScheduleAll');
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
 Route::get('/accounting/input-transaction/income','AdminController@IncomeInputTransaction');
@@ -105,3 +106,5 @@ Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');
 Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
 Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');
+
+Route::get('/nota','AdminController@TesNota');

@@ -176,8 +176,10 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
-        
+
         'Intervention\Image\ImageServiceProvider',
+        Barryvdh\Snappy\ServiceProvider::class,
+
     ],
 
     /*
@@ -232,6 +234,8 @@ return [
 
         'Image' => 'Intervention\Image\Facades\Image',
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

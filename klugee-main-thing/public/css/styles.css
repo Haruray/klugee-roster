@@ -902,3 +902,114 @@ a{
 .management-box{padding:20px 30px;background-color:#fff5cc;border-radius:10px}
 .management-heading{color:#3079c8}
 .management-sub-box{margin-bottom:20px}
+.nota-header {
+    background-color: #38b6ff;
+  }
+
+  .nota-body {
+    width: 800px;
+  }
+
+  #nota-table-head {
+    background-color: #38b6ff;
+  }
+
+  .nota-thead {
+    background-color: #38b6ff;
+    border: none;
+  }
+
+  .nota-tr {
+    border: none;
+  }
+
+  .table thead th {
+    vertical-align: bottom;
+    border: none;
+  }
+
+  .nota-td {
+    border: none;
+  }
+
+  .nota-payment-detail {
+    font-size: 20px;
+    margin-bottom: -3px;
+  }
+
+  .nota-payment {
+    font-weight: bold;
+    font-size: 23px;
+    color: #3079c8;
+    margin-bottom: -3px;
+  }
+
+  .nota-desc {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .nota-tanggal {
+    font-weight: bold;
+    font-size: 20px;
+    color: #3079c8;
+  }
+
+  .nota-ttd {
+    font-weight: bold;
+    font-size: 25px;
+  }
+
+  .nota-ttd-name {
+    font-size: 23px;
+  }
+
+  .nota-ttd-box {
+    margin: 50px 10px 20px 10px;
+  }
+
+  .nota-details {
+    margin: 20px 10px 20px 10px;
+  }
+
+  .table-external-header {
+    background-color: #38b6ff;
+    height: 50px;
+  }
+
+  .nota-table-head-desc {
+    color: white;
+    font-weight: bold;
+    margin: 10px 10px 10px 20px;
+  }
+
+  .nota-table-head-total {
+    color: white;
+    font-weight: bold;
+    margin: 10px 100px 10px 0px;
+  }
+
+  .nota-grand-total {
+    border-top: 5px solid grey;
+    font-size: 18PX;
+  }
+
+  .nota-table {
+    font-weight: bold;
+  }
+
+  .ttd-cap {
+    width: 150px;
+    text-align: right;
+    z-index: -5;
+    position: absolute;
+    right: 80px;
+    opacity: 0.25;
+  }
+
+  .nota-lunas {
+    color: #dba0a0;
+    font-weight: bolder;
+    font-size: 45px;
+    margin-right: 50px;
+  }

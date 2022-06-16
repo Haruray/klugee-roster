@@ -8,10 +8,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
     <link rel="stylesheet" href="{{asset('css/Login-Form-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
+    <script src="{{asset('js/schedulemanage-script.js')}}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" />
+
 </head>
 
 <body>
@@ -65,40 +73,77 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">SCHEDULE</h1>
-    <div>
-        <div class="container">
-            <div class="row text-center justify-content-center align-items-center">
-                <div class="col-md-3 col-sm-6">
-                    <a href="/schedule">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p><i class="fa fa-calendar button-content-icon"></i></p>
-                            <p class="button-content">My Schedule</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <a href="/schedule-admin/detailed/all">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p><i class="fa fa-calendar button-content-icon"></i></p>
-                            <p class="button-content">All Schedules<br></p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-3 offset-md-0 col-sm-6">
-                    <a href="/schedule-admin/manage">
-                        <div data-bs-hover-animate="bounce" class="button">
-                            <p><i class="fa fa-pencil button-content-icon"></i></p>
-                            <p class="button-content">Manage Schedules<br></p>
-                        </div>
-                    </a>
+    <h2 class="text-center bounce animated page-heading">All Schedule</h2>
+    <div class="container">
+        <div style="margin: 0 0 15px 10px;">
+            <select id="report-month" class="form-control-lg select-box-single" onchange="changeSchedule()">
+                @if (strcmp($selector,'all')==0)
+                <option value="all" selected>All</option>
+                @else
+                <option value="all">All</option>
+                @endif
+                @foreach ($teachers as $t)
+                    @if ($selector == $t->id)
+                    <option value="{{ $t->id }}" selected>{{ $t->name }}</option>
+                    @else
+                    <option value="{{ $t->id }}">{{ $t->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+
+            @if (strcmp($selector,'all')==0)
+            <div style="margin: 0 10px 0 10px;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Hari</th>
+                                <th rowspan="2">Jam Mulai</th>
+                                <th rowspan="2">Jam Selesai</th>
+                                <th colspan="{{ count($teachers) }}" style="text-align: center;">Teachers</th>
+                            </tr>
+                            <tr>
+                                @foreach ($teachers as $t)
+                                    <th style="text-align: center;">{{ $t->name }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0 ; $i < count($schedule); $i+=$schedule->where('day',$schedule[$i]->day)->count())
+                                <tr>
+                                    <td rowspan="{{ $schedule->where('day',$schedule[$i]->day)->count() }}">{{ $schedule[$i]->day }}</td>
+                                    <td>{{ $schedule[$i]->begin }}</td>
+                                    <td>{{ $schedule[$i]->end }}</td>
+                                    <td>{{ $schedule[$i]->student_name }}</td>
+                                </tr>
+                                @for ($j=$i+1 ; $j < $i+$schedule->where('day',$schedule[$i]->day)->count() ; $j++)
+                                    <tr>
+                                        <td>{{ $schedule[$j]->begin }}</td>
+                                        <td>{{ $schedule[$j]->end }}</td>
+                                        <td>{{ $schedule[$j]->student_name }}</td>
+                                    </tr>
+                                @endfor
+                            @endfor
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            @else
+
+            @endif
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 </body>
+
+<script>
+    function changeSchedule(){
+        var month = document.getElementById("report-month").value;
+        var year = document.getElementById("report-year").value;
+        if (!year){year = 0;}
+        location.replace("/accounting/financial-data/recap/income/"+month+"/"+year);
+    }
+</script>
 
 </html>

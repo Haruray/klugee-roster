@@ -32,6 +32,8 @@ use App\User;
 use App\Accounting;
 use App\Referral;
 
+use PDF;
+
 use Session;
 
 class AdminController extends Controller
@@ -299,6 +301,9 @@ class AdminController extends Controller
         $new_income->payment_method = $request->input('payment_method');
         if ($new_income->save()){
             Session::flash('sukses','Data successfully recorded.');
+            view()->share('data',$new_income);
+            $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+            return $pdf->download('Nota '.$new_income->date.'-'.$new_income->transaction_type.'-'.$new_income->sub_transaction.'-'.$new_income->detail.'.pdf');
         }
         else{
             Session::flash('gagal','Error has occured. Failed to record. data.');
@@ -319,12 +324,24 @@ class AdminController extends Controller
         $new_income->payment_method = $request->input('payment_method');
         if ($new_income->save()){
             Session::flash('sukses','Data successfully recorded.');
+            //pdf download
+            view()->share('data',$new_income);
+            $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+            return $pdf->download('Nota '.$new_income->date.'-'.$new_income->transaction_type.'-'.$new_income->sub_transaction.'.pdf');
         }
         else{
             Session::flash('gagal','Error has occured. Failed to record data.');
         }
 
         return redirect('/accounting/input-transaction/expense');
+    }
+
+    public function TesNota(){
+        $new_income = Accounting::first();
+        //return view('nota')->with('data',$new_income);
+        view()->share('data',$new_income);
+        $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('nota.pdf');
     }
 
     public function FinancialData(){
@@ -379,7 +396,7 @@ class AdminController extends Controller
     public function SPPProcess(Request $request){
         //TODO :
         // - mengurangi kuota berdasarkan progress report yg belum dibayar (DONE)
-        $quota_remainder = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendances')->where('id_student',$request->input('student'))->where('spp_paid',0)->where('program',$request->input('program'))->count();
+        $quota_remainder = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendance')->where('id_student',$request->input('student'))->where('spp_paid',0)->where('program',$request->input('program'))->count();
         $tuition =  TuitionFee::where('id_student', $request->input('student'))->where('program',$request->input('program'))->get()->first();
         if (is_null($tuition)){
             //belum ada tuition fee terbayar
@@ -486,6 +503,31 @@ class AdminController extends Controller
         $user->photo = $teach->photo;
         $user->save();
         return redirect('/users/add');
+    }
+
+    public function ScheduleAll($teacher){
+        if ($teacher!="all"){
+            $teachers = Schedule::select('teachers.name','teachers.id')->join('teach_schedules','teach_schedules.id_schedule', '=', 'schedules.id')->join('teachers','teach_schedules.id_teacher','=','teachers.id')->distinct()->get();
+            $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','students.name as student_name', 'teachers.name as teach_name','teachers.id')->selectRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) as end')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','id_teacher')->with('teachers.id',$teacher)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
+            //return $schedule;
+            $view = view('admin-schedule-all');
+
+            return $view->with([
+                'teachers' => $teachers,
+                'schedule' => $schedule,
+                'selector' => $teacher
+            ]);;
+        }
+        $teachers = Schedule::select('teachers.name','teachers.id')->join('teach_schedules','teach_schedules.id_schedule', '=', 'schedules.id')->join('teachers','teach_schedules.id_teacher','=','teachers.id')->distinct()->get();
+        $schedule = Schedule::select('schedules.day','schedules.begin','students.name as student_name', 'teachers.name as teach_name','teachers.id')->selectRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) as end')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','id_teacher')->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
+        return $schedule;
+        $view = view('admin-schedule-all');
+
+        return $view->with([
+            'teachers' => $teachers,
+            'schedule' => $schedule,
+            'selector' => $teacher
+        ]);
     }
 
 }
