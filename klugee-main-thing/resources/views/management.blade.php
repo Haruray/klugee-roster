@@ -88,7 +88,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div><button class="btn btn-primary" type="button">Add Program</button></div>
+                </div><button class="btn btn-primary" type="button"  data-toggle="modal" data-target="#program-add">Add Program</button></div>
             <div class="management-sub-box">
                 <h3 class="management-heading">Fee List</h3>
                 <div class="table-responsive">
@@ -105,27 +105,27 @@
                         </thead>
                         <tbody>
                             @for ($i=0 ; $i < count($feelist) ; $i+=$feelist->where('program',$feelist[$i]->program)->count())
-                                <tr>
+                                <tr id="fee-{{ $feelist[$i]->program }}-{{ $feelist[$i]->level }}">
                                     <td rowspan="{{ $feelist->where('program',$feelist[$i]->program)->count() }}">{{ $feelist[$i]->program }}</td>
                                     <td>{{ $feelist[$i]->level }}</td>
-                                    <td>{{ $feelist[$i]->nominal_exclusive/1000 }}K</td>
-                                    <td>{{ $feelist[$i]->nominal_semiprivate/1000 }}K</td>
-                                    <td>{{ $feelist[$i]->nominal_school/1000 }}K</td>
-                                    <td><button class="btn btn-warning">Edit</button></td>
+                                    <td id="fee-{{ $feelist[$i]->program }}-{{ $feelist[$i]->level }}-exclusive">{{ $feelist[$i]->nominal_exclusive/1000 }}K</td>
+                                    <td id="fee-{{ $feelist[$i]->program }}-{{ $feelist[$i]->level }}-semiprivate">{{ $feelist[$i]->nominal_semiprivate/1000 }}K</td>
+                                    <td id="fee-{{ $feelist[$i]->program }}-{{ $feelist[$i]->level }}-school">{{ $feelist[$i]->nominal_school/1000 }}K</td>
+                                    <td><button class="btn btn-warning" onclick="editFee('fee-{{ $feelist[$i]->program }}-{{ $feelist[$i]->level }}', {{ $feelist[$i]->id }}, '{{ $feelist[$i]->program}}')">Edit</button></td>
                                 </tr>
                                 @for ($j=$i+1 ; $j < $i+$feelist->where('program',$feelist[$i]->program)->count() ; $j++)
-                                <tr>
+                                <tr id="fee-{{ $feelist[$j]->program }}-{{ $feelist[$j]->level }}">
                                     <td>{{ $feelist[$j]->level }}</td>
-                                    <td>{{ $feelist[$j]->nominal_exclusive/1000 }}K</td>
-                                    <td>{{ $feelist[$j]->nominal_semiprivate/1000 }}K</td>
-                                    <td>{{ $feelist[$j]->nominal_school/1000 }}K</td>
-                                    <td><button class="btn btn-warning">Edit</button></td>
+                                    <td id="fee-{{ $feelist[$j]->program }}-{{ $feelist[$j]->level }}-exclusive">{{ $feelist[$j]->nominal_exclusive/1000 }}K</td>
+                                    <td id="fee-{{ $feelist[$j]->program }}-{{ $feelist[$j]->level }}-semiprivate">{{ $feelist[$j]->nominal_semiprivate/1000 }}K</td>
+                                    <td id="fee-{{ $feelist[$j]->program }}-{{ $feelist[$j]->level }}-school">{{ $feelist[$j]->nominal_school/1000 }}K</td>
+                                    <td><button class="btn btn-warning" onclick="editFee('fee-{{ $feelist[$j]->program }}-{{ $feelist[$j]->level }}', {{ $feelist[$j]->id }}, '{{ $feelist[$j]->program}}')">Edit</button></td>
                                 </tr>
                                 @endfor
                             @endfor
                         </tbody>
                     </table>
-                </div><button class="btn btn-primary" type="button">Add Fee</button></div>
+                </div><button class="btn btn-primary" type="button" data-toggle="modal" data-target="#fee-add">Add Fee</button></div>
             <div class="management-sub-box">
                 <h3 class="management-heading">Incentives</h3>
                 <table class="table">
@@ -142,8 +142,8 @@
                             <tr>
                                 <td>{{ $i->name }}</td>
                                 <td>{{ $i->receiver }}</td>
-                                <td>{{ $i->nominal }}</td>
-                                <td><button class="btn btn-warning">Edit</button></td>
+                                <td id="incentive-{{ $i->name }}">{{ $i->nominal/1000 }}K</td>
+                                <td><button class="btn btn-warning" onclick="editIncentive('{{ $i->name }}',{{ $i->id }})">Edit</button></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -175,13 +175,162 @@
             </div>
             <div class="management-sub-box">
                 <h3 class="management-heading">Parents Partner</h3>
-                <button class="btn btn-primary" type="button">Add Fee</button>
+                <button class="btn btn-primary" type="button">Add Partner</button>
             </div>
+
         </div>
     </div>
+    <!-- FEE EDIT MODAL -->
+    <div class="modal fade" id="edit-fee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="edit-title" class="modal-title">Fee Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form id="edit-fee-form" method="POST" action="/management/fee-edit">
+                      @csrf
+                    <input type="hidden" name="fee-id" value="" id="fee-id">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Exclusive Fee</p>
+                    <input class="form-control" type="text" name="exclusive" id="exclusive">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Semi-Private Fee</p>
+                    <input class="form-control" type="text" name="semiprivate" id="semiprivate">
+                    <p style="margin-bottom: 0px; margin-top:10px;">School Fee</p>
+                    <input class="form-control" type="text" name="school" id="school">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INCENTIVE EDIT MODAL -->
+      <div class="modal fade" id="edit-incentive" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="edit-title-incentive" class="modal-title">Fee Edit</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form method="POST" id="edit-incentive-form" action="/management/incentive-edit">
+                      @csrf
+                    <input type="hidden" value="" name="incentive-id" id="incentive-id">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Incentive Nominal</p>
+                    <input class="form-control" type="text" name="incentive-input" id="incentive-input">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEE ADD MODAL -->
+      <div class="modal fade" id="fee-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="add-title-fee" class="modal-title">Fee Add</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form method="POST" id="add-fee-form" action="/management/fee-add">
+                      @csrf
+                    <p style="margin-bottom: 0px; margin-top:10px;">Program Name</p>
+                    <select class="form-control" name="fee-program" id="fee-program">
+                        @foreach ($programs as $p)
+                            <option value="{{ $p->program }}">{{ $p->program }}</option>
+                        @endforeach
+                    </select>
+                    <p style="margin-bottom: 0px; margin-top:10px;">Level</p>
+                    <input class="form-control" type="text" name="level-add" id="level-add">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Exclusive Fee</p>
+                    <input class="form-control" type="text" name="exclusive-add" id="exclusive-add">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Semi-Private Fee</p>
+                    <input class="form-control" type="text" name="semiprivate-add" id="semiprivate-add">
+                    <p style="margin-bottom: 0px; margin-top:10px;">School Fee</p>
+                    <input class="form-control" type="text" name="school-add" id="school-add">
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRAM ADD MODAL -->
+      <div class="modal fade" id="program-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="add-title-program" class="modal-title">Program Add</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form method="POST" id="add-program-form" action="/management/program-add">
+                      @csrf
+                    <p style="margin-bottom: 0px; margin-top:10px;">New Program Name</p>
+                    <input class="form-control" type="text" name="program-add" id="program-add">
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+
+
 </body>
+
+<script>
+    function editFee(name, id, program){
+        let mainmodal = document.getElementById("edit-fee");
+        $('#edit-fee').modal('toggle');
+        mainmodal.querySelector("#fee-id").value = id;
+        mainmodal.querySelector("#edit-title").innerHTML = program + " Fee Edit";
+        mainmodal.querySelector("#exclusive").value = document.getElementById(name+"-exclusive").innerHTML.replace("K","000");
+        mainmodal.querySelector("#semiprivate").value = document.getElementById(name+"-semiprivate").innerHTML.replace("K","000");
+        mainmodal.querySelector("#school").value = document.getElementById(name+"-school").innerHTML.replace("K","000");
+
+    }
+
+    function editIncentive(name,id){
+        let mainmodal = document.getElementById("edit-incentive");
+        $('#edit-incentive').modal('toggle');
+        mainmodal.querySelector("#incentive-id").value = id;
+        mainmodal.querySelector("#edit-title-incentive").innerHTML = name + " Incentive Edit";
+        mainmodal.querySelector("#incentive-input").value = document.getElementById('incentive-'+name).innerHTML.replace("K","000");
+
+    }
+</script>
 
 </html>

@@ -86,7 +86,14 @@
                 <div class="form-row">
                     <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input id="level" name="level" class="form-control attendance-input" type="text" placeholder="Level"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div>
+                            <select name="level" id="level" class="form-control attendance-input" style="margin-left: 15px;" required>
+                                <option value="" disabled selected>Level</option>
+                                @foreach ($levels as $l)
+                                    <option value="{{ $l->level }}">{{ $l->level }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

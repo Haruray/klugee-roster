@@ -68,6 +68,7 @@
     <h1 class="bounce animated page-heading">WELCOME!</h1>
     <div>
         <div class="container">
+            <!-- TEACHER ACCESS -->
             @if (auth()->user()->user_type=='teacher')
             <div class="row">
                 <div class="col-md-3 col-sm-6">
@@ -103,7 +104,45 @@
                     </a>
                 </div>
             </div>
+            <!-- HEAD TEACHER ACCESS -->
+            @elseif(auth()->user()->user_type=="head teacher")
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <a href="/attendance-admin">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
+                            <p class="button-content">Attendance</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="/user-profiles">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p class="button-content-icon"><i class="fa fa-users"></i></p>
+                            <p class="button-content">Profiles</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="/schedule-admin">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p class="button-content-icon"><i class="fa fa-table"></i></p>
+                            <p class="button-content">Schedule</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="/earnings">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p class="button-content-icon"><i class="fa fa-money"></i></p>
+                            <p class="button-content">Earnings</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
             @else
+            <!--ADMIN OFFICER, SUPERADMIN, AND HEAD OF INSTITUTION -->
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <a href="/attendance-admin">

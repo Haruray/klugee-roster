@@ -160,7 +160,9 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->user_type == "head teacher" || auth()->user()->user_type == "admin" || auth()->user()->user_type == "super admin" || auth()->user()->user_type == "head of institution")
         <div class="progress-report-list-button-group"><a href="/students/{{ $student_id }}/progress-report/{{ $program }}/generate"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></a></div>
+        @endif
         <button id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
         <div class="table-responsive progress-report-table">
             <table id="progress-report-table" class="table">
@@ -174,6 +176,7 @@
                         <th>Documentation</th>
                         <th>Action</th>
                         <th>Status</th>
+                        <th style="width:10%;">Printed As Report Book</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,6 +194,11 @@
                         @endif
                         <td><button class="btn btn-primary" type="button">Edit</button></td>
                         @if ($progress_report[$i]->filled)
+                        <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                        @else
+                        <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                        @endif
+                        @if ($progress_report[$i]->generated)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>

@@ -35,6 +35,7 @@ class MainController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('firstlevel');
     }
 
     public function index()
@@ -289,8 +290,9 @@ class MainController extends Controller
                 $flag=false;
             }
         }
+        $levels = FeeList::select('level')->where('program', Attendance::where('id',$attendance_id)->first()->program)->get();
         $view = view('progress-report-input');
-        return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag);
+        return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag)->with('levels',$levels);
     }
 
     public function AttendanceView($attendance_id){
@@ -614,12 +616,14 @@ class MainController extends Controller
         $feelist = FeeList::get();
         $incentives = IncentiveList::get();
         $salary = SalaryList::get();
+        $programs = Program::get();
         $view = view('management');
         return $view->with([
             'programs'=>$programs,
             'feelist' => $feelist,
             'incentive' =>$incentives,
-            'salary' => $salary
+            'salary' => $salary,
+            'programs' => $programs,
         ]);
     }
 

@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//FIRST LEVEL ACCESS
 //teacher route
 Route::get('/', 'MainController@index')->name('home');
 Route::get('/attendance', 'TeacherController@AttendanceMenu');
@@ -37,18 +38,45 @@ Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
 Route::get('/earnings','MainController@Earnings');
 Route::get('/management','MainController@Management');
-//admin route
-Route::get('/attendance-admin','AdminController@AttendanceAdmin');
-Route::get('/user-profiles','AdminController@UserProfiles');
-Route::get('/users','AdminController@UserList');
-Route::get('/users/add','AdminController@AddTeacherMenu');
-Route::get('/users/{user_id}','AdminController@UserSelectProfile');
-Route::get('/users/{user_id}/students','AdminController@UserSelectStudents');
-Route::get('/users/{user_id}/attendance','AdminController@UserSelectAttendance');
-Route::get('/users/{user_id}/schedule','AdminController@UserSelectSchedule');
 
-Route::get('/schedule-admin','AdminController@ScheduleAdmin');
-Route::get('/schedule-admin/detailed/{teacher}','AdminController@ScheduleAll');
+//teacher post route
+Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
+Route::post('/attendance/edit','MainController@AttendanceEdit');
+Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
+Route::post('/profile/upload','MainController@ProfilePictureChange');
+Route::post('/profile/edit','MainController@ProfileEdit');
+
+//SECOND LEVEL ACCESS
+//minimum head teacher route
+Route::get('/attendance-admin','HeadTeacherController@AttendanceAdmin');
+Route::get('/user-profiles','HeadTeacherController@UserProfiles');
+Route::get('/users','HeadTeacherController@UserList');
+Route::get('/users/{user_id}','HeadTeacherController@UserSelectProfile');
+Route::get('/users/{user_id}/students','HeadTeacherController@UserSelectStudents');
+Route::get('/users/{user_id}/attendance','HeadTeacherController@UserSelectAttendance');
+Route::get('/users/{user_id}/schedule','HeadTeacherController@UserSelectSchedule');
+
+Route::get('/schedule-admin','HeadTeacherController@ScheduleAdmin');
+Route::get('/schedule-admin/detailed/{teacher}','HeadTeacherController@ScheduleAll');
+
+
+Route::get('/user-attendances','HeadTeacherController@UserAttendances');
+Route::get('/user-attendances/approve/{id}','HeadTeacherController@UserAttendanceApproval');
+Route::get('/schedule-admin/manage','HeadTeacherController@ScheduleAdminManage');
+
+Route::get('/students/{student_id}/progress-report/{program}/generate','HeadTeacherController@ReportGenerate');
+Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
+
+//second level access post route
+Route::post('/schedule-admin/manage/add','HeadTeacherController@ScheduleAdd');
+Route::post('/schedule-admin/manage/edit','HeadTeacherController@ScheduleEdit');
+Route::post('/profile/select/upload','HeadTeacherController@UserSelectProfilePictureChange');
+Route::post('/generate-report','HeadTeacherController@ReportGenerateProcess');
+
+
+
+//THIRD LEVEL ACCESS
+//minimum admin route
 Route::get('/accounting','AdminController@Accounting');
 Route::get('/accounting/input-transaction','AdminController@InputTransaction');
 Route::get('/accounting/input-transaction/income','AdminController@IncomeInputTransaction');
@@ -61,13 +89,13 @@ Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminContr
 Route::get('/accounting/spp','AdminController@SPP');
 Route::get('/accounting/referral/{month}/{year}','AdminController@ReferralReport');
 
-Route::get('/user-attendances','AdminController@UserAttendances');
-Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
-Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
+Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
+Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
+Route::post('/accounting/spp/process','AdminController@SPPProcess');
 
-Route::get('/students/{student_id}/progress-report/{program}/generate','AdminController@ReportGenerate');
 
-//Super Admin route
+//FOURTH LEVEL ACCESS
+//minimum superadmin route
 Route::get('/accounting/approvals','SuperAdminController@Approvals');
 Route::get('/accounting/approvals/approve-fee/{fee_id}','SuperAdminController@FeeApproval');
 Route::get('/accounting/approvals/delete-fee/{fee_id}','SuperAdminController@FeeDeletion');
@@ -84,24 +112,20 @@ Route::get('/accounting/approvals/delete-referral-front/{referral_id}','SuperAdm
 Route::get('/accounting/approvals/approve-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingApproval');
 Route::get('/accounting/approvals/delete-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingDeletion');
 
-//teacher post route
-Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
-Route::post('/attendance/edit','MainController@AttendanceEdit');
-Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
-Route::post('/profile/upload','MainController@ProfilePictureChange');
-Route::post('/profile/edit','MainController@ProfileEdit');
-//admin post route
-Route::post('/schedule-admin/manage/add','AdminController@ScheduleAdd');
-Route::post('/schedule-admin/manage/edit','AdminController@ScheduleEdit');
-Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
-Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
-Route::post('/accounting/spp/process','AdminController@SPPProcess');
-Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
-Route::post('/users/add/process','AdminController@AddTeacherProcess');
-Route::post('/generate-report','AdminController@ReportGenerateProcess');
+Route::get('/new-user','SuperAdminController@AddTeacherMenu');
 
 
-Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
+
+//super admin post route
+Route::post('/management/fee-edit','SuperAdminController@FeeEdit');
+Route::post('/management/incentive-edit','SuperAdminController@IncentiveEdit');
+Route::post('/management/fee-add','SuperAdminController@FeeAdd');
+Route::post('/management/program-add','SuperAdminController@ProgramAdd');
+
+Route::post('/users/add/process','SuperAdminController@AddTeacherProcess');
+
+
+
 
 //requests route
 Route::get('/get/student','RequestController@GetStudentData');

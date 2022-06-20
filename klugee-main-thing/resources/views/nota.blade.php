@@ -11,7 +11,7 @@
   }
 
   .nota-body {
-    width: 280mm;
+    width: 276mm;
   }
 
   #nota-table-head {
@@ -205,9 +205,9 @@ table {
     </style>
 </head>
 
-<body class="nota-body">
+<body class="nota-body" style="margin-left: -1px;">
     <div class="nota-header">
-        <div class="container"><img src="{{ public_path('img/klageealamat.png') }}" style="width: 247px;"></div>
+        <div class="container" style="margin-left: -5px;"><img src="{{ public_path('img/klageealamat.png') }}" style="width: 247px;"></div>
     </div>
     <div class="nota-details">
         @if ($data->nominal>0)

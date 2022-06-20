@@ -73,7 +73,9 @@
         <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input id="student-search" onkeyup="$dc.StudentSearch()" class="form-control d-inline-block student-search-form" type="text"></form>
     </div>
     <div class="container student-card-container">
-        <div class="text-center" style="margin: 0 0 20px 0;"><a href="/users/add"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add User</button></a></div>
+        @if (auth()->user()->user_type=="super admin" || auth()->user()->user_type=="head of institution")
+        <div class="text-center" style="margin: 0 0 20px 0;"><a href="/new-user"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add User</button></a></div>
+        @endif
         <div class="row">
             <div id="student-list" class="col-lg-12">
                 @foreach ($users as $u)

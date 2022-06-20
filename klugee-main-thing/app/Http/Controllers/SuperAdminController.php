@@ -35,7 +35,7 @@ class SuperAdminController extends Controller
     {
         $this->middleware('auth');
         //$this->middleware('superadmin');
-        $this->middleware('admin');
+        $this->middleware('fourthlevel');
     }
 
     public function Approvals(){
@@ -155,6 +155,107 @@ class SuperAdminController extends Controller
         return redirect('/accounting/approvals');
     }
 
+    public function FeeEdit(Request $request){
+        $fee = FeeList::where('id', $request->input('fee-id'))->first();
+        $fee->nominal_exclusive = $request->input('exclusive');
+        $fee->nominal_semiprivate = $request->input('semiprivate');
+        $fee->nominal_school = $request->input('school');
+        $fee->save();
+        return redirect()->back();
+    }
 
+    public function IncentiveEdit(Request $request){
+        $incentive = IncentiveList::where('id', $request->input('incentive-id'))->first();
+        $incentive->nominal = $request->input('incentive-input');
+        $incentive->save();
+        return redirect()->back();
+    }
+
+    public function FeeAdd(Request $request){
+        $fee = new FeeList;
+        $fee->program = $request->input('fee-program');
+        $fee->level = $request->input('level-add');
+        $fee->nominal_exclusive = $request->input('exclusive-add');
+        $fee->nominal_semiprivate = $request->input('semiprivate-add');
+        $fee->nominal_school = $request->input('school-add');
+        $fee->save();
+        return redirect()->back();
+    }
+
+    public function ProgramAdd(Request $request){
+        $program = new Program;
+        $program->program = $request->input('program-add');
+        $program->save();
+        $fee = new FeeList;
+        $fee->program = $request->input('program-add');
+        $fee->level = 1;
+        $fee->nominal_exclusive = 0;
+        $fee->nominal_semiprivate = 0;
+        $fee->nominal_school = 0;
+        $fee->save();
+        return redirect()->back();
+    }
+
+    public function AddTeacherMenu(){
+        $program = Program::select('program')->get();
+        $view = view('admin-new-teacher');
+        return $view->with('program',$program);
+    }
+
+    public function AddTeacherProcess(Request $request){
+        $teach = new Teachers;
+        $teach->official_id = $request->input("official-id");
+        $teach->name = $request->input("name");
+        $teach->nickname = $request->input("nickname");
+        $teach->birthplace = $request->input("birthplace");
+        $teach->birthdate = $request->input("date");
+        $teach->address = $request->input("address");
+        $teach->phone_contact = $request->input("telp");
+        $teach->emergency_contact = $request->input("telp-emergency");
+        $teach->nik = $request->input("nik");
+        $teach->institution_name = $request->input("institution");
+        $teach->join_date = $request->input("join-date");
+        if (count($request->input("teaching-program")) > 0){
+            $teach->is_teacher = true;
+        }
+        else{
+            $teach->is_teacher = false;
+        }
+        $teach->status = true;
+        $teach->photo = "default-profile-img.png";
+        $teach->save();
+
+        //teach methods
+        foreach($request->input("teaching-method") as $tm){
+            $teach_method = new TeachMethod;
+            $teach_method->id_teacher = $teach->id;
+            $teach_method->method = $tm;
+            $teach_method->save();
+        }
+        //teach positions
+        $teach_pos = new TeachPosition;
+        $teach_pos->id_teacher = $teach->id;
+        $teach_pos->position = $request->input("teacher-status");
+        $teach_pos->save();
+
+        //teach programs
+        foreach($request->input("teaching-program") as $tp){
+            $teach_program = new TeachProgram;
+            $teach_program->id_teacher = $teach->id;
+            $teach_program->program_name = $tp;
+            $teach_program->save();
+        }
+
+        //users
+        $user = new User;
+        $user->name = $teach->nickname;
+        $user->email = $request->input("email");
+        $user->password = Hash::make(strtolower(str_replace(' ','',$teach->name)));
+        $user->user_type = $request->input("user-type");
+        $user->id_teacher = $teach->id;
+        $user->photo = $teach->photo;
+        $user->save();
+        return redirect('/users/add');
+    }
 
 }

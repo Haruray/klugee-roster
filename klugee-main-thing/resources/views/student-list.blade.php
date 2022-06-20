@@ -37,10 +37,10 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
+
                 <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                 @if (auth()->user()->user_type == "admin")
                     <div class="text-left nav-item-div">
@@ -73,9 +73,8 @@
             <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input id="student-search" onkeyup="$dc.StudentSearch()" class="form-control d-inline-block student-search-form" type="text"></form>
     </div>
     <div class="container student-card-container">
-        @if (auth()->user()->user_type=="admin" or auth()->user()->user_type=="teacher manager")
+        @if (auth()->user()->user_type=="admin" || auth()->user()->user_type=="super admin" || auth()->user()->user_type=="head of institution")
         <div class="text-center" style="margin: 0 0 20px 0;"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add Student</button></div>
-
         @endif
         <div class="row">
             <div id="student-list" class="col-lg-12">

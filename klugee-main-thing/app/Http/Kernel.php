@@ -66,5 +66,10 @@ class Kernel extends HttpKernel
         'admin'=>\App\Http\Middleware\AdminAccess::class,
         'teacher' => \App\Http\Middleware\TeacherAccess::class,
         'superadmin' => \App\Http\Middleware\SuperAdminAccess::class,
+        'firstlevel' =>\App\Http\Middleware\FirstLevelAccess::class,
+        'secondlevel' =>\App\Http\Middleware\SecondLevelAccess::class,
+        'thirdlevel' =>\App\Http\Middleware\ThirdLevelAccess::class,
+        'fourthlevel' =>\App\Http\Middleware\FourthLevelAccess::class,
+        'fifthlevel' =>\App\Http\Middleware\FifthLevelAccess::class,
     ];
 }
