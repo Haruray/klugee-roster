@@ -108,17 +108,17 @@
                                 <tr>
                                     <td rowspan="{{ $feelist->where('program',$feelist[$i]->program)->count() }}">{{ $feelist[$i]->program }}</td>
                                     <td>{{ $feelist[$i]->level }}</td>
-                                    <td>{{ $feelist[$i]->nominal_exclusive }}</td>
-                                    <td>{{ $feelist[$i]->nominal_semiprivate }}</td>
-                                    <td>{{ $feelist[$i]->nominal_school }}</td>
+                                    <td>{{ $feelist[$i]->nominal_exclusive/1000 }}K</td>
+                                    <td>{{ $feelist[$i]->nominal_semiprivate/1000 }}K</td>
+                                    <td>{{ $feelist[$i]->nominal_school/1000 }}K</td>
                                     <td><button class="btn btn-warning">Edit</button></td>
                                 </tr>
                                 @for ($j=$i+1 ; $j < $i+$feelist->where('program',$feelist[$i]->program)->count() ; $j++)
                                 <tr>
                                     <td>{{ $feelist[$j]->level }}</td>
-                                    <td>{{ $feelist[$j]->nominal_exclusive }}</td>
-                                    <td>{{ $feelist[$j]->nominal_semiprivate }}</td>
-                                    <td>{{ $feelist[$j]->nominal_school }}</td>
+                                    <td>{{ $feelist[$j]->nominal_exclusive/1000 }}K</td>
+                                    <td>{{ $feelist[$j]->nominal_semiprivate/1000 }}K</td>
+                                    <td>{{ $feelist[$j]->nominal_school/1000 }}K</td>
                                     <td><button class="btn btn-warning">Edit</button></td>
                                 </tr>
                                 @endfor

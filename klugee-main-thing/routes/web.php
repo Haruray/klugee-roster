@@ -65,6 +65,8 @@ Route::get('/user-attendances','AdminController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','AdminController@UserAttendanceApproval');
 Route::get('/schedule-admin/manage','AdminController@ScheduleAdminManage');
 
+Route::get('/students/{student_id}/progress-report/{program}/generate','AdminController@ReportGenerate');
+
 //Super Admin route
 Route::get('/accounting/approvals','SuperAdminController@Approvals');
 Route::get('/accounting/approvals/approve-fee/{fee_id}','SuperAdminController@FeeApproval');
@@ -96,6 +98,7 @@ Route::post('/accounting/input-transaction/expense/process','AdminController@Exp
 Route::post('/accounting/spp/process','AdminController@SPPProcess');
 Route::post('/profile/select/upload','AdminController@UserSelectProfilePictureChange');
 Route::post('/users/add/process','AdminController@AddTeacherProcess');
+Route::post('/generate-report','AdminController@ReportGenerateProcess');
 
 
 Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
@@ -108,3 +111,4 @@ Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
 Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');
 
 Route::get('/nota','AdminController@TesNota');
+Route::get('/report','AdminController@Report');

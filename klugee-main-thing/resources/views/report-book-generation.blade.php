@@ -149,70 +149,53 @@
         </div>
         </div>
     </nav>
-    <h2 class="bounce animated page-heading">PROGRESS REPORTS</h2>
     <div class="container">
         <div class="row">
-            <div class="col-md-3 text-center"><img src="{{url('/img/'.$program.'-logo.png')}}" style="width: 120px;"></div>
-            <div class="col-md-9 text-center">
+            <div class="col-md-9 text-left">
                 <div class="d-inline-block progress-report-text">
-                    <p class="text-center progress-report-student-name">{{$student->name}}</p>
-                    <p class="text-center progress-report-program-name">{{$program}}</p>
+                    <h2 class="text-left progress-report-program-name">REPORT BOOK</h2>
+                    <p class="text-left progress-report-student-name">{{$student->name}}</p>
+                    <p class="text-left progress-report-program-name">{{$program}}</p>
                 </div>
             </div>
         </div>
-        <div class="progress-report-list-button-group"><a href="/students/{{ $student_id }}/progress-report/{{ $program }}/generate"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></a></div>
-        <button id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
-        <div class="table-responsive progress-report-table">
-            <table id="progress-report-table" class="table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Level</th>
-                        <th>Unit</th>
-                        <th>Last Exercise</th>
-                        <th>Score</th>
-                        <th>Documentation</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for ($i = 0 ; $i < count($progress_report) ; $i++)
-                    <tr>
-                        <td>{{$attendance[$i]->date}}</td>
-                        <td>{{$progress_report[$i]->level ?: ''}}</td>
-                        <td>{{$progress_report[$i]->unit ?: ''}}</td>
-                        <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
-                        <td>{{$progress_report[$i]->score ?: ''}}</td>
-                        @if (is_null($progress_report[$i]->documentation))
-                        <td></td>
-                        @else
-                        <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
-                        @endif
-                        <td><button class="btn btn-primary" type="button">Edit</button></td>
-                        @if ($progress_report[$i]->filled)
-                        <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
-                        @else
-                        <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        @endif
-                    </tr>
-                    @endfor
-                </tbody>
-            </table>
+        <div style="background-color: #fff5cc; border-radius:10px; padding:20px;">
+            <form action="/generate-report" method="POST">
+                @csrf
+                <button class="btn btn-primary float-right progress-report-button bold" type="submit" value="submit" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Generate</button>
+                <textarea name="description-english" id="" style="box-sizing: border-box; width:100%; margin-bottom:20px; margin-top:20px;" placeholder="Evaluation Description (English)" required></textarea>
+                <textarea name="description-indo" id="" style="box-sizing: border-box; width:100%; margin-bottom:20px;" placeholder="Evaluation Description (Indonesia)" required></textarea>
+                <input class="form-control" type="text" name="overall-score" style="margin-bottom:20px;" placeholder="Overall Score ( Example : 'Excellent (A+)' )" required>
+                <input class="form-control" type="text" name="farewell" style="margin-bottom:20px;" placeholder="Closing; Student's next stage (Example : 'Smartie Level 2')" required>
+                <input type="hidden" name="program" id="program" value="{{ $program }}">
+            <div class="table-responsive progress-report-table">
+                    <table id="progress-report-table" class="table">
+                        <thead>
+                            <tr>
+                                <th style="width:15px;">Checklist</th>
+                                <th>Date</th>
+                                <th>Level</th>
+                                <th>Unit</th>
+                                <th>Last Exercise</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0 ; $i < count($progress_report) ; $i++)
+                            <tr>
+                                <td><input type="checkbox" name="progress[]" value="{{ $progress_report[$i]->id }}"></td>
+                                <td>{{date('D',strtotime($progress_report[$i]->date))}}, {{date('d',strtotime($progress_report[$i]->date))}} {{date('F',strtotime($progress_report[$i]->date))}} {{date('Y',strtotime($progress_report[$i]->date))}}</td>
+                                <td>{{$progress_report[$i]->level ?: ''}}</td>
+                                <td>{{$progress_report[$i]->unit ?: ''}}</td>
+                                <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
+                                <td>{{$progress_report[$i]->score ?: ''}}</td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </form>
+            </div>
         </div>
-    </div>
-
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-
-    <!-- The Close Button -->
-    <span onclick="$dc.DocumentationModalClose()" class="close">&times;</span>
-
-    <!-- Modal Content (The Image) -->
-    <img class="modal-content" id="img01">
-
-    <!-- Modal Caption (Image Text) -->
-    <div id="caption"></div>
     </div>
 
 

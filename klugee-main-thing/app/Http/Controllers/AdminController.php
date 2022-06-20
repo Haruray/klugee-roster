@@ -530,4 +530,46 @@ class AdminController extends Controller
         ]);
     }
 
+    public function Report(){
+        // $view = view('reportbook');
+        // return $view;
+        //view()->share('data',$new_income);
+        $pdf = PDF::loadView('reportbook')->setOption('page-width','210')->setOption('page-height','297')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('Tes.pdf');
+
+    }
+
+    public function ReportGenerate($student_id, $program){
+        //get student data
+        $studentbio = Students::where('id',$student_id)->get()->first();
+        //get attendance id first based on program
+        $attendee_data = Attendee::where('id_student',$student_id)->get();
+        $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())->where('program',$program)->get();
+
+        $progress_reports = Progress::select('progress.*','attendances.date')->where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->join('attendances','attendances.id','progress.id_attendance')->where('generated',false)->orderBy('level','ASC')->orderBy('date','ASC')->get();
+        $view = view('report-book-generation')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio)->with('program',$program);
+
+        return $view;
+    }
+
+    public function ReportGenerateProcess(Request $request){
+        $progress_reports = Progress::whereIn('id',$request->input('progress'))->get();
+        $levels = Progress::select('level')->whereIn('id',$request->input('progress'))->distinct()->get();
+        $latest_teacher_1 =  Progress::whereIn('progress.id',$request->input('progress'))->join('teachers','teachers.id','=','progress.id_teacher')->get()->reverse()->first()['name'];
+        $student = Students::where('id',$progress_reports[0]->id_student)->first();
+        view()->share([
+            'data' => $progress_reports,
+            'level' => $levels,
+            'program' => $request->input('program'),
+            'teacher' => $latest_teacher_1,
+            'student' => $student,
+            'desc_eng' => $request->input('description-english'),
+            'desc_ind' => $request->input('description-indo'),
+            'score' => $request->input('overall-score'),
+            'farewell' => $request->input('farewell'),
+        ]);
+        $pdf = PDF::loadView('reportbook')->setOption('page-width','210')->setOption('page-height','297')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download($student->nickname.'\'s '.$request->input('program').' Report Book.pdf');
+
+    }
 }
