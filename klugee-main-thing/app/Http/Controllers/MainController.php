@@ -637,4 +637,28 @@ class MainController extends Controller
         $teacher->save();
         return redirect()->back();
     }
+
+    public function Notification(){
+        $view = view('notification');
+        return $view;
+    }
+
+    public function MarkNotification($notif_id){
+        auth()->user()
+            ->unreadNotifications
+            ->when($notif_id, function ($query) use ($notif_id) {
+                return $query->where('id', $notif_id);
+            })
+            ->markAsRead();
+
+        return redirect()->back();
+    }
+
+    public function MarkAllNotification(){
+        auth()->user()
+            ->unreadNotifications
+            ->markAsRead();
+
+        return redirect()->back();
+    }
 }

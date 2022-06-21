@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" />
@@ -32,17 +32,17 @@
         });
 
         });
-        
+
     </script>
     <script src="{{asset('js/attendance-script.js')}}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    
-    
+
+
+
 </head>
 
 <body>
-<nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
         <div class="container"><a class="navbar-brand navbar-logo" href="/"><img class="d-inline-block" src="{{asset('img/2.png')}}"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
@@ -55,6 +55,13 @@
                             <a class="dropdown-item" role="presentation" href="/schedule">Schedule</a>
                             <a class="dropdown-item" role="presentation" href="/earnings">Earnings</a>
                         </div>
+                        @elseif (auth()->user()->user_type=="head teacher")
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" role="presentation" href="/attendance-admin">Attendance</a>
+                            <a class="dropdown-item" role="presentation" href="/user-profiles">Profiles</a>
+                            <a class="dropdown-item" role="presentation" href="/schedule-admin">Schedule</a>
+                            <a class="dropdown-item" role="presentation" href="/earnings">Earnings</a>
+                        </div>
                         @else
                         <div class="dropdown-menu" role="menu">
                             <a class="dropdown-item" role="presentation" href="/attendance-admin">Attendance</a>
@@ -63,22 +70,26 @@
                             <a class="dropdown-item" role="presentation" href="/accounting">Accounting</a>
                         </div>
                         @endif
-                        
+
                     </li>
                 </ul>
-                
-                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
-                @if (auth()->user()->user_type == "admin")
+
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->photo)}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                     <div class="text-left nav-item-div">
                         <a class="login" href="/management">
                             <div class="d-inline-block"><i class="fa fa-cog nav-img yellow"></i></div>
                             <p class="d-inline-block nav-item-text">Management</p>
                         </a>
                     </div>
-                @endif
                 <div class="text-left nav-item-div">
                     <a class="login" href="/notification">
-                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i>
+                            @if (count(auth()->user()->unreadNotifications) > 0)
+                            <img class="warning-sign" src="{{asset('img/15.png')}}">
+                            @else
+                            <img class="warning-sign-hidden" src="{{asset('img/15.png')}}">
+                            @endif
+                        </div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
@@ -130,7 +141,7 @@
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <div class="attendance-input-div">
                                 <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
-                                <input class="form-control attendance-input" type="text" placeholder="Location" required=""> 
+                                <input class="form-control attendance-input" type="text" placeholder="Location" required="">
                                 <select id="attendance-form-hour" class="required js-example-basic-single form-control attendance-input" name="hour" placeholder="hour" required="">
                                         <option></option>
                                         <option value="7AM-8AM">7AM - 8AM</option>
@@ -154,7 +165,7 @@
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <div class="attendance-input-div">
                                 <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
-                                <input class="form-control attendance-input" id="time" name="time" type="time" placeholder="Time" required=""> 
+                                <input class="form-control attendance-input" id="time" name="time" type="time" placeholder="Time" required="">
                             </div>
                         </div>
                     </div>
@@ -227,8 +238,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 
     <script src="{{asset('js/bs-init.js')}}"></script>
-    
-    
+
+
 </body>
 
 </html>

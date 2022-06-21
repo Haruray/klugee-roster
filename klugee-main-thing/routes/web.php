@@ -38,6 +38,10 @@ Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
 Route::get('/earnings','MainController@Earnings');
 Route::get('/management','MainController@Management');
+Route::get('/notification','MainController@Notification');
+Route::get('/notification/mark-as-read/{notif_id}', 'MainController@MarkNotification');
+Route::get('/notification/mark-all-as-read', 'MainController@MarkAllNotification');
+
 
 //teacher post route
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');

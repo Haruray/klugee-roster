@@ -15,7 +15,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
         <div class="container"><a class="navbar-brand navbar-logo" href="/"><img class="d-inline-block" src="{{asset('img/2.png')}}"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
@@ -26,6 +26,13 @@
                             <a class="dropdown-item" role="presentation" href="/attendance">Attendance</a>
                             <a class="dropdown-item" role="presentation" href="/students">Students</a>
                             <a class="dropdown-item" role="presentation" href="/schedule">Schedule</a>
+                            <a class="dropdown-item" role="presentation" href="/earnings">Earnings</a>
+                        </div>
+                        @elseif (auth()->user()->user_type=="head teacher")
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" role="presentation" href="/attendance-admin">Attendance</a>
+                            <a class="dropdown-item" role="presentation" href="/user-profiles">Profiles</a>
+                            <a class="dropdown-item" role="presentation" href="/schedule-admin">Schedule</a>
                             <a class="dropdown-item" role="presentation" href="/earnings">Earnings</a>
                         </div>
                         @else
@@ -40,18 +47,22 @@
                     </li>
                 </ul>
 
-                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->id_teacher.'_'.auth()->user()->name.'.png')}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
-                @if (auth()->user()->user_type == "admin")
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->photo)}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
                     <div class="text-left nav-item-div">
                         <a class="login" href="/management">
                             <div class="d-inline-block"><i class="fa fa-cog nav-img yellow"></i></div>
                             <p class="d-inline-block nav-item-text">Management</p>
                         </a>
                     </div>
-                @endif
                 <div class="text-left nav-item-div">
                     <a class="login" href="/notification">
-                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="{{asset('img/15.png')}}"></div>
+                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i>
+                            @if (count(auth()->user()->unreadNotifications) > 0)
+                            <img class="warning-sign" src="{{asset('img/15.png')}}">
+                            @else
+                            <img class="warning-sign-hidden" src="{{asset('img/15.png')}}">
+                            @endif
+                        </div>
                         <p class="d-inline-block nav-item-text">Notification</p>
                     </a>
                 </div>
