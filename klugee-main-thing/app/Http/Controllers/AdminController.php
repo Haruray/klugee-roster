@@ -175,16 +175,22 @@ class AdminController extends Controller
 
     public function SPPProcess(Request $request){
         //TODO :
-        // - mengurangi kuota berdasarkan progress report yg belum dibayar (DONE)
+        // - update student presence status paid nya ketika di update + kasih notif juga
         $quota_remainder = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendance')->where('id_student',$request->input('student'))->where('spp_paid',0)->where('program',$request->input('program'))->count();
         $tuition =  TuitionFee::where('id_student', $request->input('student'))->where('program',$request->input('program'))->get()->first();
         if (is_null($tuition)){
             //belum ada tuition fee terbayar
+            //buat record baru
             $tuition = new TuitionFee;
             $tuition->id_student = $request->input('student');
             $tuition->program = $request->input('program');
-            $tuition->quota = $request->input('quota')-$quota_remainder < 0 ? 0 : $request->input('quota')-$quota_remainder;
+            $tuition->quota = ($request->input('quota')-$quota_remainder) <= 0 ? 0 : $request->input('quota')-$quota_remainder;
+            //tambahkan record baru untuk student_programs
+            $student_program =new StudentProgram;
+            $student_program->id_student = $request->input('student');
+            $student_program->program = $request->input('program');
             if ($tuition->save()){
+                $student_program->save();
                 Session::flash('sukses','Data successfully recorded.');
             }
             else{
@@ -193,7 +199,8 @@ class AdminController extends Controller
         }
         else{
             //sudah ada fee terdaftar
-            $tuition->quota = $tuition->quota + $request->input('quota') - $quota_remainder < 0? 0 : $tuition->quota + $request->input('quota') - $quota_remainder;
+            $tuition->quota = ($tuition->quota + $request->input('quota') - $quota_remainder) <= 0? 0 : $tuition->quota + $request->input('quota') - $quota_remainder;
+            //Update spp paid di student presence
             if ($tuition->save()){
                 Session::flash('sukses','Data successfully recorded.');
             }
@@ -201,6 +208,16 @@ class AdminController extends Controller
                 Session::flash('gagal','Error has occured. Failed to record data.');
             }
         }
+
+        //updating the student presences
+        $student_presence_spp_update = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendance')
+        ->where('id_student',$request->input('student'))
+        ->where('spp_paid',false)
+        ->where('program',$request->input('program'))->orderBy('attendances.date', 'ASC')
+        ->limit($request->input('quota') > $quota_remainder ? $quota_remainder : $request->input('quota'))
+        ->update([
+            'spp_paid' => true
+        ]);
 
         //Saving it to accounting
         $accounting = new Accounting;
