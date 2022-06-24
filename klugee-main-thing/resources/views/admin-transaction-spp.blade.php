@@ -95,13 +95,15 @@
         @endif
 
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-        <form name="spp-form" method="POST" action="/accounting/spp/process">
+        <form name="spp-form" method="POST" action="/accounting/spp/process" onsubmit="return validateForm();">
             @csrf
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input name="date" class="form-control attendance-input" type="date" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div>
+                            <input style="margin-left: 20px;" name="date" class="form-control attendance-input" type="date" required="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,9 +111,10 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
                             <select name="student" class="form-control attendance-input">
                                 <optgroup label="Students">
+                                    <option value="" disabled selected>Student</option>
                                     @foreach ($students as $s)
                                         <option value="{{ $s->id }}">{{ $s->name }}</option>
                                     @endforeach
@@ -125,9 +128,10 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-cog"></i></div>
                             <select name="program" class="form-control attendance-input">
                                 <optgroup label="Program">
+                                    <option value="" disabled selected>Program</option>
                                     @foreach ($programs as $p )
                                         <option value="{{ $p->program }}">{{ $p->program }}</option>
                                     @endforeach
@@ -152,8 +156,8 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-dollar"></i></div>
-                            <input name="quota" class="form-control attendance-input" type="text" placeholder="Jatah" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <input name="quota" class="form-control attendance-input" type="text" placeholder="Jatah Pertemuan" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         </div>
                     </div>
                 </div>
@@ -162,7 +166,9 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="notes" class="form-control attendance-input" type="text" placeholder="Notes" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div>
+                            <input style="margin-left: 20px;" name="notes" class="form-control attendance-input" type="text" placeholder="Notes">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,6 +179,7 @@
                             <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
                             <select name="pic" class="form-control attendance-input">
                                 <optgroup label="PIC">
+                                    <option value="" disabled selected>PIC</option>
                                     @foreach ($teachers as $t)
                                     <option value="{{$t->id}}">{{ $t->name }}</option>
                                 @endforeach
@@ -189,8 +196,9 @@
                             <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
                             <select name="payment_method" class="form-control attendance-input">
                                 <optgroup label="Payment Method">
+                                    <option value="" disabled selected>Payment Method</option>
                                     <option value="Cash">Cash</option>
-                                    <option value="Atm">ATM</option>
+                                    <option value="ATM">ATM</option>
                                     <option value="Other">Other</option>
                                 </optgroup>
                             </select></div>
@@ -202,7 +210,52 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="{{asset('js/bs-init.js')}}"></script>
 
 </body>
+
+<script>
+    function validateForm() {
+        let x = document.forms["spp-form"];
+        if (x["student"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Student must be filled out.'
+            });
+            return false;
+        }
+        if (x["program"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Program must be filled out.'
+            });
+            return false;
+        }
+        if (x["pic"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'PIC must be filled out.'
+            });
+            return false;
+        }
+        if (x["payment_method"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Payment Method must be filled out.'
+            });
+            return false;
+        }
+        Swal.fire({
+                icon : 'success',
+                title: 'Form Submitted!',
+                text: 'Please wait until the payment receipt is downloaded.'
+            });
+    }
+</script>
 </html>

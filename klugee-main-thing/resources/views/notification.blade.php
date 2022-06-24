@@ -79,17 +79,15 @@
     <div class="container">
         <h1 class="bounce animated page-heading text-left"><i class="fa fa-bell-o"></i> NOTIFICATIONS</h1>
 
-        <div class="management-box">
+        <div class="management-box" style="background-color:white;">
             @forelse(auth()->user()->unreadNotifications as $notification)
                 @if (!is_null($notification->data))
-                    @foreach ($notification->data as $d)
                         <div class="alert alert-success" role="alert">
-                            [{{ $notification->created_at }}] {{ json_encode($d) }}
+                            [{{ $notification->created_at }}] {{ json_encode($notification->data) }}
                             <a href="/notification/mark-as-read/{{ $notification->id }}" class="float-right mark-as-read">
                                 Mark as read
                             </a>
                         </div>
-                    @endforeach
                 @endif
 
             @if($loop->last)

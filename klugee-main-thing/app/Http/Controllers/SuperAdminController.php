@@ -42,11 +42,13 @@ class SuperAdminController extends Controller
         $view = view('admin-approvals');
         $income_approvals = Accounting::select('accountings.*','teachers.name')->where('nominal','>','0')->where('approved','=','0')->join('teachers','teachers.id','=','pic')->get();
         $expense_approvals = Accounting::select('accountings.*','teachers.name')->where('nominal','<','0')->where('approved','=','0')->join('teachers','teachers.id','=','pic')->get();
-        $fees_approvals = Fee::select('fees.id as id_fee','fees.fee_nominal','fees.lunch_nominal','fees.transport_nominal','fees.note','fees.approved','fees.id_attendance','attendances.date','teachers.name')->where('approved','=','0')->join('attendances','attendances.id','=','fees.id_attendance')->join('teachers','teachers.id','=','attendances.id_teacher')->get();
+        $fees_approvals = Fee::select('fees.id as id_fee','fees.fee_nominal','fees.lunch_nominal','fees.transport_nominal','fees.note','fees.approved','fees.id_attendance','attendances.date','teachers.name')->where('approved','=','0')->join('attendances','attendances.id','=','fees.id_attendance')
+        ->join('teachers','teachers.id','=','attendances.id_teacher')
+        ->orderBy('attendances.date')
+        ->get();
         $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')->where('status_referral','=','0')->orWhere('status_front_admin','=','0')->orWhere('status_scheduling')->join('students','students.id','=','referrals.registering_student_id')->get();
         $salary_approvals = Salary::select('salaries.*','teachers.name')->where('approved','=','0')->join('teachers','teachers.id','=','salaries.id_teacher')->get();
         $incentives = Incentive::where('approved','=','0')->get();
-        //return $fees_approvals;
         return $view->with('income',$income_approvals)->with('expense',$expense_approvals)->with('fee',$fees_approvals)->with('salary',$salary_approvals)->with('incentive',$incentives)->with('referrals',$referrals_approvals);
     }
 

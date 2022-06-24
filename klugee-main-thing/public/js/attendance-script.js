@@ -19,7 +19,7 @@
         var HTML="";
         replaceHtml(selector,HTML);
     };
-    
+
     //Counts and finds how many student input form are there in the page
     let studentsCount = 1;
 
@@ -35,11 +35,11 @@
             }
             else{
                 studentsCount++
-            }   
+            }
         }
         return studentsCount;
     }
-    
+
     let convertDay = function(number){
         if (number == 0){
             return "Sunday";
@@ -102,7 +102,7 @@
                     }
                     studentInputFormComplete+=studentInputForm2;
                     insertHtml("#attendance-form-box",studentInputFormComplete)
-                    
+
                     let studentFormSelector = "#student"+studentFormsCount;
                     $(studentFormSelector).select2({
                         placeholder: "Select a student",
@@ -112,9 +112,10 @@
             },
             error : function(){
                 alert("Data request failed. Please reload the page.");
+
             }
         });
-        
+
     }
 
     dc.MarkStudent = function(selector){
@@ -125,7 +126,7 @@
         "<div class=\"attendance-confirm-yes align-bottom\"><i class=\"fa fa-check\"></i></div>" +
         "</a>"+
         "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"yes\">";
-        
+
         replaceHtml(selector,studentCheckDoneHTML);
     }
 
@@ -145,7 +146,7 @@
         //TO do :
         // - check student duplicate so the attendanceConfirm dont have student duplicate
 
-        var form = $('form')[1]; 
+        var form = $('form')[1];
         console.log(form);
         var formdata = new FormData(form);
         console.log(formdata);
@@ -153,7 +154,7 @@
         let attendanceConfirm1 = "<div class=\"tada animated attendance-box\">"+
         "<h3 class=\"page-sub-heading\">Student's attendance is&nbsp;<span class=\"yellow\">recorded</span></h3>"+
         "<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>";
-        
+
         let attendanceConfirmComplete = attendanceConfirm1;
         $.ajax({
             url : '/attendance/input-process',
@@ -211,8 +212,10 @@
                         icon : 'error',
                         title: 'Oops...',
                         text: 'Request failed. Please reload the page.'
+                    }).then(function(){
+                        location.reload();
                     });
-    
+
                 }
             },
             error : function(response){
@@ -221,7 +224,10 @@
                     icon : 'error',
                     title: 'Oops...',
                     text: 'Input error. Please re-enter the data or reload the page.'
+                }).then(function(){
+                    location.reload();
                 });
+
             }
         })
     }

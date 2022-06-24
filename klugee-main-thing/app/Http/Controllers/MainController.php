@@ -29,6 +29,7 @@ use App\IncentiveList;
 use App\Accounting;
 use App\SalaryList;
 
+use Session;
 
 class MainController extends Controller
 {
@@ -57,9 +58,6 @@ class MainController extends Controller
     }
 
     public function AttendanceInputProcess(Request $request){
-        //TO DO :
-        // - Check student duplicate (done, untested)
-        // - If student not registered in a certain program, dont process the data and give warning
         $max_stud = 10; //max students for input
         $should_pay_teach_fee = false;
         //Save attendance data
@@ -70,13 +68,6 @@ class MainController extends Controller
         $new_attendance->program = $request->input('program');
         $new_attendance->location = $request->input('location');
         $new_attendance->class_type = $request->input('class-type');
-        if (!$new_attendance->save()){
-            //If it doesn't success, then return error message
-            return response()->json([
-                'success' => false,
-                'message' => 'Fail to save data. Please reload and re-enter the data.'
-            ], 401);
-        }
 
         for ($i = 1 ; $i < $max_stud ; $i++){
             //Search for every student input form
@@ -91,6 +82,25 @@ class MainController extends Controller
                 ])->first();
                 if ($attendee_check!=NULL){
                     continue;
+                }
+                //Check if attendee is registered to input-ed program
+                $student_program_check = Students::join('student_programs','student_programs.id_student','=','students.id')->where([
+                    ['name',$request->input($string_search)],
+                    ['program',$request->input('program')]
+                    ])->get();
+                if (count($student_program_check) <= 0){
+                    Session::flash('unregistered-program', $request->input($string_search).' belum terdaftar di program yang dimasukkan.');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fail to save data. Student is not registered to a program.'
+                    ], 401);
+                }
+                if (!$new_attendance->save()){
+                    //If it doesn't success, then return error message
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fail to save data. Please reload and re-enter the data.'
+                    ], 401);
                 }
                 //Save attendee data
                 $new_attendee = new Attendee;
@@ -155,8 +165,6 @@ class MainController extends Controller
                 $new_presence->save();
             }
         }
-
-
 
         return response()->json([
             'success' => true,
@@ -276,23 +284,56 @@ class MainController extends Controller
         return $students;
     }
 
-    public function AttendanceProgressReport($attendance_id){
-        //TO DO :
-        // - Check if progress report is filled or no
-        // - If no one is present, then give warning
-        // - FIX THIS
-
-        //Get every student on current attendance
-        $students = self::GetAttendee($attendance_id);
-        $flag = true;
-        foreach (Attendee::where('id_attendance',$attendance_id)->get() as $attendee){
-            if (!$attendee->present){
-                $flag=false;
-            }
+    private function GetPresentAttendee($attendance_id){
+        $students = array();
+        $attendee = Attendee::where('id_attendance',$attendance_id)
+        ->join('attendances','attendances.id','=','attendees.id_attendance')->get();
+        foreach ($attendee as $a){
+            if ($a->present)
+                array_push($students, Students::where('id',$a->id_student)->get()->first());
         }
-        $levels = FeeList::select('level')->where('program', Attendance::where('id',$attendance_id)->first()->program)->get();
-        $view = view('progress-report-input');
-        return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag)->with('levels',$levels);
+        return $students;
+    }
+
+    public function AttendanceProgressReport($attendance_id){
+        //Get every student on current attendance
+        $students = self::GetPresentAttendee($attendance_id);
+        $flag; //for checking whether all the students present or not
+        $filled = Progress::where('id_attendance',$attendance_id)->first()->filled;
+        if (!$filled){
+            $spp_warning = array(); //for SPP warning
+            $program = Attendance::where('id',$attendance_id)->first()->program;
+            $attendee = Attendee::where('id_attendance',$attendance_id)->join('tuition_fees','tuition_fees.id_student','=','attendees.id_student')
+            ->join('students','students.id','=','attendees.id_student')->where('program',$program)->get();
+            $flag = $attendee[0]->present;
+            foreach ($attendee as $a){
+                $flag = $flag || $a->present;
+                if ($a->quota <= 0){
+                    $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
+                    array_push($spp_warning,$warning_string);
+                }
+
+            }
+            //SPP warning stuff
+            Session::flash('spp-warning', $spp_warning);
+            $levels = FeeList::select('level')->where('program', $program)->get();
+            $view = view('progress-report-input');
+            return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag)->with('levels',$levels)->with('program', $program);
+        }
+        else{
+            return redirect('/attendance/progress-report/'.$attendance_id.'/filled');
+        }
+
+ }
+    public function ProgressView($attendance_id){
+        $progress = Attendance::join('progress','progress.id_attendance','=','attendances.id')->where('attendances.id',$attendance_id)->get();
+        if ($progress[0]->filled){
+            $view = view('progress-report-confirm');
+            return $view->with('progress',$progress);
+        }
+        else{
+            return redirect('/attendance/progress-report/'.$attendance_id);
+        }
     }
 
     public function AttendanceView($attendance_id){

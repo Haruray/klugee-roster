@@ -28,6 +28,7 @@ Route::get('/attendance/teacher-input','AdminController@TeacherAttendanceInput')
 Route::get('attendance/progress-report/{attendance_id}','MainController@AttendanceProgressReport');
 Route::get('/attendance/history','MainController@AttendanceHistory');
 Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
+Route::get('/attendance/progress-report/{attendance_id}/filled','MainController@ProgressView');
 Route::get('/students','MainController@Students');
 Route::get('/students/{student_id}','MainController@StudentsData');
 Route::get('/students/{student_id}/attendance-history','MainController@StudentsAttendanceHistory');
@@ -69,7 +70,7 @@ Route::get('/user-attendances/approve/{id}','HeadTeacherController@UserAttendanc
 Route::get('/schedule-admin/manage','HeadTeacherController@ScheduleAdminManage');
 
 Route::get('/students/{student_id}/progress-report/{program}/generate','HeadTeacherController@ReportGenerate');
-Route::get('schedule-admin/manage/delete/{schedule_id}','AdminController@ScheduleDelete');
+Route::get('schedule-admin/manage/delete/{schedule_id}','HeadTeacherController@ScheduleDelete');
 
 //second level access post route
 Route::post('/schedule-admin/manage/add','HeadTeacherController@ScheduleAdd');

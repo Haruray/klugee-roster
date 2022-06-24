@@ -111,8 +111,9 @@
                                     </div>
                                 </td>
                         </tr>
-                                @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count() ; $j++)
+                                @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count()+$i ; $j++)
                                 <tr>
+                                    <td>{{ $fee[$i]->name }}</td>
                                     <td>button</td>
                                     <td>{{$fee[$j]->fee_nominal}}</td>
                                     <td>{{$fee[$j]->lunch_nominal}}</td>

@@ -95,7 +95,7 @@
         @endif
 
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-        <form name="income-form" method="POST" action="/accounting/input-transaction/expense/process">
+        <form name="expense-form" method="POST" action="/accounting/input-transaction/expense/process" onsubmit="return validateForm()">
             @csrf
             <div class="container">
                 <div class="form-row">
@@ -109,7 +109,16 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="transaction_type" class="form-control attendance-input"><optgroup label="Transaction Type"><option value="Monthly Expense">Monthly Expense</option><option value="Investment">Investment</option><option value="Other">Other</option></optgroup></select></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <select style="margin-left: 16px;" name="transaction_type" class="form-control attendance-input">
+                                <optgroup label="Transaction Type">
+                                    <option value="" disabled selected>Transaction Type</option>
+                                    <option value="Monthly Expense">Monthly Expense</option>
+                                    <option value="Investment">Investment</option>
+                                    <option value="Other">Other</option>
+                                </optgroup>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,7 +126,16 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><select name="sub_transaction" class="form-control attendance-input"><optgroup label="Sub-Transaction"><option value="Electricity">Electricity</option><option value="Internet">Internet</option><option value="Other">Other</option></optgroup></select></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <select style="margin-left: 16px;" name="sub_transaction" class="form-control attendance-input">
+                                <optgroup label="Sub-Transaction">
+                                    <option value="" disabled selected>Sub-Transaction</option>
+                                    <option value="Electricity">Electricity</option>
+                                    <option value="Internet">Internet</option>
+                                    <option value="Other">Other</option>
+                                </optgroup>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,7 +151,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-dollar"></i></div><input name="nominal" class="form-control attendance-input" type="text" placeholder="Amount" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-dollar"></i></div><input name="nominal" class="form-control attendance-input" type="text" placeholder="Amount (IDR)" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
                     </div>
                 </div>
             </div>
@@ -141,7 +159,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="notes" class="form-control attendance-input" type="text" placeholder="Notes" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="notes" class="form-control attendance-input" type="text" placeholder="Notes"></div>
                     </div>
                 </div>
             </div>
@@ -150,8 +168,9 @@
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
-                            <select name="pic" class="form-control attendance-input">
+                            <select style="margin-left: 17px;" name="pic" class="form-control attendance-input">
                                 <optgroup label="PIC">
+                                    <option value="" disabled selected>PIC</option>
                                     @foreach ($teachers as $t)
                                     <option value="{{$t->id}}">{{ $t->name }}</option>
                                 @endforeach
@@ -166,10 +185,11 @@
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
-                            <select name="payment_method" class="form-control attendance-input">
+                            <select style="margin-left: 17px;" name="payment_method" class="form-control attendance-input">
                                 <optgroup label="Payment Method">
+                                    <option value="" disabled selected>Payment Method</option>
                                     <option value="Cash">Cash</option>
-                                    <option value="Atm">ATM</option>
+                                    <option value="ATM">ATM</option>
                                     <option value="Other">Other</option>
                                 </optgroup>
                             </select></div>
@@ -181,7 +201,51 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 
 </body>
+<script>
+    function validateForm() {
+        let x = document.forms["expense-form"];
+        if (x["transaction_type"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Transaction Type must be filled out.'
+            });
+            return false;
+        }
+        if (x["sub_transaction"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Sub Transaction must be filled out.'
+            });
+            return false;
+        }
+        if (x["pic"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'PIC must be filled out.'
+            });
+            return false;
+        }
+        if (x["payment_method"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Payment Method must be filled out.'
+            });
+            return false;
+        }
+        Swal.fire({
+                icon : 'success',
+                title: 'Form Submitted!',
+                text: 'Please wait until the payment receipt is downloaded.'
+        });
+    }
+</script>
+
 </html>

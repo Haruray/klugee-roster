@@ -48,9 +48,12 @@ class SendSPPNotification
             $string = 'SPP NOTIFICATION : '.$t->name.' belum membayar SPP '.$t->program.' untuk bulan ini.';
             array_push($notifs, $string);
         }
-        if ($users->user_type != "teacher" && count($tuition) > 0 && !self::CheckNotifDuplicate($notifs)){
-            Notification::send($users, new SPPNotification($event->user, $notifs));
+        foreach($notifs as $n){
+            if ($users->user_type != "teacher" && count($tuition) > 0 && !self::CheckNotifDuplicate($n)){
+                Notification::send($users, new SPPNotification($event->user, $n));
+            }
         }
+
 
     }
 }

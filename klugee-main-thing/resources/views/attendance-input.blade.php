@@ -108,7 +108,14 @@
         @csrf
     <div class="attendance-box" id="attendance-box">
         <div id="attendance-form-box">
+
             <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
+                @if ($message = Session::get('unregistered-program'))
+                <div class="alert alert-danger alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{{ $message }}</strong>
+                </div>
+                @endif
                 <div class="container">
                     <div class="form-row">
                         <div class="col-12 col-md-12 col-lg-12 col-xl-12">

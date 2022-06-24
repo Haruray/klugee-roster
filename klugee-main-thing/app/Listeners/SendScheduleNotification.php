@@ -60,7 +60,10 @@ class SendScheduleNotification
             array_push($notifs,$string);
         }
 
-        if (count($schedules) > 0 && !self::CheckNotifDuplicate($notifs))
-            Notification::send($users, new ScheduleNotification($event->user, $notifs));
+        foreach($notifs as $n){
+            if (count($schedules) > 0 && !self::CheckNotifDuplicate($n))
+                Notification::send($users, new ScheduleNotification($event->user, $notifs));
+        }
+
     }
 }

@@ -139,6 +139,64 @@
         var form = $('form')[1];
         var formdata = new FormData(form);
 
+        let mainmodal = document.getElementById("formModal");
+        if (mainmodal.querySelector("#day").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Day must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#time").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Time must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#location").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Location must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#class-type").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Class Type must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#program").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Program must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#subject").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Subject must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#students").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Students must be filled out..'
+            });
+            return;
+        }
+
         $.ajax({
             url : '/schedule-admin/manage/add',
             type : 'post',
@@ -202,13 +260,13 @@
     }
 
     dc.ScheduleEdit = function(schedule_id){
+        $('#scheduleEdit').modal('toggle');
         $.ajax({
             url:'/get/schedule/id/'+schedule_id,
             type : 'get',
             dataType : 'json',
             success:function(response){
                 if (response.success){
-                    $('#scheduleEdit').modal('toggle');
                     //modify things in modal
                     let mainmodal = document.getElementById("scheduleEdit");
                     mainmodal.querySelector("#schedule-id").value = schedule_id;
@@ -274,6 +332,63 @@
     dc.ScheduleEditSubmit = function(schedule_id){
         var form = $('form')[2];
         var formdata = new FormData(form);
+        let mainmodal = document.getElementById("scheduleEdit");
+        if (mainmodal.querySelector("#day").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Day must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#time").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Time must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#location").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Location must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#class-type").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Class Type must be filled out..'
+            });
+            return;
+        }
+        if (mainmodal.querySelector("#program").value==""){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Program must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#subject").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Subject must be filled out..'
+            });
+            return;
+        }
+        if (!mainmodal.querySelector("#students2").value){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Students must be filled out..'
+            });
+            return;
+        }
 
         $.ajax({
             url : '/schedule-admin/manage/edit',

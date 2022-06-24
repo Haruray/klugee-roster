@@ -214,6 +214,9 @@ class AdminController extends Controller
         $accounting->notes = $request->input('notes');
         $accounting->approved = false;
         $accounting->save();
+        view()->share('data',$accounting);
+        $pdf = PDF::loadView('nota', $accounting)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('Nota '.$accounting->date.'-'.$accounting->transaction_type.'-'.$accounting->sub_transaction.'.pdf');
     }
 
     public function ReferralReport($month, $year){

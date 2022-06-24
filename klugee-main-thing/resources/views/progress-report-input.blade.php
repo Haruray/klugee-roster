@@ -83,13 +83,22 @@
     <h1 class="bounce animated page-heading">Progress Report Input</h1>
     @if ($flag)
     <div id="attendance-box" class="attendance-box">
+        @if ($message = Session::get('spp-warning'))
+            @foreach ( $message as $m)
+            <div class="alert alert-danger alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $m }}</strong>
+            </div>
+
+            @endforeach
+        @endif
         <h3 class="page-sub-heading yellow">
             @for ($i = 0 ; $i < count($students) - 1 ; $i++)
                 {{$students[$i]->name}},
             @endfor
             {{$students[count($students)-1]->name}}
         </h3>
-        <h2 class="page-sub-heading">SMARTIE</h2>
+        <h2 class="page-sub-heading">{{ strtoupper($program) }}</h2>
         <div class="input-confirm-buttons" style="margin: 0 0 20px;"><a href="/attendance/{{$attendance_id}}"><button class="btn btn-primary d-block progress-report-check-attendance-button" type="button" style="font-size: 14px;">Check Attendance</button></div></a>
         <form>
             @csrf
