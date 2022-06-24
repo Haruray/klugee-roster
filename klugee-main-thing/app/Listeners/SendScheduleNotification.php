@@ -56,7 +56,7 @@ class SendScheduleNotification
         ->whereRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) >= CURTIME()')->get();
 
         foreach($schedules as $s){
-            $string = 'SCHEDULE NOTIFICATION: Sekarang adalah jadwal untuk mengajar '.$s->student_name.' untuk program '.$s->program.' pada jam '.$s->begin.' . Materi untuk hari ini adalah '.$s->subject.'.';
+            $string = 'SCHEDULE NOTIFICATION ('.date("d-m-Y").') : Sekarang adalah jadwal untuk mengajar '.$s->student_name.' untuk program '.$s->program.' pada jam '.$s->begin.' . Materi untuk hari ini adalah '.$s->subject.'.';
             array_push($notifs,$string);
         }
 

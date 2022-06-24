@@ -45,7 +45,7 @@ class SendSPPNotification
         //checking if its duplicate or nah
         $notifs = array();
         foreach($tuition as $t){
-            $string = 'SPP NOTIFICATION : '.$t->name.' belum membayar SPP '.$t->program.' untuk bulan ini.';
+            $string = 'SPP NOTIFICATION ('.date("d-m-Y").') : '.$t->name.' belum membayar SPP '.$t->program.' untuk bulan ini.';
             array_push($notifs, $string);
         }
         foreach($notifs as $n){

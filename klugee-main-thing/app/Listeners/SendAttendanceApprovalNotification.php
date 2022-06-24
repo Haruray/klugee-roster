@@ -40,7 +40,7 @@ class SendAttendanceApprovalNotification
     public function handle($event)
     {
         $attendances = TeachPresence::select('teach_presences.id', 'teach_presences.id_teacher','teach_presences.date','teachers.name','teachers.is_teacher')->join('teachers','teachers.id','=','teach_presences.id_teacher')->where('approved',false)->orderBy('date','DESC')->get();
-        $string = 'There are Unapproved Attendances you need to confirm.';
+        $string = '('.date('d-m-Y').') There are Unapproved Attendances you need to confirm.';
         if ($event->user->user_type == "head teacher" && count($attendances) > 0 && !self::CheckNotifDuplicate($string)){
             $users =auth()->user();
             Notification::send($users, new AttendanceApprovalNotification($event->user, $string));
