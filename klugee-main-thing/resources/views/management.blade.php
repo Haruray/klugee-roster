@@ -270,7 +270,7 @@
                         @endforeach
                     </select>
                     <p style="margin-bottom: 0px; margin-top:10px;">Level</p>
-                    <input class="form-control" type="text" name="level-add" id="level-add">
+                    <input class="form-control" type="text" name="level-add" id="level-add" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">Exclusive Fee</p>
                     <input class="form-control" type="text" name="exclusive-add" id="exclusive-add">
                     <p style="margin-bottom: 0px; margin-top:10px;">Semi-Private Fee</p>

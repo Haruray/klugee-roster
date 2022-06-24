@@ -77,16 +77,16 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading" style="color: rgb(48,121,200);">New User</h1>
-    <div class="attendance-box" style="background-color: rgb(48,121,200);">
+    <h1 class="bounce animated page-heading">New User Registration</h1>
+    <div class="attendance-box">
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-        <form name="teacheradd" method="POST" action="/users/add/process">
+        <form name="teacheradd" id="teacheradd" method="POST" action="/users/add/process" onsubmit="return validateForm();">
             @csrf
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-id-badge"></i></div><input name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="nik" class="form-control attendance-input" type="text" placeholder="NIK" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-id-card"></i></div><input name="nik" class="form-control attendance-input" type="text" placeholder="NIK" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="name" class="form-control attendance-input" type="text" placeholder="Name" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div><input name="name" class="form-control attendance-input" type="text" placeholder="Name" required=""></div>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="nickname" class="form-control attendance-input" type="text" placeholder="Nickname" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-user-o"></i></div><input name="nickname" class="form-control attendance-input" type="text" placeholder="Nickname" required=""></div>
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input id="email" name="email" class="form-control attendance-input" type="text" placeholder="Email" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-envelope"></i></div><input id="email" name="email" class="form-control attendance-input" type="text" placeholder="Email" required=""></div>
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="address" class="form-control attendance-input" type="text" placeholder="Address" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-map"></i></div><input name="address" class="form-control attendance-input" type="text" placeholder="Address" required=""></div>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="birthplace" class="form-control attendance-input" type="text" placeholder="Birth Place" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div><input name="birthplace" class="form-control attendance-input" type="text" placeholder="Birth Place" required=""></div>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,10 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input name="date" class="form-control attendance-input" type="date" required=""></div>
+                            <p style="color: white; font-weight:bold; margin:1px 0px 5px 40px;">Birthdate</p>
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div>
+                            <input style="margin-left: 16px;" name="date" class="form-control attendance-input" type="date" required="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,7 +153,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="telp" class="form-control attendance-input" type="text" placeholder="Telephone Number" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-mobile"></i></div><input name="telp" class="form-control attendance-input" type="text" placeholder="Telephone Number" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
                     </div>
                 </div>
             </div>
@@ -158,7 +161,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div><input name="telp-emergency" class="form-control attendance-input" type="text" placeholder="Emergency Contact" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-phone"></i></div><input name="telp-emergency" class="form-control attendance-input" type="text" placeholder="Emergency Contact" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
                     </div>
                 </div>
             </div>
@@ -166,7 +169,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="institution" class="form-control attendance-input" type="text" placeholder="Institution Name" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-university"></i></div><input name="institution" class="form-control attendance-input" type="text" placeholder="Institution Name" required=""></div>
                     </div>
                 </div>
             </div>
@@ -174,7 +177,10 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input name="join-date" class="form-control attendance-input" type="date" placeholder="Join Date" required=""></div>
+                            <p style="color: white; font-weight:bold; margin:1px 0px 5px 40px;">Join Date</p>
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div>
+                            <input style="margin-left:16px;" name="join-date" class="form-control attendance-input" type="date" placeholder="Join Date" required="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,13 +188,14 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
-                            <select name="user-type" class="form-control attendance-input">
+                            <div class="attendance-icon align-middle"><i class="fa fa-sitemap"></i></div>
+                            <select style="margin-left:16px;" name="user-type" class="form-control attendance-input" required>
                                 <optgroup label="User Type">
+                                    <option value="" disabled selected>User Type</option>
                                     <option value="teacher">Teacher</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="teacher manager">Teacher Manager</option>
-                                    <option value="staff">Non-Teacher Staff</option>
+                                    <option value="head teacher">Head Teacher</option>
+                                    <option value="admin">Admin Officer</option>
+                                    <option value="super admin">Super Admin</option>
                                 </optgroup>
                             </select></div>
                     </div>
@@ -199,21 +206,21 @@
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div" style="text-align: center;">
                             <p style="color:white; font-weight:bold; font-size:20px; text-align:center;">Teacher Status</p>
-                            <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teacher-status" type="radio" value="Part Time" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
+                            <div id="teacher-status-checkbox" class="form-check" style="display: inline-block; margin-right:5px; color:white;">
+                                <input class="form-check-input" name="teacher-status" type="radio" value="Part Time" id="part-time">
+                                <label class="form-check-label" for="part-time">
                                   Part Time
                                 </label>
                               </div>
                               <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teacher-status" type="radio" value="Full Time" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
+                                <input class="form-check-input" name="teacher-status" type="radio" value="Full Time" id="full-time">
+                                <label class="form-check-label" for="full-time">
                                   Full Time
                                 </label>
                               </div>
                               <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teacher-status" type="radio" value="Part Time Contract" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
+                                <input class="form-check-input" name="teacher-status" type="radio" value="Part Time Contract" id="part-time-contract">
+                                <label class="form-check-label" for="part-time-contract">
                                   Part Time Contract
                                 </label>
                               </div>
@@ -227,21 +234,21 @@
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div" style="text-align: center;">
                             <p style="color:white; font-weight:bold; font-size:20px; text-align:center;">Teaching Method</p>
-                            <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teaching-method[]" type="checkbox" value="Online" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
+                            <div id="teaching-method-checkbox" class="form-check" style="display: inline-block; margin-right:5px; color:white;">
+                                <input class="form-check-input" name="teaching-method[]" type="checkbox" value="Online" id="tm-online">
+                                <label class="form-check-label" for="tm-online">
                                   Online
                                 </label>
                               </div>
                               <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teaching-method[]" type="checkbox"" value="Studio" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
+                                <input class="form-check-input" name="teaching-method[]" type="checkbox"" value="Studio" id="tm-studio">
+                                <label class="form-check-label" for="tm-studio">
                                   Studio
                                 </label>
                               </div>
                               <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teaching-method[]" type="checkbox" value="Student's House" id="flexCheckChecked">
-                                <label class="form-check-label" for="flexCheckChecked">
+                                <input class="form-check-input" name="teaching-method[]" type="checkbox" value="Student's House" id="tm-house">
+                                <label class="form-check-label" for="tm-house">
                                   Student's House
                                 </label>
                               </div>
@@ -257,8 +264,8 @@
                             <p style="color:white; font-weight:bold; font-size:20px; text-align:center;">Teaching Program</p>
                             @foreach ($program as $p)
                             <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
-                                <input class="form-check-input" name="teaching-program[]" type="checkbox" value="{{ $p->program }}" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <input class="form-check-input" name="teaching-program[]" type="checkbox" value="{{ $p->program }}" id="{{ explode(" ",$p->program)[0] }}">
+                                <label class="form-check-label" for="{{ explode(" ",$p->program)[0] }}">
                                   {{ $p->program }}
                                 </label>
                               </div>
@@ -268,23 +275,53 @@
                 </div>
             </div>
 
-            <div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" value="submit" name="submit" onclick="ValidateEmail(document.getElementById('email').value)">Submit</button></div>
+            <div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" value="submit" name="submit">Submit</button></div>
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 
-    <script>
-        function ValidateEmail(mail)
-            {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-            {
-                return (true)
-            }
-                alert("You have entered an invalid email address!")
-                return (false)
-            }
-    </script>
 </body>
+<script>
+
+    function validateForm() {
+        let x = document.forms["teacheradd"];
+        let mail = document.getElementById('email').value;
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))){
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Invalid Email Address.'
+                });
+                return false;
+        }
+
+        if (x["user-type"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'User Type must be filled out.'
+            });
+            return false;
+        }
+        if ($('div#teacher-status-checkbox :checkbox:checked').length <= 0){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Teacher Status checkbox must be filled out.'
+            });
+            return false;
+        }
+        if ($('div#teaching-method-checkbox :checkbox:checked').length <= 0){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Teaching Method checkbox must be filled out.'
+            });
+            return false;
+        }
+    }
+</script>
 </html>

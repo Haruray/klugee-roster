@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
 
 use App\Students;
 use App\Attendance;
@@ -17,6 +19,7 @@ use App\TeachPosition;
 use App\TeachMethod;
 use App\TeachSchedule;
 use App\TeachPresence;
+use App\TeachProgram;
 use App\Schedule;
 use App\StudentSchedule;
 use App\Fee;
@@ -257,7 +260,7 @@ class SuperAdminController extends Controller
         $user->id_teacher = $teach->id;
         $user->photo = $teach->photo;
         $user->save();
-        return redirect('/users/add');
+        return redirect('/users/'.$teach->id);
     }
 
 }
