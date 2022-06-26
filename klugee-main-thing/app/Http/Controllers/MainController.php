@@ -153,18 +153,13 @@ class MainController extends Controller
                     }
                 }
             }
-
-            //Save teacher's attendance
-            $presence_check = TeachPresence::where('date', $request->input('date'))->get()->first();
-
-            if (is_null($presence_check)){
-                $new_presence = new TeachPresence;
-                $new_presence->id_teacher = auth()->user()->id_teacher;
-                $new_presence->date = $request->input('date');
-                $new_presence->id_attendance = $new_attendance->id;
-                $new_presence->save();
-            }
         }
+        //Save teacher's attendance
+        $new_presence = new TeachPresence;
+        $new_presence->id_teacher = auth()->user()->id_teacher;
+        $new_presence->date = $request->input('date');
+        $new_presence->id_attendance = $new_attendance->id;
+        $new_presence->save();
 
         return response()->json([
             'success' => true,
@@ -397,78 +392,78 @@ class MainController extends Controller
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
 
-        //PAYMENT TIME
-        $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
-        $cunt = $new_pr[0]->level;
-        $payment = new Fee;
-        $payment->id_attendance = $attendance->id;
-        $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
+        // //PAYMENT TIME
+        // $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
+        // $cunt = $new_pr[0]->level;
+        // $payment = new Fee;
+        // $payment->id_attendance = $attendance->id;
+        // $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
 
-        //Incentives
-        //lunch : syarat adalah mengajar dua kali sesi
-        $sessions = Attendance::whereDay('date',date('d', strtotime($attendance->date)))->where('id_teacher', auth()->user()->id_teacher)->count();
-        if ($sessions>=2){
-            //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
-            $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d', strtotime($attendance->date)))->sum('lunch_nominal');
-            if ($check_lunch == 0){
-                //artinya belum dibayar untuk hari ini
-                $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
-            }
-            else{
-                $payment->lunch_nominal = 0;
-            }
-        }
-        else{
-            $payment->lunch_nominal = 0;
-        }
+        // //Incentives
+        // //lunch : syarat adalah mengajar dua kali sesi
+        // $sessions = Attendance::whereDay('date',date('d', strtotime($attendance->date)))->where('id_teacher', auth()->user()->id_teacher)->count();
+        // if ($sessions>=2){
+        //     //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
+        //     $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d', strtotime($attendance->date)))->sum('lunch_nominal');
+        //     if ($check_lunch == 0){
+        //         //artinya belum dibayar untuk hari ini
+        //         $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
+        //     }
+        //     else{
+        //         $payment->lunch_nominal = 0;
+        //     }
+        // }
+        // else{
+        //     $payment->lunch_nominal = 0;
+        // }
 
-        //transport
-        $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
-        $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
-        $payment->approved = false;
-        $payment->save();
+        // //transport
+        // $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
+        // $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
+        // $payment->approved = false;
+        // $payment->save();
 
-        //Saving it in accounting
-        //main fee
-        $payment_accounting = new Accounting;
-        $payment_accounting->date = $attendance->date;
-        $payment_accounting->transaction_type = "Teacher's Fee";
-        $payment_accounting->sub_transaction = auth()->user()->name."'s Fee";
-        $payment_accounting->detail = "Main fee";
-        $payment_accounting->nominal = $payment->fee_nominal*-1;
-        $payment_accounting->pic = 1;
-        $payment_accounting->payment_method = "Other";
-        $payment_accounting->notes = "This payment is automated";
-        $payment_accounting->approved = false;
-        $payment_accounting->save();
-        //incentives : lunch
-        if ($payment->lunch_nominal >0){
-            $payment_accounting = new Accounting;
-            $payment_accounting->date = $attendance->date;
-            $payment_accounting->transaction_type = "Teacher's Fee";
-            $payment_accounting->sub_transaction = auth()->user()->name."'s Lunch Incentives";
-            $payment_accounting->detail = "Lunch Incentives";
-            $payment_accounting->nominal = $payment->lunch_nominal*-1;
-            $payment_accounting->pic = 1;
-            $payment_accounting->payment_method = "Other";
-            $payment_accounting->notes = "This payment is automated";
-            $payment_accounting->approved = false;
-            $payment_accounting->save();
-        }
-        //incentives : transport
-        if ($payment->transport_nominal >0){
-            $payment_accounting = new Accounting;
-            $payment_accounting->date = $attendance->date;
-            $payment_accounting->transaction_type = "Teacher's Fee";
-            $payment_accounting->sub_transaction = auth()->user()->name."'s Transport Incentives";
-            $payment_accounting->detail = "Transport Incentives";
-            $payment_accounting->nominal = $payment->transport_nominal*-1;
-            $payment_accounting->pic = 1;
-            $payment_accounting->payment_method = "Other";
-            $payment_accounting->notes = "This payment is automated";
-            $payment_accounting->approved = false;
-            $payment_accounting->save();
-        }
+        // //Saving it in accounting
+        // //main fee
+        // $payment_accounting = new Accounting;
+        // $payment_accounting->date = $attendance->date;
+        // $payment_accounting->transaction_type = "Teacher's Fee";
+        // $payment_accounting->sub_transaction = auth()->user()->name."'s Fee";
+        // $payment_accounting->detail = "Main fee";
+        // $payment_accounting->nominal = $payment->fee_nominal*-1;
+        // $payment_accounting->pic = 1;
+        // $payment_accounting->payment_method = "Other";
+        // $payment_accounting->notes = "This payment is automated";
+        // $payment_accounting->approved = false;
+        // $payment_accounting->save();
+        // //incentives : lunch
+        // if ($payment->lunch_nominal >0){
+        //     $payment_accounting = new Accounting;
+        //     $payment_accounting->date = $attendance->date;
+        //     $payment_accounting->transaction_type = "Teacher's Fee";
+        //     $payment_accounting->sub_transaction = auth()->user()->name."'s Lunch Incentives";
+        //     $payment_accounting->detail = "Lunch Incentives";
+        //     $payment_accounting->nominal = $payment->lunch_nominal*-1;
+        //     $payment_accounting->pic = 1;
+        //     $payment_accounting->payment_method = "Other";
+        //     $payment_accounting->notes = "This payment is automated";
+        //     $payment_accounting->approved = false;
+        //     $payment_accounting->save();
+        // }
+        // //incentives : transport
+        // if ($payment->transport_nominal >0){
+        //     $payment_accounting = new Accounting;
+        //     $payment_accounting->date = $attendance->date;
+        //     $payment_accounting->transaction_type = "Teacher's Fee";
+        //     $payment_accounting->sub_transaction = auth()->user()->name."'s Transport Incentives";
+        //     $payment_accounting->detail = "Transport Incentives";
+        //     $payment_accounting->nominal = $payment->transport_nominal*-1;
+        //     $payment_accounting->pic = 1;
+        //     $payment_accounting->payment_method = "Other";
+        //     $payment_accounting->notes = "This payment is automated";
+        //     $payment_accounting->approved = false;
+        //     $payment_accounting->save();
+        // }
         return response()->json([
             'success' => true,
             'attendance_id' => $request->input('attendance_id'),

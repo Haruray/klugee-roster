@@ -67,6 +67,7 @@ Route::get('/schedule-admin/detailed/{teacher}','HeadTeacherController@ScheduleA
 
 Route::get('/user-attendances','HeadTeacherController@UserAttendances');
 Route::get('/user-attendances/approve/{id}','HeadTeacherController@UserAttendanceApproval');
+Route::get('/user-attendances/delete/{id}','HeadTeacherController@UserAttendanceDelete');
 Route::get('/schedule-admin/manage','HeadTeacherController@ScheduleAdminManage');
 
 Route::get('/students/{student_id}/progress-report/{program}/generate','HeadTeacherController@ReportGenerate');

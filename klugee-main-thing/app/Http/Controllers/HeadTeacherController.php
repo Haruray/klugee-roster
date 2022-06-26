@@ -70,12 +70,112 @@ class HeadTeacherController extends Controller
         //TODO
         //Untuk teacher manager dan admin buat approvalnya perlu rework
         $view = view('admin-attendance-list');
-        $attendances = TeachPresence::select('teach_presences.id', 'teach_presences.id_teacher','teach_presences.date','teachers.name','teachers.is_teacher')->join('teachers','teachers.id','=','teach_presences.id_teacher')->where('approved',false)->orderBy('date','DESC')->get();
+        $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','progress.id as id_progress')
+        ->join('teachers','teachers.id','=','teach_presences.id_teacher')
+        ->join('attendances','attendances.id','=','teach_presences.id_attendance')
+        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
+        ->where('teach_presences.approved',false)
+        ->orderBy('date','DESC')->get();
         return $view->with('attendance',$attendances);
     }
 
     public function UserAttendanceApproval($id){
-        $attendance = TeachPresence::where('id',$id)->update(['approved' => true]);
+        $attendance_presence = TeachPresence::where('id',$id)->update(['approved' => true]);
+        //get attendance_id
+        $attendance_presence = TeachPresence::where('id',$id)->first();
+        $attendance_id = $attendance_presence->id_attendance;
+        $teacher_id = $attendance_presence->id_teacher;
+        $teacher_name = Teachers::where('id',$teacher_id)->first()->name;
+        //get the new progress report data
+        $new_pr = Progress::where('id_attendance',$attendance_id)->get();
+        if ($new_pr[0]->filled){
+            //process the payment thing if only the progress report is filled
+            //PAYMENT TIME
+            $attendance = Attendance::where('id',$attendance_id)->first();
+            $cunt = $new_pr[0]->level;
+            $payment = new Fee;
+            $payment->id_attendance = $attendance->id;
+            $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
+
+            //Incentives
+            //lunch : syarat adalah mengajar dua kali sesi
+            $sessions = Attendance::whereDay('date',date('d', strtotime($attendance->date)))->where('id_teacher', $teacher_id)->count();
+            if ($sessions>=2){
+                //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
+                $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d', strtotime($attendance->date)))->sum('lunch_nominal');
+                if ($check_lunch == 0){
+                    //artinya belum dibayar untuk hari ini
+                    $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
+                }
+                else{
+                    $payment->lunch_nominal = 0;
+                }
+            }
+            else{
+                $payment->lunch_nominal = 0;
+            }
+
+            //transport
+            $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
+            $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
+            $payment->approved = false;
+            $payment->save();
+
+            // //Saving it in accounting
+            // //main fee
+            // $payment_accounting = new Accounting;
+            // $payment_accounting->date = $attendance->date;
+            // $payment_accounting->transaction_type = "Teacher's Fee";
+            // $payment_accounting->sub_transaction = $teacher_name."'s Fee";
+            // $payment_accounting->detail = "Main fee";
+            // $payment_accounting->nominal = $payment->fee_nominal*-1;
+            // $payment_accounting->pic = 1;
+            // $payment_accounting->payment_method = "Other";
+            // $payment_accounting->notes = "This payment is automated";
+            // $payment_accounting->approved = false;
+            // $payment_accounting->save();
+            // //incentives : lunch
+            // if ($payment->lunch_nominal >0){
+            //     $payment_accounting = new Accounting;
+            //     $payment_accounting->date = $attendance->date;
+            //     $payment_accounting->transaction_type = "Teacher's Fee";
+            //     $payment_accounting->sub_transaction = $teacher_name."'s Lunch Incentives";
+            //     $payment_accounting->detail = "Lunch Incentives";
+            //     $payment_accounting->nominal = $payment->lunch_nominal*-1;
+            //     $payment_accounting->pic = 1;
+            //     $payment_accounting->payment_method = "Other";
+            //     $payment_accounting->notes = "This payment is automated";
+            //     $payment_accounting->approved = false;
+            //     $payment_accounting->save();
+            // }
+            // //incentives : transport
+            // if ($payment->transport_nominal >0){
+            //     $payment_accounting = new Accounting;
+            //     $payment_accounting->date = $attendance->date;
+            //     $payment_accounting->transaction_type = "Teacher's Fee";
+            //     $payment_accounting->sub_transaction = $teacher_name."'s Transport Incentives";
+            //     $payment_accounting->detail = "Transport Incentives";
+            //     $payment_accounting->nominal = $payment->transport_nominal*-1;
+            //     $payment_accounting->pic = 1;
+            //     $payment_accounting->payment_method = "Other";
+            //     $payment_accounting->notes = "This payment is automated";
+            //     $payment_accounting->approved = false;
+            //     $payment_accounting->save();
+            // }
+        }
+
+
+        return redirect('/user-attendances');
+    }
+
+    public function UserAttendanceDelete($id){
+        $attendance_presence = TeachPresence::where('id',$id)->update(['approved' => true]);
+        //get attendance_id
+        $attendance_presence = TeachPresence::where('id',$id)->first();
+        $attendance = Attendance::where('id',$attendance_presence->id_attendance)->delete();
+        //get the new progress report data
+        $new_pr = Progress::where('id_attendance',$attendance_presence->id_attendance)->delete();
+
         return redirect('/user-attendances');
     }
 

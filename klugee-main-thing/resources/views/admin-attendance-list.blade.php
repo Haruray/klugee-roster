@@ -87,9 +87,9 @@
                     <tr>
                         <th>Date</th>
                         <th>Name</th>
-                        <th>Is Teaching</th>
+                        <th>Teaching Data</th>
                         <th>Approved</th>
-                        <th>Action</th>
+                        <th style="width: 20%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,13 +98,22 @@
                     <tr>
                         <td>{{date('l',strtotime($a->date))}}, {{date('d/m/Y',strtotime($a->date))}}</td>
                         <td>{{$a->name}}</td>
-                        @if ($a->is_teacher)
-                        <td>Yes</td>
+                        @if ($a->filled)
+                        <td>button</td>
                         @else
-                        <td>No</td>
+                        <td>No data</td>
                         @endif
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        <td><a href="/user-attendances/approve/{{$a->id}}"><button type="button" class="btn btn-success">Approve</button></a></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="/user-attendances/approve/{{$a->id_presence}}">
+                                    <button type="button" class="btn btn-success">Approve</button>
+                                </a>
+                                <a href="/user-attendances/delete/{{ $a->id_presence }}">
+                                    <button type="button" class="btn btn-danger">Delete</button>
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                     @endif
                     @endforeach

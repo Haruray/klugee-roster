@@ -71,6 +71,50 @@ class SuperAdminController extends Controller
         $acc = Fee::where('id',$accounting_id)->first();
         $acc->approved = true;
         $acc->save();
+        //Saving it in accounting
+        $payment = $acc;
+        $attendance = Attendance::where('id',$payment->id_attendance)->first();
+        $teacher_name = Teachers::where('id',$attendance->id_teacher)->first()->name;
+        //main fee
+        $payment_accounting = new Accounting;
+        $payment_accounting->date = $attendance->date;
+        $payment_accounting->transaction_type = "Teacher's Fee";
+        $payment_accounting->sub_transaction = $teacher_name."'s Fee";
+        $payment_accounting->detail = "Main fee";
+        $payment_accounting->nominal = $payment->fee_nominal*-1;
+        $payment_accounting->pic = 1;
+        $payment_accounting->payment_method = "Other";
+        $payment_accounting->notes = "This payment is automated";
+        $payment_accounting->approved = true;
+        $payment_accounting->save();
+        //incentives : lunch
+        if ($payment->lunch_nominal >0){
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $attendance->date;
+            $payment_accounting->transaction_type = "Teacher's Fee";
+            $payment_accounting->sub_transaction = $teacher_name."'s Lunch Incentives";
+            $payment_accounting->detail = "Lunch Incentives";
+            $payment_accounting->nominal = $payment->lunch_nominal*-1;
+            $payment_accounting->pic = 1;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+        }
+        //incentives : transport
+        if ($payment->transport_nominal >0){
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $attendance->date;
+            $payment_accounting->transaction_type = "Teacher's Fee";
+            $payment_accounting->sub_transaction = $teacher_name."'s Transport Incentives";
+            $payment_accounting->detail = "Transport Incentives";
+            $payment_accounting->nominal = $payment->transport_nominal*-1;
+            $payment_accounting->pic = 1;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+        }
         return redirect('/accounting/approvals');
     }
 
