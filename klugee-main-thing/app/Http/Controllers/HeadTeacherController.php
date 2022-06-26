@@ -73,7 +73,7 @@ class HeadTeacherController extends Controller
         $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','progress.id as id_progress')
         ->join('teachers','teachers.id','=','teach_presences.id_teacher')
         ->join('attendances','attendances.id','=','teach_presences.id_attendance')
-        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
+        ->join('progress','progress.id_attendance','=','attendances.id')
         ->where('teach_presences.approved',false)
         ->orderBy('date','DESC')->get();
         return $view->with('attendance',$attendances);

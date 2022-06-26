@@ -105,10 +105,10 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="#">
+                    <a href="/accounting/teacher-payment">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p><i class="fa fa-money button-content-icon"></i></p>
-                            <p class="button-content">Teacher's Fees</p>
+                            <p class="button-content">Teacher Payment</p>
                         </div>
                     </a>
                 </div>

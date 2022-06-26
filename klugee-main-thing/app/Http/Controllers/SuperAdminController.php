@@ -24,6 +24,7 @@ use App\Schedule;
 use App\StudentSchedule;
 use App\Fee;
 use App\Salary;
+use App\SalaryList;
 use App\Incentive;
 use App\StudentPresence;
 use App\FeeList;
@@ -31,6 +32,10 @@ use App\IncentiveList;
 use App\User;
 use App\Accounting;
 use App\Referral;
+
+use PDF;
+
+use Session;
 
 class SuperAdminController extends Controller
 {
@@ -51,7 +56,8 @@ class SuperAdminController extends Controller
         ->get();
         $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')->where('status_referral','=','0')->orWhere('status_front_admin','=','0')->orWhere('status_scheduling')->join('students','students.id','=','referrals.registering_student_id')->get();
         $salary_approvals = Salary::select('salaries.*','teachers.name')->where('approved','=','0')->join('teachers','teachers.id','=','salaries.id_teacher')->get();
-        $incentives = Incentive::where('approved','=','0')->get();
+        $incentives = Incentive::select('teachers.name as teacher_name','incentives.*')->where('approved','=','0')
+        ->join('teachers','teachers.id','=','incentives.id_teacher')->get();
         return $view->with('income',$income_approvals)->with('expense',$expense_approvals)->with('fee',$fees_approvals)->with('salary',$salary_approvals)->with('incentive',$incentives)->with('referrals',$referrals_approvals);
     }
 
@@ -127,6 +133,21 @@ class SuperAdminController extends Controller
         $acc = Salary::where('id',$accounting_id)->first();
         $acc->approved = true;
         $acc->save();
+        $salary = Salary::where('salaries.id',$accounting_id)
+        ->join('teachers','teachers.id','=','salaries.id_teacher')
+        ->first();
+        $payment_accounting = new Accounting;
+        $payment_accounting->date = $salary->date;
+        $payment_accounting->transaction_type = "Teacher's Salary";
+        $payment_accounting->sub_transaction = $salary->name."'s Fee";
+        $payment_accounting->detail = "Main fee";
+        $payment_accounting->nominal = $salary->nominal*-1;
+        $payment_accounting->pic = 1;
+        $payment_accounting->payment_method = "Other";
+        $payment_accounting->notes = "This payment is automated";
+        $payment_accounting->approved = true;
+        $payment_accounting->save();
+
         return redirect('/accounting/approvals');
     }
 
@@ -139,6 +160,22 @@ class SuperAdminController extends Controller
         $acc = Incentive::where('id',$accounting_id)->first();
         $acc->approved = true;
         $acc->save();
+
+        $incentive = Incentive::where('incentives.id',$accounting_id)
+        ->join('teachers','teachers.id','=','incentives.id_teacher')
+        ->first();
+        $payment_accounting = new Accounting;
+        $payment_accounting->date = $incentive->date;
+        $payment_accounting->transaction_type = "Teacher's Salary";
+        $payment_accounting->sub_transaction = $incentive->name."'s Fee";
+        $payment_accounting->detail = "Main fee";
+        $payment_accounting->nominal = $incentive->nominal*-1;
+        $payment_accounting->pic = 1;
+        $payment_accounting->payment_method = "Other";
+        $payment_accounting->notes = "This payment is automated";
+        $payment_accounting->approved = true;
+        $payment_accounting->save();
+
         return redirect('/accounting/approvals');
     }
 
@@ -306,5 +343,122 @@ class SuperAdminController extends Controller
         $user->save();
         return redirect('/users/'.$teach->id);
     }
+
+    public function TeacherPayment(){
+        $view = view('admin-teacher-payment');
+        return $view;
+    }
+
+    public function TeacherSalary(){
+        $teachers = Teachers::get();
+        $view = view('admin-teacher-salary');
+        return $view->with('teachers',$teachers);
+    }
+
+    public function TeacherSalaryProcess(Request $request){
+        if ($request->input('teacher-name')!='all'){
+            $teacher_data = Teachers::where('teachers.id',$request->input('teacher-name'))
+            ->join('teach_positions','teachers.id','=','teach_positions.id_teacher')
+            ->join('users','users.id_teacher','=','teachers.id')
+            ->first();
+            $salary = new Salary;
+            $salary->date = $request->input('date');
+            $salary->id_teacher = $request->input('teacher-name');
+            $salary->nominal = SalaryList::where('position', $teacher_data->user_type)
+            ->where('status',$teacher_data->position)->first()->nominal;
+            if ($request->input('note')){$salary->note = $request->input('note');}
+            else{
+                $salary->note = $teacher_data->user_type.' '.$teacher_data->position.' salary.';
+            }
+
+            $salary->approved = false;
+            $salary->save();
+
+            //PDF buat slip gaji
+            $fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+            ->where('attendances.id_teacher', $request->input('teacher-name'))
+            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
+            $lunch_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+            ->where('attendances.id_teacher', $request->input('teacher-name'))
+            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
+            $transport_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+            ->where('attendances.id_teacher', $request->input('teacher-name'))
+            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
+
+            $incentive = Incentive::select('name','note')->selectRaw('SUM(nominal) as total')->where('id_teacher', $request->input('teacher-name'))
+            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->groupBy('name')->get();
+
+        }
+        else{
+            $teachers_data = Teachers::select('teachers.*','teach_positions.position','users.user_type')
+            ->join('teach_positions','teachers.id','=','teach_positions.id_teacher')
+            ->join('users','users.id_teacher','=','teachers.id')
+            ->get();
+            foreach($teachers_data as $t){
+                $salary = new Salary;
+                $salary->date = $request->input('date');
+                $salary->id_teacher = $t->id;
+                $salary->nominal = SalaryList::where('position', $t->user_type)
+                ->where('status',$t->position)->first()->nominal;
+                if ($request->input('note')){$salary->note = $request->input('note');}
+                else{
+                    $salary->note = ucwords($t->user_type).' '.$t->position.' salary.';
+                }
+
+                $salary->approved = false;
+                $salary->save();
+            }
+        }
+    }
+
+    public function TeacherIncentive(){
+        $teachers = Teachers::get();
+        $view = view('admin-teacher-incentive');
+        return $view->with('teachers',$teachers);
+    }
+
+    public function TeacherIncentiveProcess(Request $request){
+        if ($request->input('teacher-name')!='teacher' && $request->input('teacher-name')!='head teacher' &&
+        $request->input('teacher-name')!='admin' && $request->input('teacher-name')!='super admin'){
+            $incentive = new Incentive;
+            $incentive->name = $request->input('name');
+            $incentive->nominal = $request->input('nominal');
+            $incentive->date = $request->input('date');
+            $incentive->id_teacher = $request->input('teacher-name');
+            $incentive->note = $request->input('note');
+            $incentive->approved = false;
+
+            if ($incentive->save()){
+                Session::flash('sukses','Data successfully recorded.');
+            }
+            else{
+                Session::flash('gagal','Error has occured. Failed to record data.');
+            }
+        }
+        else{
+            $teachers_data = Teachers::select('teachers.*','users.user_type')
+            ->join('users','users.id_teacher','=','teachers.id')
+            ->where('users.user_type', $request->input('teacher-name'))
+            ->get();
+            foreach($teachers_data as $t){
+                $incentive = new Incentive;
+                $incentive->name = $request->input('name');
+                $incentive->nominal = $request->input('nominal');
+                $incentive->date = $request->input('date');
+                $incentive->id_teacher = $t->id;
+                $incentive->note = $request->input('note');
+                $incentive->approved = false;
+                if ($incentive->save()){
+                    Session::flash('sukses','Data successfully recorded.');
+                }
+                else{
+                    Session::flash('gagal','Error has occured. Failed to record data.');
+                }
+            }
+        }
+
+        return redirect('/accounting/teacher-payment/incentive');
+    }
+
 
 }

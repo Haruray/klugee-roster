@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
-    <script src="{{asset('js/studentsearch-script.js')}}"></script>
 </head>
 
 <body>
@@ -77,29 +76,32 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">USER SEARCH</h1>
-    <div class="student-search">
-        <h1></h1>
-        <form>
-        <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input id="student-search" onkeyup="$dc.StudentSearch()" class="form-control d-inline-block student-search-form" type="text"></form>
-    </div>
-    <div class="container student-card-container">
-        @if (auth()->user()->user_type=="super admin" || auth()->user()->user_type=="head of institution")
-        <div class="text-center" style="margin: 0 0 20px 0;"><a href="/new-user"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add User</button></a></div>
-        @endif
-        <div class="row">
-            <div id="student-list" class="col-lg-12">
-                @foreach ($users as $u)
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{url('/uploads/profile-pictures/'.$u->photo)}}">
-                    <p class="student-card-name" style="margin: 0 0 ;">{{$u->teachername}}</p>
-                    <p class="student-card-desc yellow" style="font-size: 15px;">{{ ucwords($u->user_type) }}</p><a href="/users/{{$u->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a></div>
-                @endforeach
+    <h1 class="bounce animated page-heading">TEACHER PAYMENT</h1>
+    <div>
+        <div class="container">
+            <div class="row text-center justify-content-center align-items-center">
+                <div class="col-md-3 col-sm-6">
+                    <a href="/accounting/teacher-payment/salary">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p><i class="fa fa-usd button-content-icon"></i></p>
+                            <p class="button-content">Salary</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="/accounting/teacher-payment/incentive">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p><i class="fa fa-usd button-content-icon"></i></p>
+                            <p class="button-content">Incentives<br></p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
+    <script src="{{asset('js/bs-init.js')}}"></script>
 </body>
 
 </html>

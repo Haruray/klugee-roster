@@ -86,7 +86,7 @@ class AdminController extends Controller
             return $pdf->download('Nota '.$new_income->date.'-'.$new_income->transaction_type.'-'.$new_income->sub_transaction.'-'.$new_income->detail.'.pdf');
         }
         else{
-            Session::flash('gagal','Error has occured. Failed to record. data.');
+            Session::flash('gagal','Error has occured. Failed to record data.');
         }
 
         return redirect('/accounting/input-transaction/income');

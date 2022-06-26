@@ -174,9 +174,9 @@
                     <tbody>
                         @foreach ($salary as $s)
                             <tr>
-                                <td>{{ $s->position }}</td>
+                                <td>{{ ucwords($s->position) }}</td>
                                 <td>{{ $s->status }}</td>
-                                <td>{{ $s->nominal }}</td>
+                                <td>{{ $s->nominal/1000 }}K</td>
                                 <td><button class="btn btn-warning">Edit</button></td>
                             </tr>
                         @endforeach

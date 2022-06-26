@@ -154,6 +154,7 @@
                             @foreach ($salary as $s)
                             <tr>
                                 <td>{{date('l',strtotime($s->date))}}, {{date('d/m/Y',strtotime($s->date))}}</td>
+                                <td>{{ $s->name }}</td>
                                 <td>{{$s->note}}</td>
                                 <td>{{$s->nominal}}</td>
                                 <td>
@@ -178,8 +179,10 @@
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>Description</th>
+                            <th>Incentive Name</th>
+                            <th>Teacher Name</th>
                             <th>Nominal</th>
+                            <th>Note</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -188,8 +191,10 @@
                         @foreach ($incentive as $i)
                         <tr>
                                 <td>{{date('l',strtotime($i->date))}}, {{date('d/m/Y',strtotime($i->date))}}</td>
-                                <td>{{$i->note}}</td>
+                                <td>{{ $i->name }}</td>
+                                <td>{{$i->teacher_name}}</td>
                                 <td>{{$i->nominal}}</td>
+                                <td>{{ $i->note }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="/accounting/approvals/approve-incentive/{{  $i->id }}"><button class="btn btn-success" type="button">Approve</button></a>

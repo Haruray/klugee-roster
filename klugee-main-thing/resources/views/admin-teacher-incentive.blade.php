@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-Clean.css')}}">
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
-    <script src="{{asset('js/studentsearch-script.js')}}"></script>
+</head>
 </head>
 
 <body>
@@ -77,29 +77,111 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">USER SEARCH</h1>
-    <div class="student-search">
-        <h1></h1>
-        <form>
-        <p class="d-inline-block student-search-icon"><i class="fa fa-search"></i></p><input id="student-search" onkeyup="$dc.StudentSearch()" class="form-control d-inline-block student-search-form" type="text"></form>
-    </div>
-    <div class="container student-card-container">
-        @if (auth()->user()->user_type=="super admin" || auth()->user()->user_type=="head of institution")
-        <div class="text-center" style="margin: 0 0 20px 0;"><a href="/new-user"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add User</button></a></div>
-        @endif
-        <div class="row">
-            <div id="student-list" class="col-lg-12">
-                @foreach ($users as $u)
-                <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{url('/uploads/profile-pictures/'.$u->photo)}}">
-                    <p class="student-card-name" style="margin: 0 0 ;">{{$u->teachername}}</p>
-                    <p class="student-card-desc yellow" style="font-size: 15px;">{{ ucwords($u->user_type) }}</p><a href="/users/{{$u->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a></div>
-                @endforeach
-            </div>
+    <h1 class="bounce animated page-heading" style="color: rgb(48,121,200);">Teacher Incentive</h1>
+    <div class="attendance-box" style="background-color: rgb(48,121,200);">
+
+        @if ($message = Session::get('sukses'))
+        <div class="alert alert-success alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
         </div>
+        @endif
+
+        @if ($message = Session::get('gagal'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
+
+        <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
+        <form name="incentive-form" method="POST" action="/accounting/teacher-payment/incentive/process" onsubmit="return validateForm()">
+            @csrf
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input name="date" class="form-control attendance-input" type="date" required=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
+                            <select style="margin-left: 17px;" name="teacher-name" class="form-control attendance-input">
+                                <optgroup label="Teacher Positions">
+                                    <option value="teacher">All Teachers</option>
+                                    <option value="head teacher">All Head Teachers</option>
+                                    <option value="admin">All Admin Officers</option>
+                                    <option value="super admin">All Super Admins</option>
+                                </optgroup>
+                                <optgroup label="Teacher Name">
+                                    <option value="" disabled selected>Teacher Name</option>
+                                    @foreach ($teachers as $t)
+                                    <option value="{{$t->id}}">{{ $t->name }}</option>
+                                @endforeach
+                                </optgroup>
+                            </select>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-check-circle"></i></div>
+                            <input style="margin-left: 17px;" name="name" class="form-control attendance-input" type="text" placeholder="Incentive Name" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-dollar"></i></div><input name="nominal" class="form-control attendance-input" type="text" placeholder="Amount (IDR)" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-exclamation"></i></div><input name="notes" class="form-control attendance-input" type="text" placeholder="Notes"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" value="submit" name="submit">Submit</button></div>
+        </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-</body>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset('js/bs-init.js')}}"></script>
 
+</body>
+<script>
+    function validateForm() {
+        let x = document.forms["incentive-form"];
+        if (x["teacher-name"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'PIC must be filled out.'
+            });
+            return false;
+        }
+        if (x["payment_method"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Payment Method must be filled out.'
+            });
+            return false;
+        }
+    }
+</script>
 </html>

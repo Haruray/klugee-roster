@@ -256,8 +256,9 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Description</th>
+                        <th>Incentive Name</th>
                         <th>Nominal</th>
+                        <th>Note</th>
                         <th>Payment Status</th>
                     </tr>
                 </thead>
@@ -266,9 +267,10 @@
                     @foreach ($incentive as $i)
                     <tr>
                             <td>{{date('l',strtotime($i->date))}}, {{date('d/m/Y',strtotime($i->date))}}</td>
-                            <td>{{$i->note}}</td>
+                            <td>{{ $i->name }}</td>
                             <td>{{$i->nominal}}</td>
-                            @if ($s->approved)
+                            <td>{{$i->note}}</td>
+                            @if ($i->approved)
                             <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
@@ -278,6 +280,7 @@
 
                 </tbody>
                 <tfoot style="background-color:#fff5cc; text-align:right;">
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
