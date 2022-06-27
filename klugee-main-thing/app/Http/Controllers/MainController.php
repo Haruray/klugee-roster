@@ -293,33 +293,40 @@ class MainController extends Controller
     }
 
     public function AttendanceProgressReport($attendance_id){
+        $view = view('progress-report-input');
         //Get every student on current attendance
         $students = self::GetPresentAttendee($attendance_id);
         $flag; //for checking whether all the students present or not
-        $filled = Progress::where('id_attendance',$attendance_id)->first()->filled;
-        if (!$filled){
-            $spp_warning = array(); //for SPP warning
-            $program = Attendance::where('id',$attendance_id)->first()->program;
-            $attendee = Attendee::where('id_attendance',$attendance_id)->join('tuition_fees','tuition_fees.id_student','=','attendees.id_student')
-            ->join('students','students.id','=','attendees.id_student')->where('program',$program)->get();
-            $flag = $attendee[0]->present;
-            foreach ($attendee as $a){
-                $flag = $flag || $a->present;
-                if ($a->quota <= 0){
-                    $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
-                    array_push($spp_warning,$warning_string);
-                }
+        $program = Attendance::where('id',$attendance_id)->first()->program;
+
+        $attendee = Attendee::where('id_attendance',$attendance_id)->join('tuition_fees','tuition_fees.id_student','=','attendees.id_student')
+        ->join('students','students.id','=','attendees.id_student')->where('program',$program)->get();
+        $flag = $attendee[0]->present;
+        //Checking attendance
+        $spp_warning = array(); //for SPP warning
+        foreach ($attendee as $a){
+            $flag = $flag || $a->present;
+            if ($a->quota <= 0){
+                $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
+                array_push($spp_warning,$warning_string);
+            }
+        }
+
+        if ($flag){ //Proceed if at least one of the attendee is present
+            $filled = Progress::where('id_attendance',$attendance_id)->first()->filled;
+            if (!$filled){ //if its not filled, the proceed to the form
+                //SPP warning stuff
+                Session::flash('spp-warning', $spp_warning);
+                $levels = FeeList::select('level')->where('program', $program)->get();
+                return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag)->with('levels',$levels)->with('program', $program);
 
             }
-            //SPP warning stuff
-            Session::flash('spp-warning', $spp_warning);
-            $levels = FeeList::select('level')->where('program', $program)->get();
-            $view = view('progress-report-input');
-            return $view->with('students', $students)->with('attendance_id',$attendance_id)->with('flag',$flag)->with('levels',$levels)->with('program', $program);
+            else{ //if its filled, then redirect to progress report confirm view
+                return redirect('/attendance/progress-report/'.$attendance_id.'/filled');
+            }
         }
-        else{
-            return redirect('/attendance/progress-report/'.$attendance_id.'/filled');
-        }
+        return $view->with('attendance_id',$attendance_id)->with('flag',$flag);
+
 
  }
     public function ProgressView($attendance_id){
