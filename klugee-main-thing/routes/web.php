@@ -129,6 +129,7 @@ Route::get('/new-user','SuperAdminController@AddTeacherMenu');
 //super admin post route
 Route::post('/management/fee-edit','SuperAdminController@FeeEdit');
 Route::post('/management/incentive-edit','SuperAdminController@IncentiveEdit');
+Route::post('/management/salary-edit','SuperAdminController@SalaryEdit');
 Route::post('/management/fee-add','SuperAdminController@FeeAdd');
 Route::post('/management/program-add','SuperAdminController@ProgramAdd');
 Route::post('/accounting/teacher-payment/salary/process','SuperAdminController@TeacherSalaryProcess');

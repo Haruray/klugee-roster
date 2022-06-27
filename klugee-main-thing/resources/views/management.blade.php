@@ -176,13 +176,12 @@
                             <tr>
                                 <td>{{ ucwords($s->position) }}</td>
                                 <td>{{ $s->status }}</td>
-                                <td>{{ $s->nominal/1000 }}K</td>
-                                <td><button class="btn btn-warning">Edit</button></td>
+                                <td id="salary-{{ $s->position }}-{{ $s->status }}">{{ $s->nominal/1000 }}K</td>
+                                <td><button class="btn btn-warning" onclick="editSalary('salary-{{ $s->position }}-{{ $s->status }}',{{ $s->id }})">Edit</button></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <button class="btn btn-primary" type="button">Add Salary</button>
             </div>
             <div class="management-sub-box">
                 <h3 class="management-heading">Parents Partner</h3>
@@ -227,7 +226,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 id="edit-title-incentive" class="modal-title">Fee Edit</h5>
+              <h5 id="edit-title-incentive" class="modal-title">Incentive Edit</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -315,6 +314,33 @@
         </div>
       </div>
 
+    <!-- SALARY EDIT MODAL -->
+    <div class="modal fade" id="edit-salary" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="edit-title-salary" style="text-transform: capitalize;" class="modal-title">Salary Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form method="POST" id="edit-salary-form" action="/management/salary-edit">
+                        @csrf
+                    <input type="hidden" value="" name="salary-id" id="salary-id">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Salary Nominal</p>
+                    <input class="form-control" type="text" name="salary-input" id="salary-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+            </div>
+        </div>
+        </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
@@ -341,6 +367,14 @@
         mainmodal.querySelector("#edit-title-incentive").innerHTML = name + " Incentive Edit";
         mainmodal.querySelector("#incentive-input").value = document.getElementById('incentive-'+name).innerHTML.replace("K","000");
 
+    }
+
+    function editSalary(name,id){
+        let mainmodal = document.getElementById("edit-salary");
+        $('#edit-salary').modal('toggle');
+        mainmodal.querySelector("#salary-id").value = id;
+        mainmodal.querySelector("#edit-title-salary").innerHTML = name.replaceAll("-"," ");
+        mainmodal.querySelector("#salary-input").value = document.getElementById(name).innerHTML.replace("K","000");
     }
 </script>
 

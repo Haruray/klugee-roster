@@ -28,6 +28,7 @@ use App\FeeList;
 use App\IncentiveList;
 use App\Accounting;
 use App\SalaryList;
+use App\User;
 
 use Session;
 
@@ -568,6 +569,7 @@ class MainController extends Controller
 
         //PROSES PERUBAHAN DI DATABASE
         $teacher = Teachers::where('id',auth()->user()->id_teacher)->update(['photo' => $image_name]);
+        $teacher = User::where('id_teacher',auth()->user()->id_teacher)->update(['photo' => $image_name]);
 
         return response()->json([
             'success' => true,

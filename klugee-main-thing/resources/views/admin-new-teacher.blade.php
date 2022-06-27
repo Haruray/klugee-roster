@@ -263,7 +263,7 @@
                         <div class="attendance-input-div" style="text-align: center;">
                             <p style="color:white; font-weight:bold; font-size:20px; text-align:center;">Teaching Program</p>
                             @foreach ($program as $p)
-                            <div class="form-check" style="display: inline-block; margin-right:5px; color:white;">
+                            <div id="teaching-program-checkbox" class="form-check" style="display: inline-block; margin-right:5px; color:white;">
                                 <input class="form-check-input" name="teaching-program[]" type="checkbox" value="{{ $p->program }}" id="{{ explode(" ",$p->program)[0] }}">
                                 <label class="form-check-label" for="{{ explode(" ",$p->program)[0] }}">
                                   {{ $p->program }}
@@ -306,11 +306,11 @@
             });
             return false;
         }
-        if ($('div#teacher-status-checkbox :checkbox:checked').length <= 0){
+        if ($('div#teaching-program-checkbox :checkbox:checked').length <= 0){
             Swal.fire({
                 icon : 'error',
                 title: 'Oops...',
-                text: 'Teacher Status checkbox must be filled out.'
+                text: 'Teaching Program checkbox must be filled out.'
             });
             return false;
         }

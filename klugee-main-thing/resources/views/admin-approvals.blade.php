@@ -222,8 +222,6 @@
                             <th style="text-align: center;" colspan="3">Bonus Referral Parents</th>
                             <th rowspan="2">PIC Front Admin</th>
                             <th rowspan="2">Actions</th>
-                            <th rowspan="2">PIC Scheduling</th>
-                            <th rowspan="2">Actions</th>
                         </tr>
                         <tr>
                             <th>Parents</th>
@@ -249,13 +247,6 @@
                                 <div class="btn-group" role="group">
                                     <a href="/accounting/approvals/approve-referral-front/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
                                     <a href="/accounting/approvals/delete-referral-front/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
-                                </div>
-                            </td>
-                            <td>{{ $r->pic_scheduling }}</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="/accounting/approvals/approve-referral-scheduling/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
-                                    <a href="/accounting/approvals/delete-referral-scheduling/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
 

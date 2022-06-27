@@ -54,7 +54,7 @@ class SuperAdminController extends Controller
         ->join('teachers','teachers.id','=','attendances.id_teacher')
         ->orderBy('attendances.date')
         ->get();
-        $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')->where('status_referral','=','0')->orWhere('status_front_admin','=','0')->orWhere('status_scheduling')->join('students','students.id','=','referrals.registering_student_id')->get();
+        $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')->where('status_referral','=','0')->orWhere('status_front_admin','=','0')->join('students','students.id','=','referrals.registering_student_id')->get();
         $salary_approvals = Salary::select('salaries.*','teachers.name')->where('approved','=','0')->join('teachers','teachers.id','=','salaries.id_teacher')->get();
         $incentives = Incentive::select('teachers.name as teacher_name','incentives.*')->where('approved','=','0')
         ->join('teachers','teachers.id','=','incentives.id_teacher')->get();
@@ -254,6 +254,13 @@ class SuperAdminController extends Controller
         $incentive = IncentiveList::where('id', $request->input('incentive-id'))->first();
         $incentive->nominal = $request->input('incentive-input');
         $incentive->save();
+        return redirect()->back();
+    }
+
+    public function SalaryEdit(Request $request){
+        $salary = SalaryList::where('id', $request->input('salary-id'))->first();
+        $salary->nominal = $request->input('salary-input');
+        $salary->save();
         return redirect()->back();
     }
 
