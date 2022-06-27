@@ -94,6 +94,7 @@ Route::get('/accounting/financial-data/recap/income/{month}/{year}','AdminContro
 Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminController@FinancialRecapExpense');
 Route::get('/accounting/spp','AdminController@SPP');
 Route::get('/accounting/referral/{month}/{year}','AdminController@ReferralReport');
+Route::get('/new-student','AdminController@NewStudent');
 
 Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
 Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
@@ -147,6 +148,7 @@ Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');
 Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
 Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');
+Route::get('/get/parent-partner','RequestController@GetParentPartner');
 
 Route::get('/nota','AdminController@TesNota');
 Route::get('/report','AdminController@Report');

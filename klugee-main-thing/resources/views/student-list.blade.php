@@ -85,7 +85,12 @@
     </div>
     <div class="container student-card-container">
         @if (auth()->user()->user_type=="admin" || auth()->user()->user_type=="super admin" || auth()->user()->user_type=="head of institution")
-        <div class="text-center" style="margin: 0 0 20px 0;"><button class="btn btn-success" type="button" style="font-size: 20px;"><i class="fa fa-user-plus"></i>&nbsp;Add Student</button></div>
+        <div class="text-center" style="margin: 0 0 20px 0;">
+            <a href="/new-student">
+                <button class="btn btn-success" type="button" style="font-size: 20px;">
+                <i class="fa fa-user-plus"></i>&nbsp;Add Student</button></div>
+            </a>
+
         @endif
         <div class="row">
             <div id="student-list" class="col-lg-12">

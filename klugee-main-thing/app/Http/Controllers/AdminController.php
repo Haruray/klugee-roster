@@ -249,6 +249,13 @@ class AdminController extends Controller
         //view()->share('data',$new_income);
         $pdf = PDF::loadView('reportbook')->setOption('page-width','210')->setOption('page-height','297')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
         return $pdf->download('Tes.pdf');
+    }
 
+    public function NewStudent(){
+        $program = Program::get();
+        $view = view('admin-new-student');
+        return $view->with([
+            'program' => $program,
+        ]);
     }
 }

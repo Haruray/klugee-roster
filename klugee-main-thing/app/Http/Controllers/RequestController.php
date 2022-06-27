@@ -26,6 +26,7 @@ use App\StudentPresence;
 use App\FeeList;
 use App\IncentiveList;
 use App\User;
+use App\Referrer;
 
 class RequestController extends Controller
 {
@@ -80,6 +81,14 @@ class RequestController extends Controller
         return response()->json([
             'success' => true,
             'teachers' => $teachers
+        ],200);
+    }
+
+    public function GetParentPartner(){
+        $parent = Referrer::get();
+        return response()->json([
+            'success' => true,
+            'parent' => $parent,
         ],200);
     }
 }
