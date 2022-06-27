@@ -287,7 +287,7 @@ class AdminController extends Controller
             $tuition = new TuitionFee;
             $tuition->id_student = $student->id;
             $tuition->program = $sp;
-            $tuition->quota =$request->input($sp.'-jatah');
+            $tuition->quota =$request->input(explode(' ',$sp)[0].'-jatah');
             $tuition->save();
             //Accounting Income SPP
             $accounting = new Accounting;
@@ -295,7 +295,7 @@ class AdminController extends Controller
             $accounting->transaction_type = "SPP";
             $accounting->sub_transaction = $sp." Program";
             $accounting->detail = $student->name;
-            $accounting->nominal = $request->input($sp.'-nominal');
+            $accounting->nominal = $request->input(explode(' ',$sp)[0].'-nominal');
             $accounting->pic = $request->input('pic');
             $accounting->payment_method = $request->input('payment_method');
             $accounting->notes = $request->input('note');

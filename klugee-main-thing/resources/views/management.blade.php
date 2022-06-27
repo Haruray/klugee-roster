@@ -189,12 +189,14 @@
                     <thead>
                         <tr>
                             <th>Parent Name</th>
+                            <th style="width:20%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($partner as $p)
                             <tr>
-                                <td>{{ $p->referrer_name }}</td>
+                                <td>{{ $p->parent }} {{ $p->referrer_name }}</td>
+                                <td><a href="/management/partner-delete/{{ $p->id }}"><button class="btn btn-danger" type="button">Delete</button></a></td>
                             </tr>
                         @endforeach
                     </tbody>

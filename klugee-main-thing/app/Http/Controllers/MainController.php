@@ -656,7 +656,8 @@ class MainController extends Controller
         $incentives = IncentiveList::get();
         $salary = SalaryList::get();
         $programs = Program::get();
-        $partner = Referrer::get();
+        $partner = Referrer::select('referrers.*','students.parent','students.parent_name')
+        ->join('students','students.id','=','referrers.parent_student_id')->get();
         $parent = Students::select('id','parent','parent_name')
         ->whereNotIn('id', Referrer::select('parent_student_id')->get())->get();
         $view = view('management');

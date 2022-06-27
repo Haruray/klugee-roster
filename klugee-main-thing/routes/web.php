@@ -120,7 +120,7 @@ Route::get('/accounting/approvals/delete-referral-front/{referral_id}','SuperAdm
 Route::get('/accounting/teacher-payment','SuperAdminController@TeacherPayment');
 Route::get('/accounting/teacher-payment/salary','SuperAdminController@TeacherSalary');
 Route::get('/accounting/teacher-payment/incentive','SuperAdminController@TeacherIncentive');
-
+Route::get('/management/partner-delete/{partner_id}','SuperAdminController@PartnerDelete');
 
 Route::get('/new-user','SuperAdminController@AddTeacherMenu');
 
