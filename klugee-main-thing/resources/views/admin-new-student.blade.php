@@ -80,13 +80,14 @@
     <h1 class="bounce animated page-heading">New Student Registration</h1>
     <div id="box" class="attendance-box">
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-        <form name="studentadd" id="teacheradd" method="POST" action="/student/add/process" onsubmit="return validateForm();">
+        <form name="studentadd" id="studentadd" method="POST" action="/student/add/process" onsubmit="return validateForm();">
             @csrf
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-id-badge"></i></div><input name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-id-badge"></i></div>
+                            <input name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
                     </div>
                 </div>
             </div>
@@ -187,7 +188,7 @@
                             <div id="student-program-checkbox" class="form-check" style="display: inline-block; margin-right:5px; color:white; ">
                                 <div style="text-align:center; height:150px; width:150px; border-radius:10px; margin-bottom:15px;">
                                     <img style="display: block; margin:auto; border:1px solid white; border-radius:50%;" src="{{ asset('img/'.$p->program.'-logo.png') }}" alt="" width="100">
-                                    <input style="display: inline-block; text-align:center; margin-left:-7px; margin-top:5px;" class="form-check-input" name="teaching-program[]" type="checkbox" value="{{ $p->program }}" id="{{ explode(" ",$p->program)[0] }}" onclick="ProgramClicked({{ explode(' ',$p->program)[0] }})">
+                                    <input style="display: inline-block; text-align:center; margin-left:-7px; margin-top:5px;" class="form-check-input" name="student-program[]" type="checkbox" value="{{ $p->program }}" id="{{ explode(" ",$p->program)[0] }}" onclick="ProgramClicked({{ explode(' ',$p->program)[0] }})">
                                     <br>
                                     <label class="form-check-label" for="{{ explode(" ",$p->program)[0] }}">
                                       {{ $p->program }}
@@ -203,7 +204,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-mobile"></i></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-dollar"></i></div>
                             <input style="margin-left: 16px;" name="registration-nominal" class="form-control attendance-input" type="text" placeholder="Registration Amount (IDR)" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
                     </div>
                 </div>
@@ -217,6 +218,40 @@
                     </div>
                 </div>
             </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div>
+                            <select style="margin-left: 17px;" name="pic" class="form-control attendance-input">
+                                <optgroup label="PIC">
+                                    <option value="" disabled selected>PIC</option>
+                                    @foreach ($teachers as $t)
+                                    <option value="{{$t->id}}">{{ $t->name }}</option>
+                                @endforeach
+                                </optgroup>
+                            </select>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-credit-card"></i></div>
+                            <select style="margin-left: 17px;" name="payment_method" class="form-control attendance-input">
+                                <optgroup label="Payment Method">
+                                    <option value="" disabled selected>Payment Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="ATM">ATM</option>
+                                    <option value="Other">Other</option>
+                                </optgroup>
+                            </select></div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="referral-bool" id="referral-bool" value="0">
             <div id="referral" class="container">
                 <button class="btn btn-primary" onclick="AddReferral()">Add Referral</button>
             </div>
@@ -262,9 +297,9 @@
                         "<div class=\"attendance-input-div\">"+
                             "<div class=\"attendance-icon align-middle\"><i class=\"fa fa-dollar\"></i></div>"+
                             "<input name=\""+program_text.id+"-nominal\" class=\"form-control attendance-input\" "+
-                            "type=\"text\" placeholder=\""+program_text.id+" Nominal (IDR)\" required=\"\" "+
+                            "type=\"text\" placeholder=\""+program_text.value+" Nominal (IDR)\" required=\"\" "+
                             "inputmode=\"numeric\" "+
-                            "oninput=\"this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');\"></div>"+
+                            "oninput=\"this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\\..*)\\./g, '$1');\"></div>"+
                     "</div></div></div>"
             JatahHTML = "<div id=\""+program_text.id+"-jatah\">"+
                 "<div class=\"form-row\">"+
@@ -272,9 +307,9 @@
                         "<div class=\"attendance-input-div\">"+
                             "<div class=\"attendance-icon align-middle\"><i class=\"fa fa-check-circle\"></i></div>"+
                             "<input name=\""+program_text.id+"-jatah\" class=\"form-control attendance-input\" "+
-                            "type=\"text\" placeholder=\" Jatah Pertemuan "+program_text.id+"\" required=\"\" "+
+                            "type=\"text\" placeholder=\" Jatah Pertemuan "+program_text.value+"\" required=\"\" "+
                             "inputmode=\"numeric\" "+
-                            "oninput=\"this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');\"></div>"+
+                            "oninput=\"this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\\..*)\\./g, '$1');\"></div>"+
                     "</div></div></div>"
 
             $('#program-container').append(NominalHTML);
@@ -319,13 +354,14 @@
             success : function(response){
                 if (response.success){
                     for (var i = 0 ; i < response.parent.length ; i++){
-                        var OptionHTML = "<option value=\""+response.parent[i].parent_student_id+"\" disabled selected>"+response.parent[i].referrer_name+"</option>";
+                        var OptionHTML = "<option value=\""+response.parent[i].parent_student_id+"\">"+response.parent[i].referrer_name+"</option>";
                         ReferrerHTML+=OptionHTML;
                     }
                     ReferrerHTML+=ReffererClosingHTML;
                     targetElem.innerHTML = ReferrerHTML;
                     $('#referral').append(ReferralNote);
                     $('#referral').append(DeleteReferral);
+                    document.getElementById("referral-bool").value="1";
                 }
                 else{
                     //alert
@@ -337,6 +373,7 @@
     function DeleteReferral(){
         let AddReferral = "<button class=\"btn btn-primary\" onclick=\"AddReferral()\">Add Referral</button>";
         let targetElem = document.querySelector('#referral');
+        document.getElementById("referral-bool").value="0";
         targetElem.innerHTML = AddReferral;
     }
 </script>

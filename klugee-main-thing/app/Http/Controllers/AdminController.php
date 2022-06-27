@@ -31,6 +31,7 @@ use App\IncentiveList;
 use App\User;
 use App\Accounting;
 use App\Referral;
+use App\Referrer;
 
 use PDF;
 
@@ -238,7 +239,7 @@ class AdminController extends Controller
 
     public function ReferralReport($month, $year){
         $years = Referral::selectRaw('YEAR(date) as year')->distinct()->get();
-        $referrals = Referral::whereMonth('date','=',$month)->whereYear('date','=',$year)->join('students','students.id','=','referrals.registering_student_id');
+        $referrals = Referral::whereMonth('date','=',$month)->whereYear('date','=',$year)->join('students','students.id','=','referrals.registering_student_id')->get();
         $view = view('admin-referrals-report');
         return $view->with('referrals',$referrals)->with('selected_year',$year)->with('selected_month',$month)->with('years',$years);
     }
@@ -253,9 +254,84 @@ class AdminController extends Controller
 
     public function NewStudent(){
         $program = Program::get();
+        $teachers = Teachers::get();
         $view = view('admin-new-student');
         return $view->with([
             'program' => $program,
+            'teachers' => $teachers,
         ]);
+    }
+
+    public function NewStudentProcess(Request $request){
+        $acc_ids = array();
+        $student = new Students;
+        $student->official_id = $request->input('official-id');
+        $student->name = $request->input('name');
+        $student->nickname = $request->input('nickname');
+        $student->birthplace = $request->input('birthplace');
+        $student->birthdate = $request->input('date');
+        $student->school_name = $request->input('school');
+        $student->parent = $request->input('parent');
+        $student->parent_name = $request->input('parent-name');
+        $student->parent_contact = $request->input('telp');
+        $student->address = $request->input('address');
+        $student->email = $request->input('email');
+        $student->photo = "default-profile-img.png";
+        $student->save();
+        foreach($request->input('student-program') as $sp){
+            $student_program = new StudentProgram;
+            $student_program->id_student = $student->id;
+            $student_program->program = $sp;
+            $student_program->save();
+            //SPP Stuff
+            $tuition = new TuitionFee;
+            $tuition->id_student = $student->id;
+            $tuition->program = $sp;
+            $tuition->quota =$request->input($sp.'-jatah');
+            $tuition->save();
+            //Accounting Income SPP
+            $accounting = new Accounting;
+            $accounting->date = date("Y-m-d");
+            $accounting->transaction_type = "SPP";
+            $accounting->sub_transaction = $sp." Program";
+            $accounting->detail = $student->name;
+            $accounting->nominal = $request->input($sp.'-nominal');
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('note');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids,$accounting->id);
+        }
+        //Accounting Income Registration
+        $accounting = new Accounting;
+        $accounting->date = date("Y-m-d");
+        $accounting->transaction_type = "Registration";
+        $accounting->sub_transaction = $sp." Program";
+        $accounting->detail = $student->name;
+        $accounting->nominal = $request->input('registration-nominal');
+        $accounting->pic = $request->input('pic');
+        $accounting->payment_method = $request->input('payment_method');
+        $accounting->notes = $request->input('note');
+        $accounting->approved = false;
+        $accounting->save();
+
+        //Referrals
+        if ($request->input('referral-bool')=='1'){
+            $referral = new Referral;
+            $referral->date = date("Y-m-d");
+            $referral->registering_student_id = $student->id;
+            $referral->referrer_parent_student_id = $request->input('referrer');
+            $referral->referrer_name = Referrer::where('parent_student_id',$request->input('referrer'))->first()->referrer_name;
+            $referral->referral_nominal = IncentiveList::where('name','Referral')->first()->nominal;
+            $referral->status_referral = false;
+            $referral->pic_front_admin = IncentiveList::where('name','PIC Referral')->first()->nominal;
+            $referral->status_front_admin = false;
+            $referral->note = $request->input('referral-note');
+            $referral->save();
+        }
+
+        return redirect('/students/'.$student->id);
+
     }
 }

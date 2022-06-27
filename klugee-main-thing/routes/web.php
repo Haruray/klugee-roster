@@ -99,6 +99,7 @@ Route::get('/new-student','AdminController@NewStudent');
 Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
 Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
 Route::post('/accounting/spp/process','AdminController@SPPProcess');
+Route::post('/student/add/process','AdminController@NewStudentProcess');
 
 
 //FOURTH LEVEL ACCESS
@@ -116,8 +117,6 @@ Route::get('/accounting/approvals/approve-referral/{referral_id}','SuperAdminCon
 Route::get('/accounting/approvals/delete-referral/{referral_id}','SuperAdminController@ReferralDeletion');
 Route::get('/accounting/approvals/approve-referral-front/{referral_id}','SuperAdminController@ReferralFrontApproval');
 Route::get('/accounting/approvals/delete-referral-front/{referral_id}','SuperAdminController@ReferralFrontDeletion');
-Route::get('/accounting/approvals/approve-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingApproval');
-Route::get('/accounting/approvals/delete-referral-scheduling/{referral_id}','SuperAdminController@ReferralSchedulingDeletion');
 Route::get('/accounting/teacher-payment','SuperAdminController@TeacherPayment');
 Route::get('/accounting/teacher-payment/salary','SuperAdminController@TeacherSalary');
 Route::get('/accounting/teacher-payment/incentive','SuperAdminController@TeacherIncentive');
@@ -133,6 +132,7 @@ Route::post('/management/incentive-edit','SuperAdminController@IncentiveEdit');
 Route::post('/management/salary-edit','SuperAdminController@SalaryEdit');
 Route::post('/management/fee-add','SuperAdminController@FeeAdd');
 Route::post('/management/program-add','SuperAdminController@ProgramAdd');
+Route::post('/management/partner-add','SuperAdminController@PartnerAdd');
 Route::post('/accounting/teacher-payment/salary/process','SuperAdminController@TeacherSalaryProcess');
 Route::post('/accounting/teacher-payment/incentive/process','SuperAdminController@TeacherIncentiveProcess');
 

@@ -32,6 +32,7 @@ use App\IncentiveList;
 use App\User;
 use App\Accounting;
 use App\Referral;
+use App\Referrer;
 
 use PDF;
 
@@ -194,7 +195,10 @@ class SuperAdminController extends Controller
     public function ReferralDeletion($accounting_id){
         $acc = Referral::where('id',$accounting_id)->first();
         $acc->update('referral_nominal',0);
-        if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0 && $acc->pic_scheduling == 0){
+        if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0){
+            $acc->delete();
+        }
+        elseif($acc->pic_front_admin==0 && !$acc->status_front_admin){
             $acc->delete();
         }
         else{
@@ -213,26 +217,10 @@ class SuperAdminController extends Controller
     public function ReferralFrontDeletion($accounting_id){
         $acc = Referral::where('id',$accounting_id)->first();
         $acc->update('pic_front_admin',0);
-        if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0 && $acc->pic_scheduling == 0){
+        if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0){
             $acc->delete();
         }
-        else{
-            $acc->save();
-        }
-        return redirect('/accounting/approvals');
-    }
-
-    public function ReferralSchedulingApproval($accounting_id){
-        $acc = Referral::where('id',$accounting_id)->first();
-        $acc->status_scheduling = true;
-        $acc->save();
-        return redirect('/accounting/approvals');
-    }
-
-    public function ReferralSchedulingDeletion($accounting_id){
-        $acc = Referral::where('id',$accounting_id)->first();
-        $acc->update('pic_scheduling',0);
-        if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0 && $acc->pic_scheduling == 0){
+        elseif($acc->referral_nominal==0 && !$acc->status_referral){
             $acc->delete();
         }
         else{
@@ -465,6 +453,14 @@ class SuperAdminController extends Controller
         }
 
         return redirect('/accounting/teacher-payment/incentive');
+    }
+
+    public function PartnerAdd(Request $request){
+        $referrer = new Referrer;
+        $referrer->referrer_name = Students::where('id',$request->input('parent'))->first()->parent_name;
+        $referrer->parent_student_id = $request->input('parent');
+        $referrer->save();
+        return redirect()->back();
     }
 
 

@@ -29,6 +29,7 @@ use App\IncentiveList;
 use App\Accounting;
 use App\SalaryList;
 use App\User;
+use App\Referrer;
 
 use Session;
 
@@ -655,6 +656,9 @@ class MainController extends Controller
         $incentives = IncentiveList::get();
         $salary = SalaryList::get();
         $programs = Program::get();
+        $partner = Referrer::get();
+        $parent = Students::select('id','parent','parent_name')
+        ->whereNotIn('id', Referrer::select('parent_student_id')->get())->get();
         $view = view('management');
         return $view->with([
             'programs'=>$programs,
@@ -662,6 +666,8 @@ class MainController extends Controller
             'incentive' =>$incentives,
             'salary' => $salary,
             'programs' => $programs,
+            'partner' => $partner,
+            'parent' => $parent,
         ]);
     }
 

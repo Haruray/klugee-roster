@@ -185,7 +185,21 @@
             </div>
             <div class="management-sub-box">
                 <h3 class="management-heading">Parents Partner</h3>
-                <button class="btn btn-primary" type="button">Add Partner</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Parent Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($partner as $p)
+                            <tr>
+                                <td>{{ $p->referrer_name }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#partner-add">Add Partner</button>
             </div>
 
         </div>
@@ -341,6 +355,37 @@
         </div>
         </div>
 
+    <!-- PARENT PARTNER ADD MODAL -->
+      <div class="modal fade" id="partner-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="add-title-partner" class="modal-title">Parent Partner Add</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form method="POST" id="add-partner-form" action="/management/partner-add">
+                      @csrf
+                    <p style="margin-bottom: 0px; margin-top:10px;">Parent Name</p>
+                    <select class="form-control" name="parent" id="parent">
+                        @foreach ($parent as $p)
+                            <option value="{{ $p->id }}">{{ $p->parent }} {{ $p->parent_name }}</option>
+                        @endforeach
+                    </select>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
@@ -376,6 +421,7 @@
         mainmodal.querySelector("#edit-title-salary").innerHTML = name.replaceAll("-"," ");
         mainmodal.querySelector("#salary-input").value = document.getElementById(name).innerHTML.replace("K","000");
     }
+
 </script>
 
 </html>

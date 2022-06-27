@@ -236,20 +236,32 @@
                             <td>{{ $r->registering_student_name }}</td>
                             <td>{{ $r->referrer_name }}</td>
                             <td>{{ $r->referral_nominal }}</td>
+                            @if ($r->status_referral)
+                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                            @elseif (!$r->status_referral && $r->referral_nominal==0)
+                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                            @else
                             <td>
                                 <div class="btn-group" role="group">
                                     <a href="/accounting/approvals/approve-referral/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
                                     <a href="/accounting/approvals/delete-referral/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
+                            @endif
+
                             <td>{{ $r->pic_front_admin }}</td>
+                            @if ($r->status_front_admin)
+                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                            @elseif (!$r->status_front_admin && $r->pic_front_admin == 0)
+                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
+                            @else
                             <td>
                                 <div class="btn-group" role="group">
                                     <a href="/accounting/approvals/approve-referral-front/{{  $r->id }}"><button class="btn btn-success" type="button">Approve</button></a>
                                     <a href="/accounting/approvals/delete-referral-front/{{  $r->id }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                 </div>
                             </td>
-
+                            @endif
                         </tr>
                         @endforeach
                     </tbody>

@@ -163,8 +163,6 @@
                             <th style="text-align: center;" colspan="3">Bonus Referral Parents</th>
                             <th rowspan="2">PIC Front Admin</th>
                             <th rowspan="2">Status</th>
-                            <th rowspan="2">PIC Scheduling</th>
-                            <th rowspan="2">Status</th>
                         </tr>
                         <tr>
                             <th>Parents</th>
@@ -176,22 +174,16 @@
                         @foreach ($referrals as $r)
                         <tr>
                             <td>{{ $r->date }}</td>
-                            <td>{{ $r->registering_student_name }}</td>
+                            <td>{{ $r->name }}</td>
                             <td>{{ $r->referrer_name }}</td>
                             <td>{{ $r->referral_nominal }}</td>
-                            @if ($i->status_referral)
+                            @if ($r->status_referral)
                             <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
                             <td>{{ $r->pic_front_admin }}</td>
-                            @if ($i->status_front_admin)
-                            <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
-                            @else
-                            <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                            @endif
-                            <td>{{ $r->pic_scheduling }}</td>
-                            @if ($i->status_scheduling)
+                            @if ($r->status_front_admin)
                             <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
