@@ -89,7 +89,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 offset-md-0 col-sm-6">
-                    <a href="/attendance/teacher-input">
+                    <a href="/attendance-admin/teacher-input">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
                             <p class="button-content">Teacher</p>

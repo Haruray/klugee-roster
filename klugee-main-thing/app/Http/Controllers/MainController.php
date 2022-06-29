@@ -62,9 +62,14 @@ class MainController extends Controller
     public function AttendanceInputProcess(Request $request){
         $max_stud = 10; //max students for input
         $should_pay_teach_fee = false;
+        $user_id_attendance = auth()->user()->id_teacher;
+        //If its another teacher, then add this :
+        if ($request->input('attendance-teacher-id')){
+            $user_id_attendance = $request->input('attendance-teacher-id');
+        }
         //Save attendance data
         $new_attendance = new Attendance;
-        $new_attendance->id_teacher = auth()->user()->id_teacher;
+        $new_attendance->id_teacher =$user_id_attendance;
         $new_attendance->date = $request->input('date');
         $new_attendance->time = $request->input('time');
         $new_attendance->program = $request->input('program');
@@ -158,7 +163,7 @@ class MainController extends Controller
         }
         //Save teacher's attendance
         $new_presence = new TeachPresence;
-        $new_presence->id_teacher = auth()->user()->id_teacher;
+        $new_presence->id_teacher = $user_id_attendance;
         $new_presence->date = $request->input('date');
         $new_presence->id_attendance = $new_attendance->id;
         $new_presence->save();
@@ -349,8 +354,9 @@ class MainController extends Controller
     }
 
     public function ProgressReportInputProcess(Request $request){
+        $user_id_attendance = Attendance::where('id', $request->input('attendance_id'))->first()->id_teacher;
+        $user_info = Teachers::where('id',$user_id_attendance)->first();
         //get all progress report with $attendance_id
-        // TODO : Level input validation
         if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
             return response()->json([
                 'success' => false,
@@ -362,12 +368,11 @@ class MainController extends Controller
         if (!is_null($request->file('documentation'))){
             $file = $request->file('documentation');
             $destinationPath = 'uploads/progress-reports';
-            $documentation_file_name = auth()->user()->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
+            $documentation_file_name = $user_info->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
             $file->move($destinationPath,$documentation_file_name);
         }
         else{
             $documentation_file_name = null;
-
         }
 
 

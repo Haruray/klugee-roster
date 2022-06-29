@@ -24,7 +24,6 @@ Auth::routes();
 Route::get('/', 'MainController@index')->name('home');
 Route::get('/attendance', 'TeacherController@AttendanceMenu');
 Route::get('/attendance/input','MainController@AttendanceInput');
-Route::get('/attendance/teacher-input','AdminController@TeacherAttendanceInput');
 Route::get('attendance/progress-report/{attendance_id}','MainController@AttendanceProgressReport');
 Route::get('/attendance/history','MainController@AttendanceHistory');
 Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
@@ -54,6 +53,7 @@ Route::post('/profile/edit','MainController@ProfileEdit');
 //SECOND LEVEL ACCESS
 //minimum head teacher route
 Route::get('/attendance-admin','HeadTeacherController@AttendanceAdmin');
+Route::get('/attendance-admin/teacher-input','HeadTeacherController@TeacherAttendanceInput');
 Route::get('/user-profiles','HeadTeacherController@UserProfiles');
 Route::get('/users','HeadTeacherController@UserList');
 Route::get('/users/{user_id}','HeadTeacherController@UserSelectProfile');

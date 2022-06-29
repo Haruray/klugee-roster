@@ -386,5 +386,19 @@ class HeadTeacherController extends Controller
 
     }
 
+    public function TeacherAttendanceInput(){
+        $students = Students::get();
+        $programs = Program::get();
+        $teachers = Teachers::get();
+
+        $view = view('attendance-input');
+        return $view->with([
+            'students'=> $students,
+            'programs' => $programs,
+            'another_teacher' => true,
+            'teachers' => $teachers,
+            ]);
+    }
+
 
 }

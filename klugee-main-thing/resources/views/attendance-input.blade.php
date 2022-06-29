@@ -103,19 +103,37 @@
         </div>
         </div>
     </nav>
+    @if ($message = Session::get('unregistered-program'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+    @endif
     <h1 class="bounce animated page-heading">Attendance Input</h1>
     <form id="attendance-form" action="/attendance/input-process" method="post">
         @csrf
     <div class="attendance-box" id="attendance-box">
         <div id="attendance-form-box">
-
             <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
-                @if ($message = Session::get('unregistered-program'))
-                <div class="alert alert-danger alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    <strong>{{ $message }}</strong>
+            @if ($another_teacher)
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div>
+                            <!--<input class="form-control attendance-input" type="text" placeholder="Program" required=""> -->
+                            <select id="attendance-form-teacher" class="required js-placeholder-program js-example-basic-single form-control attendance-input" name="attendance-teacher-id" placeholder="Teacher" required>
+                                    <option value="" disabled selected>Teacher</option>
+                                    @foreach ($teachers as $t)
+                                        <option value="{{$t->id}}">{{$t->name}}</option>
+                                    @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                @endif
+            </div>
+
+            @endif
                 <div class="container">
                     <div class="form-row">
                         <div class="col-12 col-md-12 col-lg-12 col-xl-12">
@@ -142,31 +160,6 @@
                         </div>
                     </div>
                 </div>
-                <!--
-                <div class="container">
-                    <div class="form-row">
-                        <div class="col-md-12 col-lg-12 col-xl-12">
-                            <div class="attendance-input-div">
-                                <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
-                                <input class="form-control attendance-input" type="text" placeholder="Location" required="">
-                                <select id="attendance-form-hour" class="required js-example-basic-single form-control attendance-input" name="hour" placeholder="hour" required="">
-                                        <option></option>
-                                        <option value="7AM-8AM">7AM - 8AM</option>
-                                        <option value="8AM-9AM">8AM - 9AM</option>
-                                        <option value="9AM-10AM">9AM - 10AM</option>
-                                        <option value="10AM-11AM">10AM - 11AM</option>
-                                        <option value="11AM-12PM">11AM - 12PM</option>
-                                        <option value="12PM-1PM">12AM - 1PM</option>
-                                        <option value="1PM-2PM">1PM - 2PM</option>
-                                        <option value="2PM-3PM">2PM - 3PM</option>
-                                        <option value="3PM-4PM">3PM - 4PM</option>
-                                        <option value="4PM-5PM">4PM - 5PM</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    -->
                 <div class="container">
                     <div class="form-row">
                         <div class="col-md-12 col-lg-12 col-xl-12">
@@ -182,7 +175,6 @@
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <div class="attendance-input-div">
                                 <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div>
-                                <!--<input class="form-control attendance-input" type="text" placeholder="Location" required=""> -->
                                 <select id="attendance-form-location" class="required js-example-basic-single form-control attendance-input" name="location" placeholder="Location" required="">
                                         <option value="" disabled selected>Location</option>
                                         <option value="Studio">Studio</option>
