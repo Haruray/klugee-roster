@@ -70,7 +70,7 @@ class HeadTeacherController extends Controller
         //TODO
         //Untuk teacher manager dan admin buat approvalnya perlu rework
         $view = view('admin-attendance-list');
-        $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','progress.id as id_progress')
+        $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','attendances.id as id_attendance')
         ->join('teachers','teachers.id','=','teach_presences.id_teacher')
         ->join('attendances','attendances.id','=','teach_presences.id_attendance')
         ->leftjoin('progress','progress.id_attendance','=','attendances.id')

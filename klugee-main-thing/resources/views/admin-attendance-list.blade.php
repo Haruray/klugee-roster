@@ -99,8 +99,8 @@
                         <td>{{date('l',strtotime($a->date))}}, {{date('d/m/Y',strtotime($a->date))}}</td>
                         <td>{{$a->name}}</td>
                         @if ($a->filled)
-                        <td>button</td>
-                        @else
+                        <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $a->id_attendance }})">Progress Report</button></td>
+                        @elseif (!$a->filled || is_null($a->filled))
                         <td>No data</td>
                         @endif
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
@@ -128,6 +128,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+    <script src="{{ asset('js/teaching-info.js') }}"></script>
 </body>
 
 </html>

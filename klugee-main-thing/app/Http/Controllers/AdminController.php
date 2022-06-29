@@ -149,7 +149,12 @@ class AdminController extends Controller
     public function FinancialRecapIncome($month, $year){
         $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
 
-        $income = Accounting::select('accountings.*','teachers.name')->join('teachers','accountings.pic','=','teachers.id')->where('nominal','>','0')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $income = Accounting::select('accountings.*','teachers.name')
+        ->join('teachers','accountings.pic','=','teachers.id')
+        ->where('nominal','>','0')->whereMonth('date','=',$month)
+        ->whereYear('date','=',$year)
+        ->orderBy('date','DESC')
+        ->get();
 
         $view = view('admin-monthly-recap-income');
         return $view->with('years',$years)->with('income',$income)->with('selected_year',$year)->with('selected_month',$month);
@@ -158,7 +163,12 @@ class AdminController extends Controller
     public function FinancialRecapExpense($month, $year){
         $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
 
-        $income = Accounting::select('accountings.*','teachers.name')->join('teachers','accountings.pic','=','teachers.id')->where('nominal','<','0')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $income = Accounting::select('accountings.*','teachers.name')
+        ->join('teachers','accountings.pic','=','teachers.id')
+        ->where('nominal','<','0')->whereMonth('date','=',$month)
+        ->whereYear('date','=',$year)
+        ->orderBy('date','DESC')
+        ->get();
 
         $view = view('admin-monthly-recap-expense');
         return $view->with('years',$years)->with('income',$income)->with('selected_year',$year)->with('selected_month',$month);

@@ -99,7 +99,7 @@
                             @for ($i = 0 ; $i < count($fee) ; $i+=$fee->where('date',$fee[$i]->date)->count())
                                 <td rowspan="{{$fee->where('date',$fee[$i]->date)->count()}}">{{date('l',strtotime($fee[$i]->date))}}, {{date('d/m/Y',strtotime($fee[$i]->date))}}</td>
                                 <td>{{ $fee[$i]->name }}</td>
-                                <td>button</td>
+                                <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})">Progress Report</button></td>
                                 <td>{{$fee[$i]->fee_nominal}}</td>
                                 <td>{{$fee[$i]->lunch_nominal}}</td>
                                 <td>{{$fee[$i]->transport_nominal}}</td>
@@ -114,7 +114,7 @@
                                 @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count()+$i ; $j++)
                                 <tr>
                                     <td>{{ $fee[$i]->name }}</td>
-                                    <td>button</td>
+                                    <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$j]->id_attendance }})">Progress Report</button></td>
                                     <td>{{$fee[$j]->fee_nominal}}</td>
                                     <td>{{$fee[$j]->lunch_nominal}}</td>
                                     <td>{{$fee[$j]->transport_nominal}}</td>
@@ -232,7 +232,7 @@
                     <tbody>
                         @foreach ($referrals as $r)
                         <tr>
-                            <td>{{ $r->date }}</td>
+                            <td>{{ date('l',strtotime($r->date)) }}, {{ date('d-m-Y',strtotime($r->date))}}</td>
                             <td>{{ $r->registering_student_name }}</td>
                             <td>{{ $r->referrer_name }}</td>
                             <td>{{ $r->referral_nominal }}</td>
@@ -293,7 +293,7 @@
                         @foreach ($income as $i)
                             <tr>
                                 <td style="font-weight:bold;">Income</td>
-                                <td>{{ $i->date }}</td>
+                                <td>{{ date('l',strtotime($i->date)) }}, {{ date('d-m-Y',strtotime($i->date)) }}</td>
                                 <td>{{ $i->transaction_type }}</td>
                                 <td>{{ $i->sub_transaction }}</td>
                                 <td>{{ $i->detail }}</td>
@@ -312,7 +312,7 @@
                         @foreach ($expense as $e)
                         <tr>
                             <td style="color: red; font-weight:bold;">Expense</td>
-                            <td>{{ $e->date }}</td>
+                            <td>{{ date('l',strtotime($e->date)) }}, {{ date('d-m-Y',strtotime($e->date)) }}</td>
                             <td>{{ $e->transaction_type }}</td>
                             <td>{{ $e->sub_transaction }}</td>
                             <td>{{ $e->detail }}</td>
@@ -336,13 +336,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+    <script src="{{ asset('js/teaching-info.js') }}"></script>
 </body>
-<script>
-    function changeReport(){
-        var month = document.getElementById("report-month").value;
-        var year = document.getElementById("report-year").value;
-        location.replace("/accounting/financial-data/recap/income/"+month+"/"+year);
-    }
-</script>
-
 </html>
