@@ -538,7 +538,11 @@ class MainController extends Controller
             ])->first();
             array_push($progress_reports, $pr);
         }*/
-        $progress_reports = Progress::where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->get();
+        $progress_reports = Progress::where('id_student',$student_id)
+        ->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())
+        ->join('attendances','attendances.id','=','progress.id_attendance')
+        ->orderBy('attendances.date','DESC')
+        ->get();
         $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio)->with('program',$program)->with('student_id',$student_id);
 
         return $view;

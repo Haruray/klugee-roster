@@ -13,8 +13,6 @@
     <link rel="stylesheet" href="{{asset('css/Navigation-with-Button.css')}}">
     <link rel="stylesheet" href="{{asset('css/styles.css')}}">
 
-
-
     <style>
         #myImg {
         border-radius: 5px;
@@ -95,7 +93,6 @@
         }
         }
     </style>
-    <script src="{{asset('js/progressreportlist-script.js')}}"></script>
 </head>
 
 <body>
@@ -174,7 +171,7 @@
         @if (auth()->user()->user_type == "head teacher" || auth()->user()->user_type == "admin" || auth()->user()->user_type == "super admin" || auth()->user()->user_type == "head of institution")
         <div class="progress-report-list-button-group"><a href="/students/{{ $student_id }}/progress-report/{{ $program }}/generate"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></a></div>
         @endif
-        <button id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
+        <button id="sort-newest" onclick="$dc.SortTableOldest('progress-report-table')" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
         <div class="table-responsive progress-report-table">
             <table id="progress-report-table" class="table">
                 <thead>
@@ -190,10 +187,10 @@
                         <th style="width:10%;">Printed As Report Book</th>
                     </tr>
                 </thead>
-                <tbody>
                     @for ($i = 0 ; $i < count($progress_report) ; $i++)
+                    <tbody class="table-row" id = {{ date('d-m-Y', strtotime($attendance[$i]->date)) }}>
                     <tr>
-                        <td>{{$attendance[$i]->date}}</td>
+                        <td>{{ date('l',strtotime($attendance[$i]->date)) }}, {{date('d-m-Y',strtotime($attendance[$i]->date))}}</td>
                         <td>{{$progress_report[$i]->level ?: ''}}</td>
                         <td>{{$progress_report[$i]->unit ?: ''}}</td>
                         <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
@@ -203,7 +200,7 @@
                         @else
                         <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
                         @endif
-                        <td><button class="btn btn-primary" type="button">Edit</button></td>
+                        <td><button class="btn btn-warning" type="button">Edit</button></td>
                         @if ($progress_report[$i]->filled)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
@@ -215,8 +212,8 @@
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                         @endif
                     </tr>
+                    </tbody>
                     @endfor
-                </tbody>
             </table>
         </div>
     </div>
@@ -239,6 +236,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+    <script src="{{asset('js/progressreportlist-script.js')}}"></script>
+
 </body>
 
 </html>

@@ -99,7 +99,7 @@
                     <table id="progress-report-table" class="table">
                         <thead>
                             <tr>
-                                <th style="width:15px;">Checklist</th>
+                                <th style="width:10%;">Check All <br> <input type="checkbox" onClick="toggle(this)" /><br/></th>
                                 <th>Date</th>
                                 <th>Level</th>
                                 <th>Unit</th>
@@ -111,7 +111,7 @@
                             @for ($i = 0 ; $i < count($progress_report) ; $i++)
                             <tr>
                                 <td><input type="checkbox" name="progress[]" value="{{ $progress_report[$i]->id }}"></td>
-                                <td>{{date('D',strtotime($progress_report[$i]->date))}}, {{date('d',strtotime($progress_report[$i]->date))}} {{date('F',strtotime($progress_report[$i]->date))}} {{date('Y',strtotime($progress_report[$i]->date))}}</td>
+                                <td>{{date('l',strtotime($progress_report[$i]->date))}}, {{date('d',strtotime($progress_report[$i]->date))}} {{date('F',strtotime($progress_report[$i]->date))}} {{date('Y',strtotime($progress_report[$i]->date))}}</td>
                                 <td>{{$progress_report[$i]->level ?: ''}}</td>
                                 <td>{{$progress_report[$i]->unit ?: ''}}</td>
                                 <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
@@ -131,5 +131,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 </body>
+
+<script>
+    function toggle(source) {
+    checkboxes = document.getElementsByName('progress[]');
+    for (var i=0, n=checkboxes.length;i<n;i++) {
+        checkboxes[i].checked = source.checked;
+    }
+}
+</script>
 
 </html>
