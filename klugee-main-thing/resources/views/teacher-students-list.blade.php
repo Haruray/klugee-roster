@@ -179,7 +179,7 @@
                         <td>{{$schedule_details[$i]->begin}}</td>
                         <td rowspan="{{$schedule_details->where('id_student', $schedule_details[$i]->id_student)->count()}}"><a href="/students/{{$schedule_details[$i]->id_student}}"><button class="btn btn-primary" type="button">See Student's Profile</button></a></td>
                     </tr>
-                        @for ($j=$i+1 ; $j < $schedule_details->where('id_student', $schedule_details[$i]->id_student)->count() ; $j++)
+                        @for ($j=$i+1 ; $j < $schedule_details->where('id_student', $schedule_details[$i]->id_student)->count() +$i ; $j++)
                         <tr>
                             <td>{{$schedule_details[$j]->program}}</td>
                             <td>{{$schedule_details[$j]->day}}</td>

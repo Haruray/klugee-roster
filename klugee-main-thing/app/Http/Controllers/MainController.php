@@ -600,7 +600,12 @@ class MainController extends Controller
         //Get teacher's schedule student count
         $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
         //Method 2 : join
-        $schedules_detail = Schedule::join('teach_schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->where('id_teacher',auth()->user()->id_teacher)->get();
+        $schedules_detail = Schedule::join('teach_schedules','teach_schedules.id_schedule','=','schedules.id')
+        ->join('student_schedules', 'schedules.id','=','student_schedules.id_schedule')
+        ->join('students','student_schedules.id_student','=','students.id')
+        ->where('id_teacher',auth()->user()->id_teacher)
+        ->orderBy('students.name','ASC')
+        ->get();
         //return $schedules_detail;
 
         //fees
