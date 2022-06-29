@@ -1,5 +1,5 @@
 (function (global){
-    let dc={};
+    let dc2={};
 
     //HTML insertion
     var insertHtml = function (selector, html) {
@@ -70,7 +70,7 @@
     "<p class=\"input-confirm-description\"> <names> <br> <date> <br> <program> <br> <unit> <br> <exercise> <br> <scores> </p>"+
 "</div>";
 
-    dc.TeachingInfo = function(id){
+    dc2.TeachingInfo = function(id){
         insertHtml("body",teachModal);
         $('#teach-modal').modal('toggle');
         show_loading("#teaching-info-body");
@@ -123,9 +123,9 @@
         })
     }
 
-    dc.CloseTeachingInfo = function(){
+    dc2.CloseTeachingInfo = function(){
         document.getElementById("teach-modal").remove();
     }
 
-    global.$dc = dc;
+    global.$dc2 = dc2;
 })(window);

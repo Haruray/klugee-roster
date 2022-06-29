@@ -56,7 +56,7 @@ class MainController extends Controller
         $view = view('attendance-input');
         $students = Students::get();
         $programs = Program::get();
-        return $view->with('students',$students)->with('programs',$programs);
+        return $view->with('students',$students)->with('programs',$programs)->with('another_teacher',false);
     }
 
     public function AttendanceInputProcess(Request $request){
@@ -633,7 +633,10 @@ class MainController extends Controller
         ->join('attendees','attendances.id','=','attendees.id_attendance')
         ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
-        })->leftjoin('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.id_attendance','=','attendances.id')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
+        })->leftjoin('fees','attendances.id','=','fees.id_attendance')
+        ->join('teach_presences','teach_presences.id_attendance','=','attendances.id')
+        ->where('attendances.id_teacher',auth()->user()->id_teacher)->orderBy('attendances.date','DESC')
+        ->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees
         //get this month's fee

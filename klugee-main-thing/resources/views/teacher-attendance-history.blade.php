@@ -53,6 +53,13 @@
             overflow : auto;
         }
 
+        .table-row{
+            border: #00c2cb 2px solid;
+        }
+        td{
+            border: #00c2cb 2px solid;
+        }
+
 
     </style>
     <script src="{{asset('js/progressreportlist-script.js')}}"></script>
@@ -159,8 +166,8 @@
     <div>
         <div class="container">
         <h1 style="margin-top:30px;" class="bounce animated page-heading">Attendance History</h1>
-        <button style="margin-bottom:10px;" id="sort-newest" onclick="$dc.SortTableOldest()" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
-        <table style="margin-top:20px;" id="progress-report-table" class="table">
+        <button style="margin-bottom:10px;" id="sort-newest" onclick="$dc.SortTableOldest('attendance-history-table')" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
+        <table style="margin-top:20px;" id="attendance-history-table" class="table">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -168,17 +175,17 @@
                             <th>Student</th>
                             <th>Location</th>
                             <th>Class Type</th>
-                            <th>Action</th>
+                            <th>Teaching Data</th>
                             <th>Presence Approval</th>
                             <th>Fee Status</th>
                         @endif
 
                     </tr>
                 </thead>
-                <tbody>
-                    @for ($i = 0 ; $i < count($teach_presence) ; $i+=$teach_presence->where('id', $teach_presence[$i]->id)->count())
+                @for ($i = 0 ; $i < count($teach_presence) ; $i+=$teach_presence->where('id', $teach_presence[$i]->id)->count())
+                <tbody class="table-row" id="{{ date('d-m-Y', strtotime($teach_presence[$i]->date)) }}">
                     <tr>
-                        <td id="date" rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->date}}</td>
+                        <td id="date" rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{ date('l',strtotime($teach_presence[$i]->date)) }}, {{date('d-m-Y', strtotime($teach_presence[$i]->date))}}</td>
                         @if ($profile->is_teacher)
                         <td>{{$teach_presence[$i]->name}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
@@ -186,7 +193,7 @@
                         @if (is_null($teach_presence[$i]->filled) || !$teach_presence[$i]->filled)
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">No data</td>
                         @else
-                        <td><a href="#"><button onclick="$dc.TeachingInfo({{ $teach_presence[$i]->id }})" class="btn btn-primary" type="button">Progress Report</button></a></td>
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><button onclick="$dc2.TeachingInfo({{ $teach_presence[$i]->id }})" class="btn btn-primary" type="button">Progress Report</button></td>
                         @endif
                         @if ($teach_presence[$i]->presence_approval)
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
@@ -205,16 +212,12 @@
                         @for ($j=$i+1 ; $j < $i+$teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
                         <tr>
                             <td>{{$teach_presence[$j]->name}}</td>
-                            <td><a href="#"><button onclick="$dc.TeachingInfo({{ $teach_presence[$j]->id }})" class="btn btn-primary" type="button">Progress Report</button></a></td>
                         </tr>
 
                         @endfor
                         @endif
-                    @endfor
-
-
-
                 </tbody>
+                @endfor
             </table>
         </div>
     </div>
@@ -283,6 +286,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('js/bs-init.js')}}"></script>
+<script src="{{ asset('js/progressreportlist-script.js') }}"></script>
 <script src="{{ asset('js/teaching-info.js') }}"></script>
 
 <script>

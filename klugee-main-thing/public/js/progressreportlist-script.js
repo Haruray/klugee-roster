@@ -57,9 +57,9 @@
         modal.style.display = "none";
     }
 
-    dc.SortTable = function() {
+    dc.SortTable = function(id) {
         var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("progress-report-table");
+        table = document.getElementById(id);
         switching = true;
         switched = false;
         /* Make a loop that will continue until
@@ -68,18 +68,18 @@
 
           // Start by saying: no switching is done:
           switching = false;
-          rows = table.rows;
+          rows = document.getElementsByClassName('table-row');
           /* Loop through all table rows (except the
           first, which contains table headers): */
-          for (i = 1; i < (rows.length - 1); i++) {
+          for (i = 0; i < (rows.length - 1); i++) {
             // Start by saying there should be no switching:
             shouldSwitch = false;
             /* Get the two elements you want to compare,
             one from current row and one from the next: */
-            x = rows[i].getElementsByTagName("TD")[0];
-            y = rows[i + 1].getElementsByTagName("TD")[0];
+            x = rows[i].id;
+            y = rows[i + 1].id;
             // Check if the two rows should switch place:
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            if (x < y) {
               // If so, mark as a switch and break the loop:
               shouldSwitch = true;
               break;
@@ -98,14 +98,14 @@
             //sortOldestButtonHTML = "<button onclick=\"$dc.SortTableOldest()\" class=\"btn btn-primary float-left attendance-input-button\" type=\"button\" style=\"font-size: 13px;\"><i class=\"fa fa-sort-down\"></i>&nbsp;Sort by Oldest</button>";
             sortButton = document.getElementById("sort-newest");
             sortButton.innerHTML = "<i class=\"fa fa-sort-down\"></i>&nbsp;Sort by Oldest";
-            sortButton.setAttribute('onclick','$dc.SortTableOldest()')
+            sortButton.setAttribute('onclick','$dc.SortTableOldest(\''+id+'\')')
 
         }
       }
 
-      dc.SortTableOldest = function() {
+      dc.SortTableOldest = function(id) {
         var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("progress-report-table");
+        table = document.getElementById(id);
         switching = true;
         switched = false;
         /* Make a loop that will continue until
@@ -113,18 +113,18 @@
         while (switching) {
           // Start by saying: no switching is done:
           switching = false;
-          rows = table.rows;
+          rows = document.getElementsByClassName('table-row');
           /* Loop through all table rows (except the
           first, which contains table headers): */
-          for (i = 1; i < (rows.length - 1); i++) {
+          for (i = 0; i < (rows.length - 1); i++) {
             // Start by saying there should be no switching:
             shouldSwitch = false;
             /* Get the two elements you want to compare,
             one from current row and one from the next: */
-            x = rows[i].getElementsByTagName("TD")[0];
-            y = rows[i + 1].getElementsByTagName("TD")[0];
+            x = rows[i].id;
+            y = rows[i + 1].id;
             // Check if the two rows should switch place:
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            if (x > y) {
               // If so, mark as a switch and break the loop:
               shouldSwitch = true;
               break;
@@ -143,7 +143,7 @@
             //sortOldestButtonHTML = "<button onclick=\"$dc.SortTableOldest()\" class=\"btn btn-primary float-left attendance-input-button\" type=\"button\" style=\"font-size: 13px;\"><i class=\"fa fa-sort-down\"></i>&nbsp;Sort by Oldest</button>";
             sortButton = document.getElementById("sort-newest");
             sortButton.innerHTML = "<i class=\"fa fa-sort-up\"></i>&nbsp;Sort by Newest";
-            sortButton.setAttribute('onclick','$dc.SortTable()')
+            sortButton.setAttribute('onclick','$dc.SortTable(\''+id+'\')');
 
         }
       }
