@@ -60,7 +60,7 @@
       "<div class=\"modal-content\">"+
         "<div class=\"modal-header\">"+
           "<h5 class=\"modal-title\" id=\"teach-modal-title\">Progress Report Information</h5>"+
-          "<button onclick=\"$dc.CloseTeachingInfo()\"type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"+
+          "<button onclick=\"$dc2.CloseTeachingInfo()\"type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"+
             "<span aria-hidden=\"true\">&times;</span> </button></div>"+
         "<div id=\"teaching-info-body\" class=\"modal-body\">"+
                 "</div></div></div></div>";
@@ -95,8 +95,8 @@
                     let unit = response['progress'][0]['unit'];
                     let exercise = response['progress'][0]['last_exercise'];
                     let scores = '';
-                    for (var j = 0 ; j < response['progress'].length-1 ; j++){
-                        scores += response['progress'][j]['name']+"'s Score : "+ response['progress'][j]['score']+"<br>";
+                    for (var i = 0 ; i < response['progress'].length ; i++){
+                        scores += response['progress'][i]['name']+"'s Score : "+ response['progress'][i]['score']+" <br> ";
                     }
                     teachDetails = teachDetails.replace("<names>",students);
                     teachDetails = teachDetails.replace("<date>",timedetails);
@@ -104,6 +104,7 @@
                     teachDetails = teachDetails.replace("<unit>",unit);
                     teachDetails = teachDetails.replace("<exercise>",exercise);
                     teachDetails = teachDetails.replace("<scores>",scores);
+                    console.log(scores);
                     replaceHtml("#teaching-info-body",teachDetails);
                 }
                 else{

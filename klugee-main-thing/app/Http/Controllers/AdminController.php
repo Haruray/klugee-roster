@@ -325,6 +325,7 @@ class AdminController extends Controller
         $accounting->notes = $request->input('note');
         $accounting->approved = false;
         $accounting->save();
+        array_push($acc_ids,$accounting->id);
 
         //Referrals
         if ($request->input('referral-bool')=='1'){
@@ -339,9 +340,55 @@ class AdminController extends Controller
             $referral->status_front_admin = false;
             $referral->note = $request->input('referral-note');
             $referral->save();
+            //Diskon referral SPP
+            $accounting = new Accounting;
+            $accounting->date = date("Y-m-d");
+            $accounting->transaction_type = "Diskon Referral";
+            $accounting->sub_transaction = Referrer::where('parent_student_id',$request->input('referrer'))->first()->referrer_name;
+            $accounting->detail = 'Pendaftaran Murid '.$student->name;
+            $accounting->nominal = -20000;
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('note');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids,$accounting->id);
+            //Diskon referral Registration
+            $accounting = new Accounting;
+            $accounting->date = date("Y-m-d");
+            $accounting->transaction_type = "Diskon Pendaftaran Referral";
+            $accounting->sub_transaction = Referrer::where('parent_student_id',$request->input('referrer'))->first()->referrer_name;
+            $accounting->detail = 'Pendaftaran Murid '.$student->name;
+            $accounting->nominal = -50000;
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('note');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids,$accounting->id);
         }
-
+        return self::GenerateNota($acc_ids,'Pendaftaran Murid');
         return redirect('/students/'.$student->id);
+
+    }
+
+    public function GenerateNota($id_accounting, $title){
+        $ids = array();
+        if (!is_array($id_accounting)){
+            array_push($ids,$id_accounting);
+        }
+        else{
+            $ids = array_merge($ids, $id_accounting);
+        }
+        $accounting =  Accounting::whereIn('id',$ids)->get();
+        $admin = User::join('teachers','teachers.id','=','users.id_teacher')->where('users.user_type','admin')->first();
+        view()->share([
+            'data'=>$accounting,
+            'admin' => $admin,
+            'title' => $title,
+        ]);
+        $pdf = PDF::loadView('nota', $accounting)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('Nota '.$accounting[0]->date.'-'.$accounting[0]->transaction_type.'-'.$accounting[0]->sub_transaction.'.pdf');
 
     }
 }

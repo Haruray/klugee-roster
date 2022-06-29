@@ -287,6 +287,11 @@
             });
             return false;
         }
+        Swal.fire({
+                icon : 'success',
+                title: 'Success!',
+                text: 'Form Submitted! Wait for the receipt to be downloaded.'
+            });
     }
 
     function ProgramClicked(program_text){

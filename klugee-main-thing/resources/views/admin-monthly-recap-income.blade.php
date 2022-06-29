@@ -167,6 +167,7 @@
                             <th>Payment Method</th>
                             <th>Notes</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -185,12 +186,13 @@
                             @else
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
+                            <td><a href="/generate-nota/{{ $i->id }}/{{ $i->transaction_type }}"><button type="button" class="btn btn-primary"><i class="fa fa-download"></i></button></a></td>
                         </tr>
                         @endforeach
                     </tbody>
                     <thead>
                         <thead>
-                            <th style="text-align: right;" colspan="9">Total (IDR) : {{ $income->sum('nominal') }}</th>
+                            <th style="text-align: right;" colspan="10">Total (IDR) : {{ $income->sum('nominal') }}</th>
                         </thead>
                     </thead>
                 </table>

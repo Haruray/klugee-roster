@@ -205,6 +205,15 @@
                     </div>
                 </div>
             </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <input style="margin-top:10px; margin-left:5px;" type="checkbox" name="referral-bonus[]" id="referral-bonus">
+                            <span style="color: white; font-weight:bold; margin-left:5px;"> Use referral bonuses</span>
+                    </div>
+                </div>
+            </div>
             <div class="attendance-input-button-box"><button class="btn btn-primary attendance-input-button" type="submit" value="submit" name="submit">Submit</button></div>
         </form>
     </div>

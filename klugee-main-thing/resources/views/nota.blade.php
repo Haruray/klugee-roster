@@ -12,6 +12,7 @@
 
   .nota-body {
     width: 276mm;
+    padding: 5px;
   }
 
   #nota-table-head {
@@ -73,7 +74,7 @@
   }
 
   .nota-ttd-box {
-    margin: 50px 10px 20px 10px;
+    margin: 20px 10px -10px 10px;
   }
 
   .nota-details {
@@ -121,6 +122,9 @@
     font-size: 45px;
     margin-right: 50px;
     margin-bottom: -10px;
+    position: absolute;
+    bottom:0px;
+    right: 20px;
     float: right;
   }
 
@@ -210,12 +214,12 @@ table {
         <div class="container" style="margin-left: -5px;"><img src="{{ public_path('img/klageealamat.png') }}" style="width: 247px;"></div>
     </div>
     <div class="nota-details">
-        @if ($data->nominal>0)
-        <p class="nota-desc">INCOME TRANSACTION : {{ strtoupper($data->transaction_type) }}</p>
+        @if ($data->sum('nominal')>0)
+        <p class="nota-desc">INCOME TRANSACTION : {{ strtoupper($title) }}</p>
         @else
-        <p class="nota-desc">EXPENSE TRANSACTION : {{ strtoupper($data->transaction_type) }}</p>
+        <p class="nota-desc">EXPENSE TRANSACTION : {{ strtoupper($title) }}</p>
         @endif
-            <p class="nota-tanggal">MALANG,<br>{{date('d',strtotime($data->date))}} {{ date('F',strtotime($data->date)) }} {{ date('Y',strtotime($data->date)) }}</p>
+            <p class="nota-tanggal">MALANG,<br>{{date('d',strtotime($data[0]->date))}} {{ date('F',strtotime($data[0]->date)) }} {{ date('Y',strtotime($data[0]->date)) }}</p>
     </div>
     <div>
         <div class="table-responsive nota-table">
@@ -227,26 +231,29 @@ table {
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($data as $d)
                     <tr class="nota-tr">
-                        <td class="nota-td">{{ strtoupper($data->sub_transaction.', '.$data->detail) }}</td>
-                        @if ($data->nominal < 0)
-                        <td class="nota-td">- Rp.{{ $data->nominal*-1 }}</td>
+                        <td class="nota-td">{{ strtoupper($d->transaction_type.', '.$d->sub_transaction.', '.$d->detail) }}</td>
+                        @if ($d->nominal < 0 )
+                        <td class="nota-td">- Rp.{{ $d->nominal*-1 }}</td>
                         @else
-                        <td class="nota-td">Rp.{{ $data->nominal }}</td>
+                        <td class="nota-td">Rp.{{ $d->nominal }}</td>
                         @endif
+
                     </tr>
+                    @endforeach
+
                     <tr class="nota-tr nota-grand-total">
                         <td class="nota-td nota-lunas-box">GRAND TOTAL
-                            @if ($data->nominal>0)
+                            @if ($data->sum('nominal')>0)
                             <h1 class="float-right nota-lunas">LUNAS</h1>
                             @endif
                         </td>
-                        @if ($data->nominal < 0)
-                        <td class="nota-td">- Rp.{{ $data->nominal*-1 }}</td>
+                        @if ($data->sum('nominal')<0)
+                        <td class="nota-td">- Rp.{{ $data->sum('nominal')*-1 }}</td>
                         @else
-                        <td class="nota-td">Rp.{{ $data->nominal }}</td>
+                        <td class="nota-td">Rp.{{ $data->sum('nominal') }}</td>
                         @endif
-
                     </tr>
                 </tbody>
             </table>
@@ -255,12 +262,12 @@ table {
     <div class="nota-ttd-box">
             <div style="float: left;">
                 <p class="nota-payment">PAYMENT DETAILS<br></p>
-                <p class="nota-payment-detail">{{ $data->payment_method }}</p>
+                <p class="nota-payment-detail">{{ $data[0]->payment_method }}</p>
             </div>
                 <div style="float: right; position:relative;">
                     <img class="ttd-cap" src="{{ public_path('img/1.png') }}">
-                    <p class="text-right nota-ttd">HEAD TEACHER</p>
-                    <p class="text-right nota-ttd-name">Teacher's Name</p>
+                    <p class="text-right nota-ttd">ADMIN OFFICER</p>
+                    <p class="text-right nota-ttd-name">{{ $admin->name }}</p>
                 </div>
     </div>
 </body>

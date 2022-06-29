@@ -95,6 +95,7 @@ Route::get('/accounting/financial-data/recap/expense/{month}/{year}','AdminContr
 Route::get('/accounting/spp','AdminController@SPP');
 Route::get('/accounting/referral/{month}/{year}','AdminController@ReferralReport');
 Route::get('/new-student','AdminController@NewStudent');
+Route::get('/generate-nota/{id_accounting}/{title}','AdminController@GenerateNota');
 
 Route::post('/accounting/input-transaction/income/process','AdminController@IncomeProcess');
 Route::post('/accounting/input-transaction/expense/process','AdminController@ExpenseProcess');
