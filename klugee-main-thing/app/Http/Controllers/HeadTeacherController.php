@@ -73,7 +73,7 @@ class HeadTeacherController extends Controller
         $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','progress.id as id_progress')
         ->join('teachers','teachers.id','=','teach_presences.id_teacher')
         ->join('attendances','attendances.id','=','teach_presences.id_attendance')
-        ->join('progress','progress.id_attendance','=','attendances.id')
+        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
         ->where('teach_presences.approved',false)
         ->orderBy('date','DESC')->get();
         return $view->with('attendance',$attendances);
@@ -88,6 +88,10 @@ class HeadTeacherController extends Controller
         $teacher_name = Teachers::where('id',$teacher_id)->first()->name;
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$attendance_id)->get();
+        if (count($new_pr) == 0){
+            //Kalau gaada progress reportnya, langsung balik aja
+            return redirect('/user-attendances');
+        }
         if ($new_pr[0]->filled){
             //process the payment thing if only the progress report is filled
             //PAYMENT TIME
@@ -120,51 +124,7 @@ class HeadTeacherController extends Controller
             $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
             $payment->approved = false;
             $payment->save();
-
-            // //Saving it in accounting
-            // //main fee
-            // $payment_accounting = new Accounting;
-            // $payment_accounting->date = $attendance->date;
-            // $payment_accounting->transaction_type = "Teacher's Fee";
-            // $payment_accounting->sub_transaction = $teacher_name."'s Fee";
-            // $payment_accounting->detail = "Main fee";
-            // $payment_accounting->nominal = $payment->fee_nominal*-1;
-            // $payment_accounting->pic = 1;
-            // $payment_accounting->payment_method = "Other";
-            // $payment_accounting->notes = "This payment is automated";
-            // $payment_accounting->approved = false;
-            // $payment_accounting->save();
-            // //incentives : lunch
-            // if ($payment->lunch_nominal >0){
-            //     $payment_accounting = new Accounting;
-            //     $payment_accounting->date = $attendance->date;
-            //     $payment_accounting->transaction_type = "Teacher's Fee";
-            //     $payment_accounting->sub_transaction = $teacher_name."'s Lunch Incentives";
-            //     $payment_accounting->detail = "Lunch Incentives";
-            //     $payment_accounting->nominal = $payment->lunch_nominal*-1;
-            //     $payment_accounting->pic = 1;
-            //     $payment_accounting->payment_method = "Other";
-            //     $payment_accounting->notes = "This payment is automated";
-            //     $payment_accounting->approved = false;
-            //     $payment_accounting->save();
-            // }
-            // //incentives : transport
-            // if ($payment->transport_nominal >0){
-            //     $payment_accounting = new Accounting;
-            //     $payment_accounting->date = $attendance->date;
-            //     $payment_accounting->transaction_type = "Teacher's Fee";
-            //     $payment_accounting->sub_transaction = $teacher_name."'s Transport Incentives";
-            //     $payment_accounting->detail = "Transport Incentives";
-            //     $payment_accounting->nominal = $payment->transport_nominal*-1;
-            //     $payment_accounting->pic = 1;
-            //     $payment_accounting->payment_method = "Other";
-            //     $payment_accounting->notes = "This payment is automated";
-            //     $payment_accounting->approved = false;
-            //     $payment_accounting->save();
-            // }
         }
-
-
         return redirect('/user-attendances');
     }
 
