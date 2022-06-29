@@ -94,16 +94,6 @@
             cache : false,
             contentType : false,
             processData : false,
-            /*data : {
-                "attendance_id" : $("#attendance_id").val(),
-                "level" : $("#level").val(),
-                "unit" : $("#unit").val(),
-                "last_exercise" : $("#last_exercise").val(),
-                "score" : $("#score").val(),
-                "documentation" : $("#file").val(),
-                "note" : $("#note").val(),
-                "_token" : $("meta[name='csrf-token']").attr("content")
-            },*/
             data : formdata,
             success : function(response){
                 if (response.success){

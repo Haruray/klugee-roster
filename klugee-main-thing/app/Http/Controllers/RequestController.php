@@ -91,4 +91,15 @@ class RequestController extends Controller
             'parent' => $parent,
         ],200);
     }
+
+    public function GetTeachingInfo($id){
+        $data = Attendance::join('progress','progress.id_attendance','=','attendances.id')
+            ->join('attendees','attendees.id_attendance','=','attendances.id')
+            ->join('students','students.id','=','attendees.id_student')
+            ->where('attendances.id',$id)->get();
+        return response()->json([
+            'success' => true,
+            'progress' => $data,
+        ],200);
+    }
 }

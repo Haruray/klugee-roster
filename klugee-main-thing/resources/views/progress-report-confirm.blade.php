@@ -80,12 +80,21 @@
         <h3 class="page-sub-heading">Progress report is&nbsp;<span class="yellow">filled</span></h3>
         <h1 class="page-sub-heading"><i class="fa fa-check swing animated infinite input-confirm-check"></i></h1>
         <p class="input-confirm-description">
-            Michelle Anatolia, Diva Azaria<br
-            >Monday, 29-11-2021<br>
-            Smartie, 3rd grade math<br>
-            Multiplication<br>
-            Multiple by 8 exercise<br>
-            Score : 100</p>
+            @for ($i=0 ; $i < count($progress) ; $i++)
+                @if ($i != count($progress)-1)
+                    {{ $progress[$i]->name }},
+                @else
+                    {{ $progress[$i]->name }}
+                @endif
+            @endfor
+            <br>
+            {{ date('l',strtotime($progress[0]->date)) }}, {{ date('d-m-Y', strtotime($progress[0]->date)) }} <br>
+            {{ $progress[0]->program }}, Level {{ $progress[0]->level }} <br>
+            {{ $progress[0]->unit }} <br>
+            {{ $progress[0]->last_exercise }} <br>
+            @for ($i=0 ; $i < count($progress) ; $i++)
+                {{ $progress[$i]->name }}'s Score : {{ $progress[$i]->score }} <br>
+            @endfor
         <div class="input-confirm-buttons"><button class="btn btn-primary d-block input-confirm-button-alternative" type="button">Edit Progress Report</button></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

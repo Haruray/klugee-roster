@@ -337,8 +337,12 @@ class MainController extends Controller
     public function ProgressView($attendance_id){
         $progress = Attendance::join('progress','progress.id_attendance','=','attendances.id')->where('attendances.id',$attendance_id)->get();
         if ($progress[0]->filled){
+            $data = Attendance::join('progress','progress.id_attendance','=','attendances.id')
+            ->join('attendees','attendees.id_attendance','=','attendances.id')
+            ->join('students','students.id','=','attendees.id_student')
+            ->where('attendances.id',$attendance_id)->get();
             $view = view('progress-report-confirm');
-            return $view->with('progress',$progress);
+            return $view->with('progress',$data);
         }
         else{
             return redirect('/attendance/progress-report/'.$attendance_id);
@@ -545,7 +549,8 @@ class MainController extends Controller
         $fee1 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('fee_nominal');
         $fee2 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('lunch_nominal');
         $fee3 = Fee::whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->sum('transport_nominal');
-        $fees = $fee1+$fee2+$fee3;
+        $incentive = Incentive::where('id_teacher',auth()->user()->id_teacher)->whereMonth('date',date('m'))->sum('nominal');
+        $fees = $fee1+$fee2+$fee3 + $incentive;
         return $fees;
     }
 
@@ -624,9 +629,11 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval')->join('attendees','attendances.id','=','attendees.id_attendance')->join('students','attendees.id_student','=','students.id')->join('progress', function($join){
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled')
+        ->join('attendees','attendances.id','=','attendees.id_attendance')
+        ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
-        })->join('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.id_attendance','=','attendances.id')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
+        })->leftjoin('fees','attendances.id','=','fees.id_attendance')->join('teach_presences','teach_presences.id_attendance','=','attendances.id')->where('attendances.id_teacher',auth()->user()->id_teacher)->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees
         //get this month's fee

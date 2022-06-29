@@ -149,6 +149,7 @@ Route::get('/get/progress-report/{attendance_id}/documentation','RequestControll
 Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
 Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');
 Route::get('/get/parent-partner','RequestController@GetParentPartner');
+Route::get('/get/teaching-info/{id}','RequestController@GetTeachingInfo');
 
 Route::get('/nota','AdminController@TesNota');
 Route::get('/report','AdminController@Report');

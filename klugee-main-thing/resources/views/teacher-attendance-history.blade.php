@@ -183,7 +183,11 @@
                         <td>{{$teach_presence[$i]->name}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->class_type}}</td>
-                        <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
+                        @if (is_null($teach_presence[$i]->filled) || !$teach_presence[$i]->filled)
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">No data</td>
+                        @else
+                        <td><a href="#"><button onclick="$dc.TeachingInfo({{ $teach_presence[$i]->id }})" class="btn btn-primary" type="button">Progress Report</button></a></td>
+                        @endif
                         @if ($teach_presence[$i]->presence_approval)
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
@@ -191,6 +195,8 @@
                         @endif
                         @if ($teach_presence[$i]->fee_approval)
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                        @elseif(is_null($teach_presence[$i]->fee_approval))
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">No fee</td>
                         @else
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                         @endif
@@ -199,7 +205,7 @@
                         @for ($j=$i+1 ; $j < $i+$teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
                         <tr>
                             <td>{{$teach_presence[$j]->name}}</td>
-                            <td><a href="#"><button class="btn btn-primary" type="button">Progress Report</button></a></td>
+                            <td><a href="#"><button onclick="$dc.TeachingInfo({{ $teach_presence[$j]->id }})" class="btn btn-primary" type="button">Progress Report</button></a></td>
                         </tr>
 
                         @endfor
@@ -277,6 +283,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('js/bs-init.js')}}"></script>
+<script src="{{ asset('js/teaching-info.js') }}"></script>
 
 <script>
 
