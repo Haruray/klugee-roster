@@ -200,7 +200,11 @@
                         @else
                         <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
                         @endif
+                        @if ($progress_report[$i]->filled)
                         <td><button class="btn btn-warning" type="button">Edit</button></td>
+                        @else
+                        <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-primary" type="button">Fill <br> Progress Report</button></a></td>
+                        @endif
                         @if ($progress_report[$i]->filled)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
                         @else
