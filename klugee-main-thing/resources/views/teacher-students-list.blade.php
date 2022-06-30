@@ -127,10 +127,16 @@
                         <div class="text-center teacher-profile-img-outline"><img id="profile-pic" class="student-profile-img" src="{{url('/uploads/profile-pictures/'.$profile->photo)}}">
                             <a data-toggle="modal" data-target="#upload-modal"><i class="fa fa-camera teacher-profile-camera" data-bs-hover-animate="pulse"></i></a>
                          </div>
+                         @if ($user_id != auth()->user()->id_teacher)
+                         <a href="/earnings/{{ $user_id }}/{{ date('m') }}/{{ date('Y') }}">
+                            @else
+                        <a href="/earnings/{{ date('m') }}/{{ date('Y') }}">
+                        @endif
                         <div class="teacher-fee">
-                            <p>Fee up to day&nbsp;</p>
-                            <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
-                        </div>
+                                <p>Fee up to day&nbsp;</p>
+                                <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">

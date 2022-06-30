@@ -265,22 +265,6 @@ class HeadTeacherController extends Controller
         ],200);
     }
 
-    public function UserSelectEarnings($user_id){
-        //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
-        $position = TeachPosition::where('id_teacher', $user_id)->get();
-        $method = TeachMethod::where('id_teacher', $user_id)->get();
-
-        $teachPresences = Attendance::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
-        $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->get();
-        $salary = Salary::whereYear('date',date('y'))->where('id_teacher',$user_id)->get();
-        $total_fee = self::CountCurrentUserFee($user_id);
-        $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
-
-
-        $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
-        return $view->with('user_id',$user_id);
-    }
 
     public function ScheduleAdminManage(){
         $view = view('admin-schedule-manage');
@@ -431,6 +415,28 @@ class HeadTeacherController extends Controller
             'another_teacher' => true,
             'teachers' => $teachers,
             ]);
+    }
+
+    public function UserSelectEarnings($user_id, $month, $year){
+        $years = Attendance::selectRaw('YEAR(date) as year')->distinct()->get();
+        //Basic data
+        $profile = Teachers::where('id',$user_id)->first();
+        $position = TeachPosition::where('id_teacher', $user_id)->get();
+        $method = TeachMethod::where('id_teacher', $user_id)->get();
+
+        $teachPresences = Attendance::whereMonth('date', $month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
+        $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')
+        ->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())
+        ->whereMonth('attendances.date',$month)->whereYear('attendances.date',$year)
+        ->get();
+        $salary = Salary::whereMonth('date',$month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
+        $total_fee = self::CountCurrentUserFee($user_id);
+        $incentives = Incentive::whereMonth('date', $month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
+
+
+        $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
+        return $view->with('user_id',$user_id)->with('month',$month)->with('year',$year)->with('years',$years);
+
     }
 
 

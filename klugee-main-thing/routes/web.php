@@ -39,7 +39,7 @@ Route::get('/profile','MainController@CurrentUserProfile');
 Route::get('/profile/students','MainController@CurrentUserStudents');
 Route::get('/profile/attendance','MainController@CurrentUserAttendance');
 Route::get('/schedule','MainController@Schedule');
-Route::get('/earnings','MainController@Earnings');
+Route::get('/earnings/{month}/{year}','MainController@Earnings');
 Route::get('/management','MainController@Management');
 Route::get('/notification','MainController@Notification');
 Route::get('/notification/mark-as-read/{notif_id}', 'MainController@MarkNotification');
@@ -63,6 +63,7 @@ Route::get('/users/{user_id}','HeadTeacherController@UserSelectProfile');
 Route::get('/users/{user_id}/students','HeadTeacherController@UserSelectStudents');
 Route::get('/users/{user_id}/attendance','HeadTeacherController@UserSelectAttendance');
 Route::get('/users/{user_id}/schedule','HeadTeacherController@UserSelectSchedule');
+Route::get('/earnings/{user_id}/{month}/{year}','HeadTeacherController@UserSelectEarnings');
 
 Route::get('/schedule-admin','HeadTeacherController@ScheduleAdmin');
 Route::get('/schedule-admin/detailed/{teacher}','HeadTeacherController@ScheduleAll');

@@ -127,10 +127,16 @@
                         <div class="text-center teacher-profile-img-outline"><img id="profile-pic" class="student-profile-img" src="{{url('/uploads/profile-pictures/'.$profile->photo)}}">
                             <a data-toggle="modal" data-target="#upload-modal"><i class="fa fa-camera teacher-profile-camera" data-bs-hover-animate="pulse"></i></a>
                          </div>
+                         @if ($user_id != auth()->user()->id_teacher)
+                         <a href="/earnings/{{ $user_id }}/{{ date('m') }}/{{ date('Y') }}">
+                            @else
+                        <a href="/earnings/{{ date('m') }}/{{ date('Y') }}">
+                        @endif
                         <div class="teacher-fee">
-                            <p>Fee up to day&nbsp;</p>
-                            <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
-                        </div>
+                                <p>Fee up to day&nbsp;</p>
+                                <p class="bold teacher-fee-nominal">Rp{{$fees ?: '0'}}</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">
@@ -157,8 +163,84 @@
     </div>
     <div>
         <div class="container">
+
         <h1 style="margin-top:30px;" class="bounce animated page-heading">Earnings</h1>
-        <h4 class="bold green">This Month's</h3>
+        <div style="margin: 0 0 15px 0px;">
+            <select id="earning-month" class="form-control-lg select-box-single" onchange="changeEarnings()">
+                @if ($month == 1)
+                <option value="01" selected>January</option>
+                @else
+                <option value="01">January</option>
+                @endif
+                @if ($month == 2)
+                <option value="02" selected>February</option>
+                @else
+                <option value="02">February</option>
+                @endif
+                @if ($month == 3)
+                <option value="03" selected>March</option>
+                @else
+                <option value="03">March</option>
+                @endif
+                @if ($month == 4)
+                <option value="04" selected>April</option>
+                @else
+                <option value="04">April</option>
+                @endif
+                @if ($month == 5)
+                <option value="05" selected>May</option>
+                @else
+                <option value="05">May</option>
+                @endif
+                @if ($month == 6)
+                <option value="06" selected>June</option>
+                @else
+                <option value="06">June</option>
+                @endif
+                @if ($month == 7)
+                <option value="07" selected>July</option>
+                @else
+                <option value="07">July</option>
+                @endif
+                @if ($month == 8)
+                <option value="08" selected>August</option>
+                @else
+                <option value="08">August</option>
+                @endif
+                @if ($month == 9)
+                <option value="09" selected>September</option>
+                @else
+                <option value="09">September</option>
+                @endif
+                @if ($month == 10)
+                <option value="10" selected>October</option>
+                @else
+                <option value="10">October</option>
+                @endif
+                @if ($month == 11)
+                <option value="11" selected>November</option>
+                @else
+                <option value="11">November</option>
+                @endif
+                @if ($month == 12)
+                <option value="12" selected>December</option>
+                @else
+                <option value="12">December</option>
+                @endif
+
+            </select>
+            <select
+                id="earning-year" class="form-control-lg select-box-single" required="" onchange="changeEarnings()">
+                @foreach ($years as $y)
+                    @if ($y->year == $year)
+                        <option value="{{ $y->year }}" selected>{{ $y->year }}</option>
+                    @else
+                        <option value="{{ $y->year }}">{{ $y->year }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        <h4 class="bold green">{{ date('F', mktime(0, 0, 0, $month, 10)) }}</h3>
         <h2 class="bold blue">FEES</h2>
         <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
                 <thead>
@@ -211,11 +293,11 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th>Total : Rp{{$fees ?:'0'}}</th>
+                    <th>Total : Rp{{$fee->sum('fee_nominal') + $fee->sum('lunch_nominal') + $fee->sum('transport_nominal')}}</th>
                 </tfoot>
             </table>
 
-        <h4 class="bold green">This Year's</h3>
+        <h4 class="bold green">{{ date('F', mktime(0, 0, 0, $month, 10)) }}</h3>
         <h2 class="bold blue">SALARY</h2>
         <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
                 <thead>
@@ -246,11 +328,11 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th>Total : Rp{{$salary->count('nominal') ?: '0'}}</th>
+                    <th>Total : Rp{{$salary->sum('nominal') }}</th>
                 </tfoot>
             </table>
 
-            <h4 class="bold green">This Months's</h3>
+            <h4 class="bold green">{{ date('F', mktime(0, 0, 0, $month, 10)) }}</h3>
             <h2 class="bold blue">INCENTIVES (outside of lunch and transport)</h2>
             <table style="margin-top:20px; margin-bottom:30px;" id="progress-report-table" class="table">
                 <thead>
@@ -284,7 +366,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th>Total : Rp{{$incentive->count('nominal') ?: '0'}}</th>
+                    <th>Total : Rp{{$incentive->sum('nominal')}}</th>
                 </tfoot>
             </table>
         </div>
@@ -452,6 +534,21 @@ $(document).ready(function(){
 	});
 
 });
+</script>
+<script>
+    function changeEarnings(){
+        var month = document.getElementById("earning-month").value;
+        var year = document.getElementById("earning-year").value;
+        if (!year){year = 0;}
+        var user_id_auth = {!! json_encode(auth()->user()->id_teacher) !!}
+        var user_id = {!! json_encode($user_id) !!}
+        if (user_id_auth != user_id){
+            location.replace("/earnings/"+user_id+'/'+month+"/"+year);
+        }
+        else{
+            location.replace("/earnings/"+month+"/"+year);
+        }
+    }
 </script>
 
 </html>

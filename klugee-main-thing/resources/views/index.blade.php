@@ -107,7 +107,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="/earnings">
+                    <a href="/earnings/{{ date('m') }}/{{ date('Y') }}">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-money"></i></p>
                             <p class="button-content">Earnings</p>
@@ -143,7 +143,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <a href="/earnings">
+                    <a href="/earnings/{{ date('m') }}/{{ date('Y') }}">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-money"></i></p>
                             <p class="button-content">Earnings</p>

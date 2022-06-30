@@ -677,22 +677,26 @@ class MainController extends Controller
         return $view->with('user_id',$user_id);
     }
 
-    public function Earnings(){
+    public function Earnings($month,$year){
         $user_id = auth()->user()->id_teacher;
+        $years = Attendance::selectRaw('YEAR(date) as year')->distinct()->get();
         //Basic data
         $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
-        $teachPresences = Attendance::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
-        $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())->get();
-        $salary = Salary::whereYear('date',date('y'))->where('id_teacher',$user_id)->get();
+        $teachPresences = Attendance::whereMonth('date', $month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
+        $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')
+        ->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())
+        ->whereMonth('attendances.date',$month)->whereYear('attendances.date',$year)
+        ->get();
+        $salary = Salary::whereMonth('date',$month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
         $total_fee = self::CountCurrentUserFee();
-        $incentives = Incentive::whereMonth('date', date('m'))->where('id_teacher',$user_id)->get();
+        $incentives = Incentive::whereMonth('date', $month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
 
 
         $view=view('teacher-earnings')->with('fee',$fee)->with('salary',$salary)->with('incentive',$incentives)->with('fees',$total_fee)->with('profile',$profile)->with('position',$position)->with('method',$method);
-        return $view->with('user_id',$user_id);
+        return $view->with('user_id',$user_id)->with('month',$month)->with('year',$year)->with('years',$years);
     }
 
     public function Management(){
