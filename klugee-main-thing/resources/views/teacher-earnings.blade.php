@@ -258,7 +258,7 @@
                     <tr>
                         @for ($i = 0 ; $i < count($fee) ; $i+=$fee->where('date',$fee[$i]->date)->count())
                             <td rowspan="{{$fee->where('date',$fee[$i]->date)->count()}}">{{date('l',strtotime($fee[$i]->date))}}, {{date('d/m/Y',strtotime($fee[$i]->date))}}</td>
-                            <td>button</td>
+                            <td><button onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})" class="btn btn-primary">Progress Report</button></td>
                             <td>{{$fee[$i]->fee_nominal}}</td>
                             <td>{{$fee[$i]->lunch_nominal}}</td>
                             <td>{{$fee[$i]->transport_nominal}}</td>
@@ -436,6 +436,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset('js/bs-init.js')}}"></script>
+<script src="{{ asset('js/teaching-info.js') }}"></script>
 
 <script>
 
