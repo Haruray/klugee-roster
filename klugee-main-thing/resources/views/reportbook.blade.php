@@ -288,7 +288,7 @@
                         <td>Teacher</td>
                     </tr>
                     <tr>
-                        <td style="padding-right: 20mm;">Maria Regina Chandra K.S.</td>
+                        <td style="padding-right: 20mm;">{{ $head_teacher->name }}</td>
                         <td>{{ $teacher }}</td>
                     </tr>
                 </table>
@@ -297,7 +297,7 @@
     </div>
 </div>
 
-@for ($k = 0 ; $k < count($data) ; $k+=10)
+@for ($k = 0 ; $k < count($data) ; $k+=$data->where('level',$data[$k]->level)->count() > 10? 10: $data->where('level',$data[$k]->level)->count())
 <div class="halaman" style="background-color: #00c2cb;">
     <img src="{{  public_path('img/white-logo.png') }}" style="
                                 position: relative;
@@ -349,7 +349,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for ($i = $k ; $i < count($data) ; $i+= $data->where('level',$data[$i]->level)->count())
+                        @for ($i = $k ; $i < ($data->where('level',$data[$k]->level)->count()+$k > 10 ? 10+$k : $data->where('level',$data[$k]->level)->count()+$k) ; $i+= $data->where('level',$data[$i]->level)->count())
                         <tr>
                             <td style="background-color: white; color:black; border:1px solid black; padding:10px; width:15%; text-align:center;" rowspan="{{ $data->where('level',$data[$i]->level)->count() }}">{{strtoupper($data[$i]->level ?: '')}}</td>
                             <td style="background-color: white; color:black; border:1px solid black; padding:10px; width:25%">{{strtoupper($data[$i]->unit ?: '')}}</td>

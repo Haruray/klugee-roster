@@ -380,9 +380,14 @@ class HeadTeacherController extends Controller
         //get attendance id first based on program
         $attendee_data = Attendee::where('id_student',$student_id)->get();
         $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())->where('program',$program)->get();
-
+        $head_teacher = Teachers::join('users','users.id_teacher','=','teachers.id')
+        ->where('user_type','head teacher')->first();
         $progress_reports = Progress::select('progress.*','attendances.date')->where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->join('attendances','attendances.id','progress.id_attendance')->where('generated',false)->where('filled',true)->orderBy('level','ASC')->orderBy('date','ASC')->get();
-        $view = view('report-book-generation')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio)->with('program',$program);
+        $view = view('report-book-generation')->with('progress_report',$progress_reports)
+        ->with('attendance',$attendance_ids)
+        ->with('student', $studentbio)
+        ->with('program',$program)
+        ->with('head_teacher',$head_teacher);
 
         return $view;
     }
@@ -395,6 +400,8 @@ class HeadTeacherController extends Controller
         $levels = Progress::select('level')->whereIn('id',$request->input('progress'))->distinct()->get();
         $latest_teacher_1 =  Progress::whereIn('progress.id',$request->input('progress'))->join('teachers','teachers.id','=','progress.id_teacher')->get()->reverse()->first()['name'];
         $student = Students::where('id',$progress_reports[0]->id_student)->first();
+        $head_teacher = Teachers::select('teachers.name')->join('users','users.id_teacher','=','teachers.id')
+        ->where('user_type','head teacher')->first();
         view()->share([
             'data' => $progress_reports,
             'level' => $levels,
@@ -405,6 +412,7 @@ class HeadTeacherController extends Controller
             'desc_ind' => $request->input('description-indo'),
             'score' => $request->input('overall-score'),
             'farewell' => $request->input('farewell'),
+            'head_teacher' => $head_teacher,
         ]);
         $pdf = PDF::loadView('reportbook')->setOption('page-width','210')->setOption('page-height','297')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
         return $pdf->download($student->nickname.'\'s '.$request->input('program').' Report Book.pdf');
