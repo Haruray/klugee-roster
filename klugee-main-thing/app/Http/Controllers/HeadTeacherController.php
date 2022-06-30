@@ -132,9 +132,24 @@ class HeadTeacherController extends Controller
         $attendance_presence = TeachPresence::where('id',$id)->update(['approved' => true]);
         //get attendance_id
         $attendance_presence = TeachPresence::where('id',$id)->first();
-        $attendance = Attendance::where('id',$attendance_presence->id_attendance)->delete();
+        $id_attendance = $attendance_presence->id_attendance;
+        $program = Attendance::where('id',$id_attendance)->first()->program;
+        $attendance = Attendance::where('id', $id_attendance)->delete();
         //get the new progress report data
-        $new_pr = Progress::where('id_attendance',$attendance_presence->id_attendance)->delete();
+        $new_pr = Progress::where('id_attendance',$id_attendance)->delete();
+        $student_attendance = StudentPresence::where('id_attendance',$id_attendance)->get();
+        //Update SPP Info : delete spp paid on student presence and increase quota
+        foreach($student_attendance as $sa){
+            if ($sa->spp_paid){
+                $stud_a = StudentPresence::where('id',$sa->id)->first();
+                $tuition = TuitionFee::where('id_student',$stud_a->id_student)
+                ->where('program', $program)
+                ->first();
+                $tuition->quota++;
+                $tuition->save();
+                $stud_a->delete();
+            }
+        }
 
         return redirect('/user-attendances');
     }
