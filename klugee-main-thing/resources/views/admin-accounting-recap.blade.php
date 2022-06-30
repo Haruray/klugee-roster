@@ -76,7 +76,7 @@
         </div>
         </div>
     </nav>
-    <h1 class="bounce animated page-heading">ATTENDANCE</h1>
+    <h1 class="bounce animated page-heading">RECAP REPORT</h1>
     <div>
         <div class="container">
             <div class="row">

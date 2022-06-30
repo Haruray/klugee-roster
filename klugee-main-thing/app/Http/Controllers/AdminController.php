@@ -185,8 +185,7 @@ class AdminController extends Controller
     }
 
     public function SPPProcess(Request $request){
-        //TODO :
-        // - update student presence status paid nya ketika di update + kasih notif juga
+        $acc_ids = array();
         $quota_remainder = StudentPresence::join('attendances','attendances.id','=','student_presences.id_attendance')->where('id_student',$request->input('student'))->where('spp_paid',0)->where('program',$request->input('program'))->count();
         $tuition =  TuitionFee::where('id_student', $request->input('student'))->where('program',$request->input('program'))->get()->first();
         if (is_null($tuition)){
@@ -242,9 +241,9 @@ class AdminController extends Controller
         $accounting->notes = $request->input('notes');
         $accounting->approved = false;
         $accounting->save();
-        view()->share('data',$accounting);
-        $pdf = PDF::loadView('nota', $accounting)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
-        return $pdf->download('Nota '.$accounting->date.'-'.$accounting->transaction_type.'-'.$accounting->sub_transaction.'.pdf');
+        array_push($acc_ids, $accounting->id);
+        return self::GenerateNota($acc_ids, "SPP");
+        // return $pdf->download('Nota '.$accounting->date.'-'.$accounting->transaction_type.'-'.$accounting->sub_transaction.'.pdf');
     }
 
     public function ReferralReport($month, $year){

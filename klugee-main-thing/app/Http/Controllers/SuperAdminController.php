@@ -217,6 +217,16 @@ class SuperAdminController extends Controller
             $payment_accounting->notes = "This payment is automated";
             $payment_accounting->approved = true;
             $payment_accounting->save();
+
+            //Tambahin Incentivenya ke admin
+            $incentive = new Incentive;
+            $incentive->name = "PIC Front Admin Referral Bonus";
+            $incentive->date = $acc->date;
+            $incentive->id_teacher = User::where('user_type','admin')->first()->id_teacher;
+            $incentive->nominal = $acc->referral_nominal;
+            $incentive->note = $acc->note;
+            $incentive->approved = true;
+            $incentive->save();
         }
         return redirect('/accounting/approvals');
     }

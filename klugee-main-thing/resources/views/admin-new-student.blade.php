@@ -87,7 +87,7 @@
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-id-badge"></i></div>
-                            <input name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
+                            <input style="margin-left: 16px;" name="official-id" class="form-control attendance-input" type="text" placeholder="Official ID" required=""></div>
                     </div>
                 </div>
             </div>
