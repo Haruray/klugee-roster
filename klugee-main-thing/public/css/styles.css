@@ -1013,3 +1013,122 @@ a{
     font-size: 45px;
     margin-right: 50px;
   }
+
+  .login-body {
+    background-color: #2dafff;
+  }
+
+  .login-form-div {
+    width: 400px;
+    height: 450px;
+    position: absolute;
+    top: 0;
+    bottom: 120px;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+
+  .login-egg {
+    text-align: center;
+    position: relative;
+  }
+
+  .login-welcome {
+    text-align: center;
+    color: white;
+  }
+
+  .login-password-eye {
+    margin-left: -30px;
+    cursor: pointer;
+    text-align: right;
+  }
+
+  .login-password {
+    position: relative;
+  }
+
+  .login-password-eye {
+    position: absolute;
+    bottom: 35px;
+    left: 365px;
+    color: grey;
+  }
+
+  .login-form {
+    margin-top: 8px;
+  }
+
+  .form-div {
+    margin-top: 10px;
+  }
+
+  .form-label {
+    margin-bottom: 1px;
+    font-size: 15px;
+    margin-left: 1px;
+    color: white;
+    font-weight: bold;
+  }
+
+  .form-control.form-password {
+    padding-right: 30px;
+  }
+
+  .password-forgot {
+    margin-left: 2px;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .login-button {
+    text-align: right;
+  }
+
+  .login-button-actualbutton {
+    margin-top: 30px;
+  }
+
+  .fail-message {
+    font-size: 13px;
+    margin-bottom: 0;
+  }
+
+  .login-button-actualbutton-actual {
+    width: 100px;
+    background-color: #2ab4ee;
+    color: white;
+    font-weight: bold;
+  }
+
+  .login-logo {
+    text-align: center;
+  }
+
+  .login-form-div-actual {
+    background-color: #53dee4;
+    border-radius: 10px;
+    padding: 50px 20px 10px 20px;
+    margin-top: 100px;
+  }
+
+  .login-logo-text {
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .login-egg-actual {
+    position: absolute;
+    left: 120px;
+    bottom: 0px;
+  }
+
+  .login-egg-jerami {
+    position: absolute;
+    left: 90px;
+    bottom: -20px;
+  }

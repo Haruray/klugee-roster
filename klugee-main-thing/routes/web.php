@@ -19,6 +19,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/login', 'LoginController@index')->name('login');
+Route::post('/login', 'LoginController@check_login')->name('login.check_login');
+
 //FIRST LEVEL ACCESS
 //teacher route
 Route::get('/', 'MainController@index')->name('home');
