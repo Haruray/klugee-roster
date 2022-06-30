@@ -79,8 +79,8 @@
     <h1 class="bounce animated page-heading">ATTENDANCE</h1>
     <div>
         <div class="container">
-            <div class="row">
-                <div class="col-md-3 offset-md-3 col-sm-6">
+            <div class="row text-center justify-content-center align-items-center">
+                <div class="col-md-3 col-sm-6">
                     <a href="/attendance/input">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
@@ -88,7 +88,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3 offset-md-0 col-sm-6">
+                <div class="col-md-3 col-sm-6">
                     <a href="/attendance-admin/teacher-input">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-pencil"></i></p>
@@ -96,8 +96,14 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
+                <div class="col-md-3 offset-md-0 col-sm-6">
+                    <a href="/attendance/history/{{ date('Y-m-d') }}/{{ date('Y-m-d') }}">
+                        <div data-bs-hover-animate="bounce" class="button">
+                            <p class="button-content-icon"><i class="fa fa-history"></i></p>
+                            <p class="button-content">History</p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

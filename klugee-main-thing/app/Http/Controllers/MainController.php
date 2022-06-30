@@ -304,14 +304,19 @@ class MainController extends Controller
         $flag; //for checking whether all the students present or not
         $program = Attendance::where('id',$attendance_id)->first()->program;
 
-        $attendee = Attendee::where('id_attendance',$attendance_id)->join('tuition_fees','tuition_fees.id_student','=','attendees.id_student')
-        ->join('students','students.id','=','attendees.id_student')->where('program',$program)->get();
+        $attendee = Attendee::where('attendees.id_attendance',$attendance_id)
+        ->join('tuition_fees','tuition_fees.id_student','=','attendees.id_student')
+        ->join('students','students.id','=','attendees.id_student')
+        ->join('student_presences',function($join){
+            $join->on('student_presences.id_student','=','students.id')->on('student_presences.id_attendance','=','attendees.id_attendance');
+        })
+        ->where('program',$program)->get();
         $flag = $attendee[0]->present;
         //Checking attendance
         $spp_warning = array(); //for SPP warning
         foreach ($attendee as $a){
             $flag = $flag || $a->present;
-            if ($a->quota <= 0){
+            if ($a->spp_paid == 0){
                 $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
                 array_push($spp_warning,$warning_string);
             }
