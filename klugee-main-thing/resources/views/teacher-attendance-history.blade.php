@@ -191,7 +191,9 @@
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->class_type}}</td>
                         @if (is_null($teach_presence[$i]->filled) || !$teach_presence[$i]->filled)
-                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">No data</td>
+                        <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">
+                            <a href="/attendance/progress-report/{{ $teach_presence[$i]->id }}"><button class="btn btn-warning" type="button">Fill Progress Report</button></a>
+                        </td>
                         @else
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}"><button onclick="$dc2.TeachingInfo({{ $teach_presence[$i]->id }})" class="btn btn-primary" type="button">Progress Report</button></td>
                         @endif

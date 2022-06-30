@@ -89,15 +89,13 @@
                     </a>
                 </div>
                 <div class="col-md-3 offset-md-0 col-sm-6">
-                    <a href="/attendance/history">
+                    <a href="/attendance/history/{{ date('Y-m-d') }}/{{ date('Y-m-d') }}">
                         <div data-bs-hover-animate="bounce" class="button">
                             <p class="button-content-icon"><i class="fa fa-history"></i></p>
                             <p class="button-content">History</p>
                         </div>
                     </a>
                 </div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
-                <div class="col-md-3 col-sm-6"><a href="#"></a></div>
             </div>
         </div>
     </div>

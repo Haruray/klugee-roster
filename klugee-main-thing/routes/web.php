@@ -28,7 +28,7 @@ Route::get('/', 'MainController@index')->name('home');
 Route::get('/attendance', 'TeacherController@AttendanceMenu');
 Route::get('/attendance/input','MainController@AttendanceInput');
 Route::get('attendance/progress-report/{attendance_id}','MainController@AttendanceProgressReport');
-Route::get('/attendance/history','MainController@AttendanceHistory');
+Route::get('/attendance/history/{from}/{to}','MainController@AttendanceHistory');
 Route::get('/attendance/{attendance_id}','MainController@AttendanceView');
 Route::get('/attendance/progress-report/{attendance_id}/filled','MainController@ProgressView');
 Route::get('/students','MainController@Students');

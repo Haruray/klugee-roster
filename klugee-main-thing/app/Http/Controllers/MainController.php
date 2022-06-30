@@ -508,9 +508,23 @@ class MainController extends Controller
         return $view->with('student', $studentbio)->with('programs', $student_tuition_payment);
     }
 
-    public function AttendanceHistory(){
-        $view = view('attendance-history');
-
+    public function AttendanceHistory($from, $to){
+        //Get attendance detail
+        $progress = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled', 'attendances.program')
+        ->join('attendees','attendances.id','=','attendees.id_attendance')
+        ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
+            $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
+        })->leftjoin('fees','attendances.id','=','fees.id_attendance')
+        ->join('teach_presences','teach_presences.id_attendance','=','attendances.id')
+        ->where('attendances.id_teacher',auth()->user()->id_teacher)->orderBy('attendances.date','DESC')
+        ->where('attendances.date','>=', $from)
+        ->where('attendances.date','<=', $to)
+        ->get();
+        $view = view('attendance-history')->with([
+            'progress' => $progress,
+            'from' => $from,
+            'to' => $to,
+        ]);
         return $view;
     }
 
