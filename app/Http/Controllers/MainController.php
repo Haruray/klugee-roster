@@ -78,10 +78,12 @@ class MainController extends Controller
 
         for ($i = 1 ; $i < $max_stud ; $i++){
             //Search for every student input form
+            $is_there_any_student = false;
             $string_search = "student".$i;
             $string_search_2 = "student-attend-".$i;
 
             if ($request->input($string_search) != NULL){
+                $is_there_any_student = true;
                 //check if attendee a duplicate or not
                 $attendee_check = Attendee::where([
                     ['id_attendance',$new_attendance->id],
@@ -159,6 +161,12 @@ class MainController extends Controller
                         ]);
                     }
                 }
+            }
+            elseif (!$is_there_any_student){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No student in input data',
+                ], 401);
             }
         }
         //Save teacher's attendance
