@@ -311,17 +311,22 @@ class MainController extends Controller
             $join->on('student_presences.id_student','=','students.id')->on('student_presences.id_attendance','=','attendees.id_attendance');
         })
         ->where('program',$program)->get();
-        $flag = $attendee[0]->present;
-        //Checking attendance
-        $spp_warning = array(); //for SPP warning
-        foreach ($attendee as $a){
-            $flag = $flag || $a->present;
-            if ($a->spp_paid == 0){
-                $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
-                array_push($spp_warning,$warning_string);
+        if (count($attendee) == 0){
+            //if there's no attendee, then it's obviously dont show the progress report
+            $flag = false;
+        }
+        else{
+            $flag = $attendee[0]->present;
+            //Checking attendance
+            $spp_warning = array(); //for SPP warning
+            foreach ($attendee as $a){
+                $flag = $flag || $a->present;
+                if ($a->spp_paid == 0){
+                    $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
+                    array_push($spp_warning,$warning_string);
+                }
             }
         }
-
         if ($flag){ //Proceed if at least one of the attendee is present
             $filled = Progress::where('id_attendance',$attendance_id)->first()->filled;
             if (!$filled){ //if its not filled, the proceed to the form
@@ -557,12 +562,32 @@ class MainController extends Controller
             ])->first();
             array_push($progress_reports, $pr);
         }*/
-        $progress_reports = Progress::where('id_student',$student_id)
-        ->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())
+        $progress_reports = Progress::where('progress.id_student',$student_id)
+        ->whereIn('progress.id_attendance', $attendance_ids->pluck('id')->toArray())
         ->join('attendances','attendances.id','=','progress.id_attendance')
+        ->join('student_presences',function($join){
+            $join->on('student_presences.id_attendance','=','progress.id_attendance')->on('student_presences.id_student','=','progress.id_student');
+        })
         ->orderBy('attendances.date','DESC')
         ->get();
-        $view = view('progress-report-list')->with('progress_report',$progress_reports)->with('attendance',$attendance_ids)->with('student', $studentbio)->with('program',$program)->with('student_id',$student_id);
+
+        $student_presences_unpaid = StudentPresence::whereIn('id_attendance',$attendance_ids->pluck('id')->toArray())
+        ->where('id_student',$student_id)
+        ->where('spp_paid', false)->count();
+
+        $student_tuition_payment = TuitionFee::where('id_student',$student_id)
+        ->where('program',$program)
+        ->first()->quota;
+
+
+        $view = view('progress-report-list')
+        ->with('progress_report',$progress_reports)
+        ->with('attendance',$attendance_ids)
+        ->with('student', $studentbio)
+        ->with('program',$program)
+        ->with('student_id',$student_id)
+        ->with('unpaid',$student_presences_unpaid)
+        ->with('quota', $student_tuition_payment);
 
         return $view;
     }

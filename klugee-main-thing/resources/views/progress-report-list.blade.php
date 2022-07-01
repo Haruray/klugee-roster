@@ -92,6 +92,16 @@
             width: 100%;
         }
         }
+        #information{
+            margin-top: 20px;
+            margin-bottom:20px;
+            color: #2dafff;
+            font-weight: bold;
+            border: 1px solid #2dafff;
+            width: 350px;
+            padding: 10px;
+            box-shadow: 2px 2px;
+        }
     </style>
 </head>
 
@@ -168,6 +178,16 @@
                 </div>
             </div>
         </div>
+        <div id="information">
+            SPP Payment Status :
+            @if ($quota > 0 )
+            <span style="color : #6ce679;"><i style="display: inline;" class="fa fa-check"></i> Paid</span> <br>
+            @else
+            <span style="color : red;"><i style="display: inline;" class="fa fa-exclamation"></i> Late Payment</span> <br>
+            @endif
+            Jatah Pertemuan : {{ $quota }} Pertemuan<br>
+            Pertemuan yang Belum Lunas : {{ $unpaid }} Pertemuan
+        </div>
         @if (auth()->user()->user_type == "head teacher" || auth()->user()->user_type == "admin" || auth()->user()->user_type == "super admin" || auth()->user()->user_type == "head of institution")
         <div class="progress-report-list-button-group"><a href="/students/{{ $student_id }}/progress-report/{{ $program }}/generate"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></a></div>
         @endif
@@ -183,14 +203,15 @@
                         <th>Score</th>
                         <th>Documentation</th>
                         <th>Action</th>
-                        <th>Status</th>
+                        <th>SPP Paid</th>
+                        <th>Filled</th>
                         <th style="width:10%;">Printed As Report Book</th>
                     </tr>
                 </thead>
                     @for ($i = 0 ; $i < count($progress_report) ; $i++)
-                    <tbody class="table-row" id = {{ date('d-m-Y', strtotime($attendance[$i]->date)) }}>
+                    <tbody class="table-row" id = {{ date('Y-m-d', strtotime($progress_report[$i]->date)) }}>
                     <tr>
-                        <td>{{ date('l',strtotime($attendance[$i]->date)) }}, {{date('d-m-Y',strtotime($attendance[$i]->date))}}</td>
+                        <td>{{ date('l',strtotime($progress_report[$i]->date)) }}, {{date('d-m-Y',strtotime($progress_report[$i]->date))}}</td>
                         <td>{{$progress_report[$i]->level ?: ''}}</td>
                         <td>{{$progress_report[$i]->unit ?: ''}}</td>
                         <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
@@ -204,6 +225,11 @@
                         <td><button class="btn btn-warning" type="button">Edit</button></td>
                         @else
                         <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-primary" type="button">Fill <br> Progress Report</button></a></td>
+                        @endif
+                        @if ($progress_report[$i]->spp_paid)
+                        <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
+                        @else
+                        <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                         @endif
                         @if ($progress_report[$i]->filled)
                         <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
