@@ -348,6 +348,23 @@ class HeadTeacherController extends Controller
         ], 200);
     }
 
+    private function CreateTimeJson($day, $teacher_json){
+        $schedule = Schedule::select('schedules.day','schedules.begin')
+        ->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')
+        ->orderBy('schedules.begin','ASC')
+        ->where('day',$day)
+        ->get();
+
+        $schedule_json = '{';
+        foreach($schedule as $s){
+            $schedule_json = $schedule_json.'"'.$s->begin.'": '.$teacher_json.',';
+        }
+        $schedule_json = substr($schedule_json,0,-1);
+        $schedule_json= $schedule_json.'}';
+        return $schedule_json;
+
+    }
+
     public function ScheduleAll($teacher){
         if ($teacher!="all"){
             $teachers = Schedule::select('teachers.name','teachers.id')->join('teach_schedules','teach_schedules.id_schedule', '=', 'schedules.id')->join('teachers','teach_schedules.id_teacher','=','teachers.id')->distinct()->get();
@@ -362,12 +379,65 @@ class HeadTeacherController extends Controller
             ]);;
         }
         $teachers = Schedule::select('teachers.name','teachers.id')->join('teach_schedules','teach_schedules.id_schedule', '=', 'schedules.id')->join('teachers','teach_schedules.id_teacher','=','teachers.id')->distinct()->get();
+        // $schedule = Schedule::select('schedules.day','schedules.begin','students.name as student_name', 'teachers.name as teach_name','teachers.id')->selectRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) as end')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','id_teacher')->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
+        $schedule = Schedule::select('schedules.day','schedules.begin')
+        ->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')
+        ->orderBy('schedules.begin','ASC')->get();
+        $teacher_json = '{';
+        $day_json = '{';
+        foreach($teachers as $t){
+            $teacher_json = $teacher_json.'"'.$t->name.'": null,';
+        }
+        $teacher_json = substr($teacher_json,0,-1);
+        $teacher_json= $teacher_json.'}';
+
+        foreach($schedule as $s){
+            $day_json = $day_json.'"'.$s->day.'": '.self::CreateTimeJson($s->day,$teacher_json).',';
+        }
+
+        $day_json = substr($day_json,0,-1);
+        $day_json= $day_json.'}';
+
+        $schedule_json = json_decode($day_json, true);
+        $teacher_json =  json_decode($teacher_json, true);
+        //return $schedule_json;
+        //filling the actual schedule
+        foreach(array_keys($schedule_json) as $day){
+            foreach(array_keys($schedule_json[$day]) as $time){
+                foreach(array_keys($schedule_json[$day][$time]) as $teach){
+                    $schedule = Schedule::select('schedules.day','schedules.begin','students.name as student_name', 'teachers.name as teach_name','teachers.id')
+                    ->selectRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) as end')
+                    ->join('student_schedules','schedules.id','=','student_schedules.id_schedule')
+                    ->join('students','student_schedules.id_student','=','students.id')
+                    ->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')
+                    ->join('teachers','teachers.id','=','id_teacher')
+                    ->where([
+                        ['day',$day],
+                        ['begin',$time],
+                        ['teachers.name',$teach]
+                    ])
+                    ->get();
+                    $res='';
+                    for ($i = 0 ; $i < count($schedule); $i++){
+                        if ($i != count($schedule)-1){
+                            $res = $res.$schedule[$i]->student_name.', ';
+                        }
+                        else{
+                            $res = $res.$schedule[$i]->student_name;
+                        }
+                    }
+                    $schedule_json[$day][$time][$teach] = $res;
+                }
+            }
+        }
         $schedule = Schedule::select('schedules.day','schedules.begin','students.name as student_name', 'teachers.name as teach_name','teachers.id')->selectRaw('DATE_ADD(schedules.begin, INTERVAL 55 MINUTE) as end')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->join('teachers','teachers.id','=','id_teacher')->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
-        return $schedule;
+        //return $schedule_json;
         $view = view('admin-schedule-all');
 
         return $view->with([
             'teachers' => $teachers,
+            'teacher_json' => $teacher_json,
+            'schedule_json' => $schedule_json,
             'schedule' => $schedule,
             'selector' => $teacher
         ]);

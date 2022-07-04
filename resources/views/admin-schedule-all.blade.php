@@ -111,30 +111,37 @@
                                 <th rowspan="2">Hari</th>
                                 <th rowspan="2">Jam Mulai</th>
                                 <th rowspan="2">Jam Selesai</th>
-                                <th colspan="{{ count($teachers) }}" style="text-align: center;">Teachers</th>
+                                <th colspan="{{ count($teacher_json) }}" style="text-align: center;">Teachers</th>
                             </tr>
                             <tr>
-                                @foreach ($teachers as $t)
-                                    <th style="text-align: center;">{{ $t->name }}</th>
+                                @foreach (array_keys($teacher_json) as $t)
+                                    <th style="text-align: center;">{{ $t }}</th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0 ; $i < count($schedule); $i+=$schedule->where('day',$schedule[$i]->day)->count())
+                            @foreach (array_keys($schedule_json) as $day)
                                 <tr>
-                                    <td rowspan="{{ $schedule->where('day',$schedule[$i]->day)->count() }}">{{ $schedule[$i]->day }}</td>
-                                    <td>{{ $schedule[$i]->begin }}</td>
-                                    <td>{{ $schedule[$i]->end }}</td>
-                                    <td>{{ $schedule[$i]->student_name }}</td>
+                                    <td rowspan="{{ count($schedule_json[$day])+1 }}">{{ $day }}</td>
                                 </tr>
-                                @for ($j=$i+1 ; $j < $i+$schedule->where('day',$schedule[$i]->day)->count() ; $j++)
-                                    <tr>
-                                        <td>{{ $schedule[$j]->begin }}</td>
-                                        <td>{{ $schedule[$j]->end }}</td>
-                                        <td>{{ $schedule[$j]->student_name }}</td>
-                                    </tr>
-                                @endfor
-                            @endfor
+                                @foreach (array_keys($schedule_json[$day]) as $time)
+                                <tr>
+                                    <td>
+                                        {{ $time }}
+                                    </td>
+                                    <td>{{ date('H:i', strtotime("+55 minutes", strtotime($time))) }}</td>
+                                    @foreach ($schedule_json[$day][$time] as $desc)
+                                            @if ($desc=='')
+                                            <td>{{ $desc }}</td>
+                                            @else
+                                            <td style="background-color:#fff5cc; font-weight:bold;">{{ $desc }}</td>
+                                            @endif
+                                    @endforeach
+                                </tr>
+
+                                @endforeach
+                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
