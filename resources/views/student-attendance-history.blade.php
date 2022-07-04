@@ -23,7 +23,7 @@
         #myImg:hover {opacity: 0.7;}
 
         /* The Modal (background) */
-        .modal {
+        .modal-documentation {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
@@ -38,7 +38,7 @@
         }
 
         /* Modal Content (Image) */
-        .modal-content {
+        .modal-content-documentation {
         margin: auto;
         display: block;
         width: 80%;
@@ -58,7 +58,7 @@
         }
 
         /* Add Animation - Zoom in the Modal */
-        .modal-content, #caption {
+        .modal-content-documentation, #caption {
         animation-name: zoom;
         animation-duration: 0.6s;
         }
@@ -69,7 +69,7 @@
         }
 
         /* The Close Button */
-        .close {
+        .close-documentation {
         position: absolute;
         top: 15px;
         right: 35px;
@@ -79,8 +79,8 @@
         transition: 0.3s;
         }
 
-        .close:hover,
-        .close:focus {
+        .close-documentation:hover,
+        .close-documentation:focus {
         color: #bbb;
         text-decoration: none;
         cursor: pointer;
@@ -88,7 +88,7 @@
 
         /* 100% Image Width on Smaller Screens */
         @media only screen and (max-width: 700px){
-        .modal-content {
+        .modal-content-documentation {
             width: 100%;
         }
         }
@@ -167,29 +167,30 @@
         </div>
         </div>
     </nav>
-    <h2 class="bounce animated page-heading">PROGRESS REPORTS</h2>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 text-center"><img src="{{url('/img/'.$program.'-logo.png')}}" style="width: 120px;"></div>
-            <div class="col-md-9 text-center">
-                <div class="d-inline-block progress-report-text">
-                    <p class="text-center progress-report-student-name">{{$student->name}}</p>
-                    <p class="text-center progress-report-program-name">{{$program}}</p>
+    <div class="text-center">
+        <div class="container student-profile-img-div">
+            <div class="row" style="padding: 0 20px 0 20px;">
+                <div class="col-sm-12 col-md-4 col-xl-3 offset-lg-1 text-center">
+                    <div class="text-left d-inline-block teacher-profile-img-group">
+                        <div class="text-center teacher-profile-img-outline">
+                            <img class="student-profile-img" src="{{url('/uploads/students/'.$student->photo)}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-7 col-xl-8 offset-lg-0 text-center">
+                    <div class="d-inline-block">
+                        <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">{{$student->name}}</p>
+                        <p class="green bold" style="font-size: 20px;">School</p>
+                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">{{$student->school_name}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="information">
-            SPP Payment Status :
-            @if ($quota > 0 )
-            <span style="color : #6ce679;"><i style="display: inline;" class="fa fa-check"></i> Paid</span> <br>
-            @else
-            <span style="color : red;"><i style="display: inline;" class="fa fa-exclamation"></i> Late Payment</span> <br>
-            @endif
-            Jatah Pertemuan : {{ $quota }} Pertemuan<br>
-            Pertemuan yang Belum Lunas : {{ $unpaid }} Pertemuan
-        </div>
+    </div>
+
+    <h2 class="bounce animated page-heading">STUDENT ATTENDANCE HISTORY</h2>
+    <div class="container">
         @if (auth()->user()->user_type == "head teacher" || auth()->user()->user_type == "admin" || auth()->user()->user_type == "super admin" || auth()->user()->user_type == "head of institution")
-        <div class="progress-report-list-button-group"><a href="/students/{{ $student_id }}/progress-report/{{ $program }}/generate"><button class="btn btn-primary float-right progress-report-button bold" type="button" style="font-size: 13px;"><i class="fa fa-book"></i>&nbsp;Report Book</button></a></div>
         @endif
         <button id="sort-newest" onclick="$dc.SortTableOldest('progress-report-table')" class="btn btn-primary float-left attendance-input-button" type="button" style="font-size: 13px;"><i class="fa fa-sort-down"></i>&nbsp;Sort by Oldest</button>
         <div class="table-responsive progress-report-table">
@@ -197,32 +198,36 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Level</th>
-                        <th>Unit</th>
-                        <th>Last Exercise</th>
-                        <th>Score</th>
+                        <th>Program</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Class Type</th>
                         <th>Documentation</th>
                         <th>Action</th>
                         <th>SPP Paid</th>
                         <th>Filled</th>
-                        <th style="width:10%;">Printed As Report Book</th>
                     </tr>
                 </thead>
                     @for ($i = 0 ; $i < count($progress_report) ; $i++)
                     <tbody class="table-row" id = {{ date('Y-m-d', strtotime($progress_report[$i]->date)) }}>
                     <tr>
                         <td>{{ date('l',strtotime($progress_report[$i]->date)) }}, {{date('d-m-Y',strtotime($progress_report[$i]->date))}}</td>
-                        <td>{{$progress_report[$i]->level ?: ''}}</td>
-                        <td>{{$progress_report[$i]->unit ?: ''}}</td>
-                        <td>{{$progress_report[$i]->last_exercise ?: ''}}</td>
-                        <td>{{$progress_report[$i]->score ?: ''}}</td>
+                        <td>{{ $progress_report[$i]->program }}</td>
+                        <td>{{$progress_report[$i]->time ?: ''}}</td>
+                        <td>{{ $progress_report[$i]->location }}</td>
+                        <td>{{ $progress_report[$i]->class_type }}</td>
                         @if (is_null($progress_report[$i]->documentation))
                         <td></td>
                         @else
                         <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id_attendance}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
                         @endif
                         @if ($progress_report[$i]->filled)
-                        <td><button class="btn btn-warning" type="button">Edit</button></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button  class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $progress_report[$i]->id_attendance }})">Info</button>
+                                <button class="btn btn-warning" type="button">Edit</button>
+                            </div>
+                        </td>
                         @else
                         <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-primary" type="button">Fill <br> Progress Report</button></a></td>
                         @endif
@@ -236,11 +241,6 @@
                         @else
                         <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                         @endif
-                        @if ($progress_report[$i]->generated)
-                        <td><i class="fa fa-check-circle" style="font-size: 40px;color: #6ce679;"></i></td>
-                        @else
-                        <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
-                        @endif
                     </tr>
                     </tbody>
                     @endfor
@@ -249,13 +249,13 @@
     </div>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal-documentation">
 
     <!-- The Close Button -->
-    <span onclick="$dc.DocumentationModalClose()" class="close">&times;</span>
+    <span onclick="$dc.DocumentationModalClose()" class="close-documentation">&times;</span>
 
     <!-- Modal Content (The Image) -->
-    <img class="modal-content" id="img01">
+    <img class="modal-content-documentation" id="img01">
 
     <!-- Modal Caption (Image Text) -->
     <div id="caption"></div>
@@ -266,6 +266,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+    <script src="{{ asset('js/teaching-info.js') }}"></script>
     <script src="{{asset('js/progressreportlist-script.js')}}"></script>
 
 </body>

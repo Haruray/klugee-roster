@@ -13,6 +13,8 @@
 .salary-body {
   width: 1476px;
   margin:0;
+  padding-left: 10px;
+  padding-right:10px;
 }
 
 .nota-body {
@@ -305,6 +307,12 @@ table {
                             <td class="nota-td">Rp. {{ $i->total }}</td>
                         </tr>
                     @endforeach
+                    <tr class="nota-tr">
+                        <td></td>
+                        <td class="nota-td">Total Upah</td>
+                        <td class="nota-td">Rp. {{ $incentive->sum('total') + $salary->sum('nominal') + $fee->sum('fee_nominal')
+                        + $lunch->sum('transport_nominal') + $transport->sum('transport_nominal') }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

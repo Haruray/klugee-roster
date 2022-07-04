@@ -53,7 +53,7 @@ class RequestController extends Controller
     }
 
     public function GetDocumentation($attendance_id){
-        $documentation = Progress::where('id',$attendance_id)->first()->documentation;
+        $documentation = Progress::where('id_attendance',$attendance_id)->first()->documentation;
         return response()->json([
             'success' => true,
             'documentation' => $documentation

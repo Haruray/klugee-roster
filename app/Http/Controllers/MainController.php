@@ -64,7 +64,7 @@ class MainController extends Controller
         $should_pay_teach_fee = false;
         $user_id_attendance = auth()->user()->id_teacher;
         //If its another teacher, then add this :
-        if ($request->input('attendance-teacher-id')){
+        if (!is_null($request->input('attendance-teacher-id'))){
             $user_id_attendance = $request->input('attendance-teacher-id');
         }
         //Save attendance data
@@ -78,7 +78,7 @@ class MainController extends Controller
 
         for ($i = 1 ; $i < $max_stud ; $i++){
             //Search for every student input form
-            $is_there_any_student = false;
+            $is_there_any_student = true;
             $string_search = "student".$i;
             $string_search_2 = "student-attend-".$i;
 
@@ -169,6 +169,7 @@ class MainController extends Controller
                 ], 401);
             }
         }
+        //ERROR HERE
         //Save teacher's attendance
         $new_presence = new TeachPresence;
         $new_presence->id_teacher = $user_id_attendance;
@@ -593,6 +594,42 @@ class MainController extends Controller
         ->with('attendance',$attendance_ids)
         ->with('student', $studentbio)
         ->with('program',$program)
+        ->with('student_id',$student_id)
+        ->with('unpaid',$student_presences_unpaid)
+        ->with('quota', $student_tuition_payment);
+
+        return $view;
+    }
+
+    public function StudentsAttendanceHistory($student_id){
+        //get student data
+        $studentbio = Students::where('id',$student_id)->get()->first();
+        //get attendance id first based on program
+        $attendee_data = Attendee::where('id_student',$student_id)->get();
+        $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())
+        ->get();
+
+        $progress_reports = Progress::where('progress.id_student',$student_id)
+        ->whereIn('progress.id_attendance', $attendance_ids->pluck('id')->toArray())
+        ->join('attendances','attendances.id','=','progress.id_attendance')
+        ->join('student_presences',function($join){
+            $join->on('student_presences.id_attendance','=','progress.id_attendance')->on('student_presences.id_student','=','progress.id_student');
+        })
+        ->orderBy('attendances.date','DESC')
+        ->get();
+
+        $student_presences_unpaid = StudentPresence::whereIn('id_attendance',$attendance_ids->pluck('id')->toArray())
+        ->where('id_student',$student_id)
+        ->where('spp_paid', false)->count();
+
+        $student_tuition_payment = TuitionFee::where('id_student',$student_id)
+        ->first()->quota;
+
+
+        $view = view('student-attendance-history')
+        ->with('progress_report',$progress_reports)
+        ->with('attendance',$attendance_ids)
+        ->with('student', $studentbio)
         ->with('student_id',$student_id)
         ->with('unpaid',$student_presences_unpaid)
         ->with('quota', $student_tuition_payment);

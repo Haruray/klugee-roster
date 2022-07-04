@@ -212,8 +212,6 @@
                         icon : 'error',
                         title: 'Oops...',
                         text: 'Request failed. Please reload the page.'
-                    }).then(function(){
-                        location.reload();
                     });
 
                 }
@@ -224,8 +222,6 @@
                     icon : 'error',
                     title: 'Oops...',
                     text: 'Input error. Please re-enter the data or reload the page.'
-                }).then(function(){
-                    location.reload();
                 });
 
             }
