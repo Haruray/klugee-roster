@@ -369,6 +369,8 @@
                     <th>Total : Rp{{$incentive->sum('nominal')}}</th>
                 </tfoot>
             </table>
+            <button class="btn btn-primary" style="margin-bottom:20px;" data-toggle="modal" data-target="#modal-salary">Create Salary Check</button>
+
         </div>
     </div>
 
@@ -431,7 +433,79 @@
 			  	</div>
 			</div>
 
-
+<!-- Modal -->
+<div class="modal fade" id="modal-salary" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Generate Salary</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/generate-salary" method="POST">
+            @csrf
+            <input type="hidden" name="teacher" id="teacher" value={{ $user_id }}>
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div id="salary-amount" class="attendance-input-div">
+                            <input style="margin-left:17px;" name="divisi" class="form-control attendance-input" type="text" placeholder="Divisi" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div id="salary-amount" class="attendance-input-div">
+                            <input style="margin-left:17px;" name="no-kontrak" class="form-control attendance-input" type="text" placeholder="No. Kontrak" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div id="salary-amount" class="attendance-input-div">
+                            <input style="margin-left:17px;" name="npsn" class="form-control attendance-input" type="text" placeholder="NPSN" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div id="salary-amount" class="attendance-input-div">
+                            <input style="margin-left:17px;" name="NILPNF" class="form-control attendance-input" type="text" placeholder="Nomor Izin Lembaga Pendidikan Non-Formal" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <select style="margin-left: 17px;" name="payment_method" class="form-control attendance-input">
+                                <optgroup label="Payment Method">
+                                    <option value="" disabled selected>Payment Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="ATM">ATM</option>
+                                    <option value="Other">Other</option>
+                                </optgroup>
+                            </select></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="submit" class="btn btn-primary">Generate Check</button>
+              </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>

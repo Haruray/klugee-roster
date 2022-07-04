@@ -140,6 +140,7 @@ Route::post('/management/program-add','SuperAdminController@ProgramAdd');
 Route::post('/management/partner-add','SuperAdminController@PartnerAdd');
 Route::post('/accounting/teacher-payment/salary/process','SuperAdminController@TeacherSalaryProcess');
 Route::post('/accounting/teacher-payment/incentive/process','SuperAdminController@TeacherIncentiveProcess');
+Route::post('/generate-salary','SuperAdminController@GenerateSalaryProfile');
 
 
 Route::post('/users/add/process','SuperAdminController@AddTeacherProcess');
@@ -158,3 +159,4 @@ Route::get('/get/teaching-info/{id}','RequestController@GetTeachingInfo');
 
 Route::get('/nota','AdminController@TesNota');
 Route::get('/report','AdminController@Report');
+Route::get('/salary/{}','SuperAdminController@TesSalary');

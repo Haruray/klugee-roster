@@ -32,6 +32,7 @@ use App\User;
 use App\Accounting;
 use App\Referral;
 use App\Referrer;
+use App\UsedReferral;
 
 use PDF;
 
@@ -82,9 +83,7 @@ class AdminController extends Controller
         $new_income->payment_method = $request->input('payment_method');
         if ($new_income->save()){
             Session::flash('sukses','Data successfully recorded.');
-            view()->share('data',$new_income);
-            $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
-            return $pdf->download('Nota '.$new_income->date.'-'.$new_income->transaction_type.'-'.$new_income->sub_transaction.'-'.$new_income->detail.'.pdf');
+            return self::GenerateNota($new_income->id, $new_income->transaction_type);
         }
         else{
             Session::flash('gagal','Error has occured. Failed to record data.');
@@ -106,9 +105,7 @@ class AdminController extends Controller
         if ($new_income->save()){
             Session::flash('sukses','Data successfully recorded.');
             //pdf download
-            view()->share('data',$new_income);
-            $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
-            return $pdf->download('Nota '.$new_income->date.'-'.$new_income->transaction_type.'-'.$new_income->sub_transaction.'.pdf');
+            return self::GenerateNota($new_income->id, $new_income->transaction_type);
         }
         else{
             Session::flash('gagal','Error has occured. Failed to record data.');
@@ -229,21 +226,57 @@ class AdminController extends Controller
             'spp_paid' => true
         ]);
 
-        //Saving it to accounting
-        $accounting = new Accounting;
-        $accounting->date = $request->input('date');
-        $accounting->transaction_type = "SPP";
-        $accounting->sub_transaction = $request->input('program')." Program";
-        $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
-        $accounting->nominal = $request->input('nominal');
-        $accounting->pic = $request->input('pic');
-        $accounting->payment_method = $request->input('payment_method');
-        $accounting->notes = $request->input('notes');
-        $accounting->approved = false;
-        $accounting->save();
-        array_push($acc_ids, $accounting->id);
+
+        //Kalau pakai referral bonus, catat
+        if ($request->input('referral-bonus')[0] && Referral::where('referrer_parent_student_id',$request->input('student'))->count() !=0 ){
+            $referral = Referral::where('referrer_parent_student_id',$request->input('student'))
+            ->whereNotIn('id',UsedReferral::select('id')->pluck('used_referral_id')->toArray())->first();
+            $save_referral = new UsedReferral;
+            $save_referral->used_referral_id = $referral->id;
+            //Saving it to accounting
+            $accounting = new Accounting;
+            $accounting->date = $request->input('date');
+            $accounting->transaction_type = "SPP";
+            $accounting->sub_transaction = $request->input('program')." Program";
+            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+            $accounting->nominal =$request->input('referral-bonus')[0]? $request->input('nominal') - $referral->referral_nominal : $request->input('nominal');
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('notes');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids, $accounting->id);
+
+            $accounting = new Accounting;
+            $accounting->date = $request->input('date');
+            $accounting->transaction_type = "SPP Referral Discount";
+            $accounting->sub_transaction = $request->input('program')." Program";
+            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+            $accounting->nominal = $referral->referral_nominal;
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('notes');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids, $accounting->id);
+            $save_referral->save();
+        }
+        else{
+            //Saving it to accounting
+            $accounting = new Accounting;
+            $accounting->date = $request->input('date');
+            $accounting->transaction_type = "SPP";
+            $accounting->sub_transaction = $request->input('program')." Program";
+            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+            $accounting->nominal =$request->input('nominal');
+            $accounting->pic = $request->input('pic');
+            $accounting->payment_method = $request->input('payment_method');
+            $accounting->notes = $request->input('notes');
+            $accounting->approved = false;
+            $accounting->save();
+            array_push($acc_ids, $accounting->id);
+        }
         return self::GenerateNota($acc_ids, "SPP");
-        // return $pdf->download('Nota '.$accounting->date.'-'.$accounting->transaction_type.'-'.$accounting->sub_transaction.'.pdf');
     }
 
     public function ReferralReport($month, $year){

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>klugee-roster</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button navbar-main">
+        <div class="container"><a class="navbar-brand navbar-logo" href="#"><img class="d-inline-block" src="assets/img/2.png"><p class="d-inline-block brand-name" style="color: #fff5cc;">Roster Management<br></p></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse navbar-icons-center" id="navcol-1">
+                <ul class="nav navbar-nav text-left mr-auto nav-item-dropdown">
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="color: white;"><i class="fa fa-search nav-item-icon"></i>&nbsp; &nbsp; Explore</a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Attendance</a><a class="dropdown-item" role="presentation" href="#">Students</a><a class="dropdown-item" role="presentation" href="#">Schedule</a><a class="dropdown-item" role="presentation"
+                                href="#">Earnings</a></div>
+                    </li>
+                </ul>
+                <div class="nav-item-div"><a class="login" href="#"><img class="profile-img" src="assets/img/edgysul.png"><p class="d-inline-block nav-item-text">Teacher Rico</p></a></div>
+                <div class="text-left nav-item-div">
+                    <a class="login" href="#">
+                        <div class="d-inline-block"><i class="fa fa-bell-o notif-img yellow"></i><img class="warning-sign" src="assets/img/15.png"></div>
+                        <p class="d-inline-block nav-item-text">Notification</p>
+                    </a>
+                </div>
+                <div class="text-left nav-item-div">
+                    <a class="login" href="#">
+                        <div class="d-inline-block"><i class="fa fa-sign-out notif-img yellow"></i></div>
+                        <p class="d-inline-block nav-item-text">Sign Out</p>
+                    </a>
+                </div>
+        </div>
+        </div>
+    </nav>
+    <h1 class="bounce animated page-heading">Attendance Input</h1>
+    <div class="attendance-box">
+        <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
+        <form>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-book"></i></div><input class="form-control attendance-input" type="text" placeholder="Program" required=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-calendar"></i></div><input class="form-control attendance-input" type="datetime-local" required=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div><input class="form-control attendance-input" type="text" placeholder="Location" required=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input class="form-control attendance-input" type="text" placeholder="Class Type" required=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div><input class="form-control attendance-input attendance-input-student" type="text" placeholder="Student's Name" required=""></div>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center">
+                        <div class="attendance-confirm-yes align-bottom"><i class="fa fa-check"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-row">
+                    <div class="col-11 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+                        <div class="attendance-input-div">
+                            <div class="attendance-icon align-middle"><i class="fa fa-user"></i></div><input class="form-control attendance-input attendance-input-student" type="text" placeholder="Student's Name" required=""></div>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center">
+                        <a href="#">
+                            <div class="attendance-confirm align-bottom"><i class="fa fa-check"></i></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="attendance-input-button-box">
+                <a href="#">
+                    <div class="attendance-plus"><i class="fa fa-plus"></i></div>
+                </a><button class="btn btn-primary attendance-input-button" type="button">Submit</button></div>
+        </form>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
+</html>

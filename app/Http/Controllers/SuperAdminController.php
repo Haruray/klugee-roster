@@ -141,7 +141,7 @@ class SuperAdminController extends Controller
         $payment_accounting->date = $salary->date;
         $payment_accounting->transaction_type = "Teacher's Salary";
         $payment_accounting->sub_transaction = $salary->name."'s Salary";
-        $payment_accounting->detail = "Main salary for ".date('F',$incentive->date).' '.date('Y',$incentive->date);
+        $payment_accounting->detail = "Main salary for ".date('F',$acc->date).' '.date('Y',$acc->date);
         $payment_accounting->nominal = $salary->nominal*-1;
         $payment_accounting->pic = 1;
         $payment_accounting->payment_method = "Other";
@@ -436,20 +436,9 @@ class SuperAdminController extends Controller
             $salary->approved = false;
             $salary->save();
 
-            //PDF buat slip gaji
-            $fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
-            ->where('attendances.id_teacher', $request->input('teacher-name'))
-            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
-            $lunch_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
-            ->where('attendances.id_teacher', $request->input('teacher-name'))
-            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
-            $transport_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
-            ->where('attendances.id_teacher', $request->input('teacher-name'))
-            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->get();
-
-            $incentive = Incentive::select('name','note')->selectRaw('SUM(nominal) as total')->where('id_teacher', $request->input('teacher-name'))
-            ->whereMonth('date','=', date('m', strtotime($request->input('date'))))->where('approved',true)->groupBy('name')->get();
-
+            return self::GenerateSalary($request->input('teacher-name'), $request->input('date'),
+            $request->input('payment_method'), $request->input('teacher-name'), $request->input('no-kontrak'),
+            $request->input('divisi'), $request->input('npsn'), $request->input('NILPNF'));
         }
         else{
             $teachers_data = Teachers::select('teachers.*','teach_positions.position','users.user_type')
@@ -457,11 +446,13 @@ class SuperAdminController extends Controller
             ->join('users','users.id_teacher','=','teachers.id')
             ->get();
             foreach($teachers_data as $t){
+                $nominal_check = SalaryList::where('position', $t->user_type)
+                ->where('status',$t->position)->first();
+                $nominal = is_null($nominal_check) ? 0 : $nominal_check->nominal;
                 $salary = new Salary;
                 $salary->date = $request->input('date');
                 $salary->id_teacher = $t->id;
-                $salary->nominal = SalaryList::where('position', $t->user_type)
-                ->where('status',$t->position)->first()->nominal;
+                $salary->nominal = $nominal;
                 if ($request->input('note')){$salary->note = $request->input('note');}
                 else{
                     $salary->note = ucwords($t->user_type).' '.$t->position.' salary.';
@@ -470,7 +461,195 @@ class SuperAdminController extends Controller
                 $salary->approved = false;
                 $salary->save();
             }
+            Session::flash('sukses','Data successfully recorded.');
+            return redirect()->back();
         }
+    }
+
+    public function GenerateSalary($id_teacher, $date, $payment, $nk, $div, $npsn, $nilnf){
+        $month = date('m',strtotime($date));
+        $year = date('Y',strtotime($date));
+        //month dalam bentuk angka
+        //PDF buat slip gaji
+        $fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->get();
+        $lunch_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher',$id_teacher)
+        ->where('lunch_nominal','>',0)
+        ->whereMonth('date','=',$month)->where('approved',true)
+        ->whereYear('date','=',$year)->get();
+        $transport_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->where('transport_nominal','>',0)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $incentive = Incentive::select('name','note')->selectRaw('SUM(nominal) as total')
+        ->where('id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->groupBy('name')->get();
+        $salary = Salary::select('date','nominal','note')->where('id_teacher',$id_teacher)
+        ->whereMonth('date','=',$month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $teacher = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('teachers.id',$id_teacher)->first();
+        $head = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('users.user_type','head of institution')->first();
+        view()->share([
+            'fee'=> $fee,
+            'lunch' => $lunch_fee,
+            'transport' => $transport_fee,
+            'incentive' => $incentive,
+            'salary' =>$salary,
+            'teacher' => $teacher,
+            'date' => $date,
+            'head' => $head,
+            'via' => $payment,
+            'nk' => $nk,
+            'div' => $div,
+            'npsn' => $npsn,
+            'nilnf' => $nilnf
+        ]);
+        $pdf = PDF::loadView('salary')->setPaper('b5')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('Salary '.$salary[0]->date.'-'.$teacher->name.'-'.$teacher->position.'.pdf');
+
+    }
+
+    public function GenerateSalaryProfile(Request $request){
+        $id_teacher = $request->input('teacher');
+        $date = date('Y-m-d');
+        $payment = $request->input('payment_method');
+        $nk = $request->input('no-kontrak');
+        $div = $request->input('divisi');
+        $npsn = $request->input('npsn');
+        $nilnf = $request->input('NILPNF');
+        $month = date('m',strtotime($date));
+        $year = date('Y',strtotime($date));
+        //month dalam bentuk angka
+        //PDF buat slip gaji
+        $fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->get();
+        $lunch_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher',$id_teacher)
+        ->where('lunch_nominal','>',0)
+        ->whereMonth('date','=',$month)->where('approved',true)
+        ->whereYear('date','=',$year)->get();
+        $transport_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->where('transport_nominal','>',0)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $incentive = Incentive::select('name','note')->selectRaw('SUM(nominal) as total')
+        ->where('id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->groupBy('name')->get();
+        $salary = Salary::select('date','nominal','note')->where('id_teacher',$id_teacher)
+        ->whereMonth('date','=',$month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $teacher = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('teachers.id',$id_teacher)->first();
+        $head = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('users.user_type','head of institution')->first();
+        view()->share([
+            'fee'=> $fee,
+            'lunch' => $lunch_fee,
+            'transport' => $transport_fee,
+            'incentive' => $incentive,
+            'salary' =>$salary,
+            'teacher' => $teacher,
+            'date' => $date,
+            'head' => $head,
+            'via' => $payment,
+            'nk' => $nk,
+            'div' => $div,
+            'npsn' => $npsn,
+            'nilnf' => $nilnf
+        ]);
+        $pdf = PDF::loadView('salary')->setPaper('b5')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        return $pdf->download('Salary '.$date.'-'.$teacher->name.'-'.$teacher->position.'.pdf');
+
+    }
+
+
+    public function TesSalary(){
+        $id_teacher = 1;
+        $date = date('Y-m-d');
+        $month = 7;
+        $year = 2022;
+        //month dalam bentuk angka
+        //PDF buat slip gaji
+        $fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->get();
+        $lunch_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher',$id_teacher)
+        ->where('lunch_nominal','>',0)
+        ->whereMonth('date','=',$month)->where('approved',true)
+        ->whereYear('date','=',$year)->get();
+        $transport_fee = Fee::join('attendances','attendances.id','=','fees.id_attendance')
+        ->where('attendances.id_teacher', $id_teacher)
+        ->where('transport_nominal','>',0)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $incentive = Incentive::select('name','note')->selectRaw('SUM(nominal) as total')
+        ->where('id_teacher', $id_teacher)
+        ->whereMonth('date','=', $month)
+        ->whereYear('date','=',$year)
+        ->where('approved',true)->groupBy('name')->get();
+        $salary = Salary::select('date','nominal','note')->where('id_teacher',$id_teacher)
+        ->whereMonth('date','=',$month)
+        ->whereYear('date','=',$year)->where('approved',true)->get();
+        $teacher = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('teachers.id',$id_teacher)->first();
+        $head = Teachers::select('teachers.*','users.user_type','teach_positions.position')
+        ->join('teach_positions','teach_positions.id_teacher','=','teachers.id')
+        ->join('users','users.id_teacher','=','teachers.id')
+        ->where('users.user_type','head of institution')->first();
+        // view()->share([
+        //     'fee'=> $fee,
+        //     'lunch' => $lunch_fee,
+        //     'transport' => $transport_fee,
+        //     'incentive' => $incentive,
+        //     'salary' =>$salary,
+        //     'teacher' => $teacher,
+        //     'date' => $date,
+        //     'head' => $head,
+        //     'via' => 'ATM'
+        // ]);
+        // $pdf = PDF::loadView('salary')->setPaper('b5')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        // return $pdf->download('Salary '.$salary[0]->date.'-'.$teacher->name.'-'.$teacher->position.'.pdf');
+
+        $view = view('salary');
+        return $view->with([
+            'fee'=> $fee,
+            'lunch' => $lunch_fee,
+            'transport' => $transport_fee,
+            'incentive' => $incentive,
+            'salary' =>$salary,
+            'teacher' => $teacher,
+            'date' => $date,
+            'head' => $head,
+            'via' => 'ATM'
+        ]);
     }
 
     public function TeacherIncentive(){
