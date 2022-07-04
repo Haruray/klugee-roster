@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
 
 use App\Students;
 use App\Attendance;
@@ -828,6 +829,13 @@ class MainController extends Controller
             ->unreadNotifications
             ->markAsRead();
 
+        return redirect()->back();
+    }
+
+    public function ChangePassword(Request $request){
+        $user = User::where('id_teacher',$request->input('id-teacher'))->first();
+        $user->password = Hash::make($request->input('password-form'));
+        $user->save();
         return redirect()->back();
     }
 }

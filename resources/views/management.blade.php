@@ -81,7 +81,9 @@
         <div class="management-box">
             <div class="management-sub-box">
                 <h3 class="management-heading">Password Change</h3>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#password">Change Password</button>
             </div>
+            @if (auth()->user()->user_type == "head of institution")
             <div class="management-sub-box">
                 <h3 class="management-heading">Programs</h3>
                 <div class="table-responsive">
@@ -203,10 +205,7 @@
                 </table>
                 <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#partner-add">Add Partner</button>
             </div>
-
-        </div>
-    </div>
-    <!-- FEE EDIT MODAL -->
+             <!-- FEE EDIT MODAL -->
     <div class="modal fade" id="edit-fee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -387,9 +386,44 @@
           </div>
         </div>
       </div>
+            @endif
+        </div>
+    </div>
+    <!-- PASSWORD CHANGE MODAL -->
+    <div class="modal fade" id="password" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="password-title" class="modal-title">Change Password</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <form method="POST" id="password-change" action="/change-password" onsubmit="return changePassword();">
+                      @csrf
+                      <input type="hidden" name="teacher-id" id="teacher-id" value={{ auth()->user()->id_teacher }}>
+                    <p style="margin-bottom: 0px; margin-top:10px;">New Password</p>
+                    <input class="form-control" type="password" name="password-form" id="password-form">
+                    <p style="margin-bottom: 0px; margin-top:10px;">Confirm Password</p>
+                    <input class="form-control" type="password" name="password-form-confirm" id="password-form-confirm">
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 
 
@@ -422,6 +456,32 @@
         mainmodal.querySelector("#salary-id").value = id;
         mainmodal.querySelector("#edit-title-salary").innerHTML = name.replaceAll("-"," ");
         mainmodal.querySelector("#salary-input").value = document.getElementById(name).innerHTML.replace("K","000");
+    }
+
+    function changePassword(){
+        let pass = document.getElementById("password-form").value;
+        let pass_confirm = document.getElementById("password-form-confirm").value;
+        if (pass != pass_confirm){
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Password don\'t match.',
+            });
+            return false;
+        }
+        else{
+            //harus 8 karakter
+            if (pass.length < 8){
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Password length must be at least 8 characters.',
+                });
+            return false;
+            }
+            return true;
+        }
+
     }
 
 </script>

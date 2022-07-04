@@ -383,6 +383,8 @@ class HeadTeacherController extends Controller
         $schedule = Schedule::select('schedules.day','schedules.begin')
         ->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')
         ->orderBy('schedules.begin','ASC')->get();
+
+        //This is fucking horrible dont laugh.
         $teacher_json = '{';
         $day_json = '{';
         foreach($teachers as $t){

@@ -53,6 +53,8 @@ Route::post('/attendance/progress-report/input-process','MainController@Progress
 Route::post('/profile/upload','MainController@ProfilePictureChange');
 Route::post('/profile/edit','MainController@ProfileEdit');
 
+Route::post('/change-password','MainController@ChangePassword');
+
 //SECOND LEVEL ACCESS
 //minimum head teacher route
 Route::get('/attendance-admin','HeadTeacherController@AttendanceAdmin');

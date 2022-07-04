@@ -408,7 +408,8 @@ class SuperAdminController extends Controller
         $user->id_teacher = $teach->id;
         $user->photo = $teach->photo;
         $user->save();
-        return redirect('/users/'.$teach->id);
+        Session::flash('sukses','New user registered! Email : '.$user->email.' , Password : '.strtolower(str_replace(' ','',$teach->name)));
+        return redirect()->back();
     }
 
     public function TeacherPayment(){
