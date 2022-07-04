@@ -305,6 +305,11 @@ class AdminController extends Controller
     }
 
     public function NewStudentProcess(Request $request){
+        //Check official id uniqueness
+        if (Students::where('official_id', $request->input('official-id'))->count() >0 ){
+            Session::flash('gagal','Official ID is not unique.');
+            return redirect()->back();
+        }
         $acc_ids = array();
         $student = new Students;
         $student->official_id = $request->input('official-id');

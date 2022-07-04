@@ -351,6 +351,11 @@ class SuperAdminController extends Controller
     }
 
     public function AddTeacherProcess(Request $request){
+        //Check official id uniqueness
+        if (Teachers::where('official_id', $request->input('official-id'))->count() >0 ){
+            Session::flash('gagal','Official ID is not unique.');
+            return redirect()->back();
+        }
         $teach = new Teachers;
         $teach->official_id = $request->input("official-id");
         $teach->name = $request->input("name");

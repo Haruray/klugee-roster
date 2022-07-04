@@ -248,7 +248,7 @@ table {
     <div class="nota-header">
         <div>
             <img src="{{ public_path('img/klageealamat.png') }}" style="width: 247px;">
-            <h2 style="float: right; color:#eeeeee; margin-top:45px; margin-right:40px;">SLIP GAJI</h2>
+            <h1 style="float: right; color:#eeeeee; margin-top:45px; margin-right:40px;">SLIP GAJI</h1>
         </div>
     </div>
     <div class="salary-details">

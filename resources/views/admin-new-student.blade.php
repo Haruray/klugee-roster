@@ -79,6 +79,19 @@
     </nav>
     <h1 class="bounce animated page-heading">New Student Registration</h1>
     <div id="box" class="attendance-box">
+        @if ($message = Session::get('sukses'))
+        <div class="alert alert-success alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
+
+        @if ($message = Session::get('gagal'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+        @endif
         <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
         <form name="studentadd" id="studentadd" method="POST" action="/student/add/process" onsubmit="return validateForm();">
             @csrf
