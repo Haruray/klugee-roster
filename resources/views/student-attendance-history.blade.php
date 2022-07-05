@@ -182,6 +182,8 @@
                         <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">{{$student->name}}</p>
                         <p class="green bold" style="font-size: 20px;">School</p>
                         <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">{{$student->school_name}}</p>
+                        <button data-toggle="modal" data-target="#student-bio" class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Student Bio</button>
+
                     </div>
                 </div>
             </div>
@@ -247,6 +249,40 @@
             </table>
         </div>
     </div>
+
+        <!-- Modal -->
+<div class="modal fade" id="student-bio" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Student Bio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Name</p>
+          <p>{{ $student->name }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Nickname</p>
+          <p>{{ $student->nickname }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Address</p>
+          <p>{{ $student->address }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Birth Place</p>
+          <p>{{ $student->birthplace }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Birth Date</p>
+          <p>{{ date('d F Y', strtotime($student->birthdate))}}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">School Name</p>
+          <p>{{ $student->school_name }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Parent</p>
+          <p>{{ $student->parent }} {{ $student->parent_name }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Parent Contact</p>
+          <p>{{ $student->parent_contact }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Parent Email</p>
+          <p>{{ $student->email }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- The Modal -->
     <div id="myModal" class="modal-documentation">
