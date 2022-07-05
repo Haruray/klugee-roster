@@ -21,6 +21,10 @@ Auth::routes();
 
 Route::get('/login', 'LoginController@index')->name('login');
 Route::post('/login', 'LoginController@check_login')->name('login.check_login');
+Route::get('/forget-password', 'ForgotPasswordController@getEmail');
+Route::post('/forget-password', 'ForgotPasswordController@postEmail');
+Route::get('/reset-password/{token}', 'ResetPasswordController@getPassword');
+Route::post('/reset-password', 'ResetPasswordController@updatePassword');
 
 //FIRST LEVEL ACCESS
 //teacher route

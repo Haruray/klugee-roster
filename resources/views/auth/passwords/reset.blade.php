@@ -19,12 +19,18 @@
             <p class="login-logo-text">Password Reset</p>
         </div>
         <div class="login-form-div-actual">
+            <div class="login-egg" style="margin-top: 20px;">
+                <span id="egg">
+                    <img style="left: 105px;" class="animated login-egg-actual" src="{{ asset('img/bird-key.png') }}" width="140px;">
+                    {{-- <img style="left: 110px;" class="animated login-egg-actual" src="{{ asset('img/bird-key-success.png') }}" width="170px;"> --}}
+
+                </span>
+            </div>
+
             <div id="form-div" class="form-div">
-                <form method="POST" action="{{ route('password.update') }}">
+                <form>
                     @csrf
-
                     <input type="hidden" name="token" value="{{ $token }}">
-
                     <div class="login-form">
                         <p class="form-label">{{ __('E-Mail Address') }}</p>
 
@@ -57,7 +63,9 @@
 
                     <div class="login-button">
                         <div class="login-button-actualbutton">
-                            <button type="submit" class="btn btn-primary">
+                            <p id="fail-message" class="fail-message"></p>
+                            <button type="submit" class="btn btn-primary" type="submit"
+                            onclick="ResetPassword(); return false;">
                                 {{ __('Reset Password') }}
                             </button>
                         </div>
@@ -69,6 +77,53 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        let ResetPassword = function(){
+                var form = $('form')[0];
+                var formdata = new FormData(form);
+                $.ajax({
+                    url : "/reset-password",
+                    type : 'post',
+                    dataType : 'JSON',
+                    cache : false,
+                    contentType : false,
+                    processData : false,
+                    data : formdata,
+                    success : function(response){
+                        if (response.success){
+                            var info = response.data['user_type']+" "+response.data['name'];
+                            var redirect ="<p style=\"text-align: center; color:white; font-size:18px; margin-top:30px;\">Password Sucessfully Changed!<br>"+
+                            "Please wait, you are being redirected...</p>"+
+                            "<p style=\"text-align: center; color:white; font-size:14px; margin-top:70px;\">Still not redirected? <a style=\"font-weight: bold; font-style:italic;\" href=\"/\">Click here</a></p>"
+                            redirect = redirect.replace('<name>',info);
+                            var crackedEgg = "<img style=\"left: 110px;\" class=\"bounce animated login-egg-actual\" src=\"{{ asset('img/bird-key-success.png') }}\" width=\"170px;\">";
+                            //egg change
+                            var targetElem = document.querySelector('#egg');
+                            targetElem.innerHTML=crackedEgg;
+                            //info change
+                            var targetElem = document.querySelector('#form-div');
+                            targetElem.innerHTML=redirect;
+                            const myTimeout = setTimeout(function(){
+                                window.location.href = "/";
+                            }, 3000);
+                        }
+                        else{
+                            Swal.fire({
+                                icon : 'error',
+                                title: 'Oops...',
+                                text: 'Password Reset Error.',
+                            });
+                        }
+
+                    },
+                    error : function(response){
+                        document.getElementById("fail-message").innerHTML=response.message;
+                    }
+                })
+            }
+    </script>
 </body>
 
 </html>

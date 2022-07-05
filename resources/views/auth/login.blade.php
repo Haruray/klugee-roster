@@ -31,7 +31,7 @@
                         <p class="form-label">Password</p>
                         <input class="form-control form-password" id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Enter your password here">
                         <i id="eye" onclick="SeePassword()" class="fa fa-eye login-password-eye"></i>
-                        <a class="password-forgot" href="{{ route('password.request') }}">Forgot your password?</a>
+                        <a class="password-forgot" href="/forget-password">Forgot your password?</a>
                     </div>
                     <div class="login-button">
                         <div class="login-button-actualbutton">

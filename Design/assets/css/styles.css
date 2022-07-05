@@ -1147,3 +1147,22 @@ td {
   bottom: -80px;
 }
 
+.body-password {
+  background-color: #2dafff;
+}
+
+.pass-bird {
+  margin-top: 20px;
+}
+
+.pass-reset-main {
+  background-color: #00c2cb;
+  width: 700px;
+  text-align: center;
+  margin: auto;
+  padding: 20px;
+  margin-top: 50px;
+  border-radius: 10px;
+  box-shadow: 5px 5px #d9d9d9;
+}
+

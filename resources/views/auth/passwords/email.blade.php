@@ -19,14 +19,24 @@
             <p class="login-logo-text">Password Reset</p>
         </div>
         <div class="login-form-div-actual">
-            <div id="form-div" class="form-div">
-                @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-                </div>
+
+            @if ($message = Session::get('sukses'))
+            <div class="login-egg">
+                <span id="egg"><img style="left: 105px;" class="bounce animated login-egg-actual" src="{{ asset('img/bird-key-question.png') }}" width="140px;"></span>
+            </div>
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+            @else
+            <div class="login-egg">
+                <span id="egg"><img style="left: 105px;" class="login-egg-actual" src="{{ asset('img/bird-key-question.png') }}" width="140px;"></span>
+            </div>
             @endif
 
-            <form method="POST" action="{{ route('password.email') }}">
+            <div id="form-div" class="form-div">
+
+            <form method="POST" action="/forget-password">
                 @csrf
 
                     <div class="login-form">
