@@ -514,11 +514,11 @@ class SuperAdminController extends Controller
             ->join('teach_positions','teachers.id','=','teach_positions.id_teacher')
             ->join('users','users.id_teacher','=','teachers.id')
             ->first();
+            $nominal_check = SalaryList::where('position',$teacher_data->user_type)->where('status',$teacher_data->position)->first();
             $salary = new Salary;
             $salary->date = $request->input('date');
             $salary->id_teacher = $request->input('teacher-name');
-            $salary->nominal = SalaryList::where('position', $teacher_data->user_type)
-            ->where('status',$teacher_data->position)->first()->nominal;
+            $salary->nominal = is_null($nominal_check) ? 0 : $nominal_check->nominal;
             if ($request->input('note')){$salary->note = $request->input('note');}
             else{
                 $salary->note = $teacher_data->user_type.' '.$teacher_data->position.' salary.';
@@ -609,7 +609,7 @@ class SuperAdminController extends Controller
             'nilnf' => $nilnf
         ]);
         $pdf = PDF::loadView('salary')->setPaper('b5')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
-        return $pdf->download('Salary '.$salary[0]->date.'-'.$teacher->name.'-'.$teacher->position.'.pdf');
+        return $pdf->download('Salary '.$date.'-'.$teacher->name.'-'.$teacher->position.'.pdf');
 
     }
 
