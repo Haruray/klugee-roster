@@ -230,53 +230,56 @@ class AdminController extends Controller
         //Kalau pakai referral bonus, catat
         if ($request->input('referral-bonus')[0] && Referral::where('referrer_parent_student_id',$request->input('student'))->count() !=0 ){
             $referral = Referral::where('referrer_parent_student_id',$request->input('student'))
-            ->whereNotIn('id',UsedReferral::select('id')->pluck('used_referral_id')->toArray())->first();
-            $save_referral = new UsedReferral;
-            $save_referral->used_referral_id = $referral->id;
-            //Saving it to accounting
-            $accounting = new Accounting;
-            $accounting->date = $request->input('date');
-            $accounting->transaction_type = "SPP";
-            $accounting->sub_transaction = $request->input('program')." Program";
-            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
-            $accounting->nominal =$request->input('referral-bonus')[0]? $request->input('nominal') - $referral->referral_nominal : $request->input('nominal');
-            $accounting->pic = $request->input('pic');
-            $accounting->payment_method = $request->input('payment_method');
-            $accounting->notes = $request->input('notes');
-            $accounting->approved = false;
-            $accounting->save();
-            array_push($acc_ids, $accounting->id);
+            ->whereNotIn('id',UsedReferral::select('used_referral_id')->pluck('used_referral_id')->toArray())->first();
+            if (!is_null($referral)){
+                $save_referral = new UsedReferral;
+                $save_referral->used_referral_id = $referral->id;
+                //Saving it to accounting
+                $accounting = new Accounting;
+                $accounting->date = $request->input('date');
+                $accounting->transaction_type = "SPP";
+                $accounting->sub_transaction = $request->input('program')." Program";
+                $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+                $accounting->nominal =$request->input('referral-bonus')[0]? $request->input('nominal') - $referral->referral_nominal : $request->input('nominal');
+                $accounting->pic = $request->input('pic');
+                $accounting->payment_method = $request->input('payment_method');
+                $accounting->notes = $request->input('notes');
+                $accounting->approved = false;
+                $accounting->save();
+                array_push($acc_ids, $accounting->id);
 
-            $accounting = new Accounting;
-            $accounting->date = $request->input('date');
-            $accounting->transaction_type = "SPP Referral Discount";
-            $accounting->sub_transaction = $request->input('program')." Program";
-            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
-            $accounting->nominal = $referral->referral_nominal;
-            $accounting->pic = $request->input('pic');
-            $accounting->payment_method = $request->input('payment_method');
-            $accounting->notes = $request->input('notes');
-            $accounting->approved = false;
-            $accounting->save();
-            array_push($acc_ids, $accounting->id);
-            $save_referral->save();
+                $accounting = new Accounting;
+                $accounting->date = $request->input('date');
+                $accounting->transaction_type = "SPP Referral Discount";
+                $accounting->sub_transaction = $request->input('program')." Program";
+                $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+                $accounting->nominal = $referral->referral_nominal;
+                $accounting->pic = $request->input('pic');
+                $accounting->payment_method = $request->input('payment_method');
+                $accounting->notes = $request->input('notes');
+                $accounting->approved = false;
+                $accounting->save();
+                array_push($acc_ids, $accounting->id);
+                $save_referral->save();
+                return self::GenerateNota($acc_ids, "SPP");
+            }
         }
-        else{
-            //Saving it to accounting
-            $accounting = new Accounting;
-            $accounting->date = $request->input('date');
-            $accounting->transaction_type = "SPP";
-            $accounting->sub_transaction = $request->input('program')." Program";
-            $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
-            $accounting->nominal =$request->input('nominal');
-            $accounting->pic = $request->input('pic');
-            $accounting->payment_method = $request->input('payment_method');
-            $accounting->notes = $request->input('notes');
-            $accounting->approved = false;
-            $accounting->save();
-            array_push($acc_ids, $accounting->id);
-        }
+        //Saving it to accounting if not using referral bonus
+        $accounting = new Accounting;
+        $accounting->date = $request->input('date');
+        $accounting->transaction_type = "SPP";
+        $accounting->sub_transaction = $request->input('program')." Program";
+        $accounting->detail = Students::select('name')->where('id',$request->input('student'))->get()->first()->name;
+        $accounting->nominal =$request->input('nominal');
+        $accounting->pic = $request->input('pic');
+        $accounting->payment_method = $request->input('payment_method');
+        $accounting->notes = $request->input('notes');
+        $accounting->approved = false;
+        $accounting->save();
+        array_push($acc_ids, $accounting->id);
         return self::GenerateNota($acc_ids, "SPP");
+
+
     }
 
     public function ReferralReport($month, $year){
