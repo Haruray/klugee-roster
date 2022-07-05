@@ -48,7 +48,7 @@
                     </li>
                 </ul>
 
-                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->photo)}}"><p class="d-inline-block nav-item-text">Teacher {{auth()->user()->name}}</p></a></div>
+                <div class="nav-item-div"><a class="login" href="/profile"><img class="profile-img" src="{{url('/uploads/profile-pictures/'.auth()->user()->photo)}}"><p class="d-inline-block nav-item-text">{{ ucwords(auth()->user()->user_type) }} {{auth()->user()->name}}</p></a></div>
                     <div class="text-left nav-item-div">
                         <a class="login" href="/management">
                             <div class="d-inline-block"><i class="fa fa-cog nav-img yellow"></i></div>
