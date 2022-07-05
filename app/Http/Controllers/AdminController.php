@@ -424,7 +424,7 @@ class AdminController extends Controller
             'admin' => $admin,
             'title' => $title,
         ]);
-        $pdf = PDF::loadView('nota', $accounting)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        $pdf = PDF::loadView('nota', $accounting)->setPaper('b6')->setOrientation('portrait')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
         return $pdf->download('Nota '.$accounting[0]->date.'-'.$accounting[0]->transaction_type.'-'.$accounting[0]->sub_transaction.'.pdf');
 
     }

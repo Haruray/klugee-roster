@@ -13,8 +13,8 @@
 .salary-body {
   width: 1476px;
   margin:0;
-  padding-left: 10px;
-  padding-right:10px;
+  padding-left: 1px;
+  padding-right:1px;
 }
 
 .nota-body {
@@ -108,7 +108,7 @@
 }
 
 .nota-ttd-box {
-  margin: 50px 10px 250px 10px;
+  margin: 10px 10px 200px 10px;
 }
 
 .salary-details {
@@ -317,22 +317,28 @@ table {
             </table>
         </div>
     </div>
-    <div class="nota-ttd-box">
+    <div class="nota-ttd-box" style="position: absolute; top:840px;">
         <div>
                 <div style="float: left; position: relative;"><img class="salary-ttd-cap" src="{{ public_path('img/1.png') }}">
                     <p class="text-left salary-ttd">Kepala Lembaga</p>
                     <p class="text-left salary-ttd-name">{{ $head->name }}</p>
                 </div>
-                <div style="float: right;">
+                <div style="float: right;position: absolute; left:950px; width:500px;">
                     <p class="text-right salary-payment">Telah ditransfer dan diterima<br>di tanggal {{ date('d F Y',strtotime($date)) }}</p>
                     <p class="text-right salary-payment-detail">Via {{ $via }}</p>
                 </div>
         </div>
     </div>
-    <div style="height: 50px; background-color:#38b6ff; padding:15px 10px 0 10px;">
-        <p style="color: white; float: left; font-size:17px;">NPSN <strong>{{ $npsn }}</strong></p>
-        <p style="color: white; float: right; font-size:17px;">Nomor Izin Lembaga Pendidikan Non Formal {{ $nilnf }}</p>
-    </div>
+    <footer class="bg-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="height: 50px; background-color:#38b6ff; padding:15px 10px 0 10px; position: absolute;
+        top:990px; width:1481px; margin-left:-5px;">
+            <p style="color: white; float: left; font-size:17px;">NPSN <strong>{{ $npsn }}</strong></p>
+            <p style="color: white; float: right; font-size:17px;">Nomor Izin Lembaga Pendidikan Non Formal {{ $nilnf }}</p>
+        </div>
+        <!-- Copyright -->
+      </footer>
+
 </body>
 
 </html>

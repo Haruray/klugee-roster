@@ -55,7 +55,14 @@ class SuperAdminController extends Controller
         ->join('teachers','teachers.id','=','attendances.id_teacher')
         ->orderBy('attendances.date')
         ->get();
-        $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')->where('status_referral','=','0')->orWhere('status_front_admin','=','0')->join('students','students.id','=','referrals.registering_student_id')->get();
+        $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')
+        ->where([
+            ['referral_nominal','>',0],
+            ['pic_front_admin','>',0]
+        ])
+        ->where('status_referral','=','0')
+        ->orWhere('status_front_admin','=','0')
+        ->join('students','students.id','=','referrals.registering_student_id')->get();
         $salary_approvals = Salary::select('salaries.*','teachers.name')->where('approved','=','0')->join('teachers','teachers.id','=','salaries.id_teacher')->get();
         $incentives = Incentive::select('teachers.name as teacher_name','incentives.*')->where('approved','=','0')
         ->join('teachers','teachers.id','=','incentives.id_teacher')->get();
@@ -141,7 +148,7 @@ class SuperAdminController extends Controller
         $payment_accounting->date = $salary->date;
         $payment_accounting->transaction_type = "Teacher's Salary";
         $payment_accounting->sub_transaction = $salary->name."'s Salary";
-        $payment_accounting->detail = "Main salary for ".date('F',$acc->date).' '.date('Y',$acc->date);
+        $payment_accounting->detail = "Main salary for ".$salary->date.' '.$salary->date;
         $payment_accounting->nominal = $salary->nominal*-1;
         $payment_accounting->pic = 1;
         $payment_accounting->payment_method = "Other";
@@ -190,7 +197,7 @@ class SuperAdminController extends Controller
         $acc->status_referral = true;
         $acc->save();
         //Accounting
-        if ($acc->status_referral==true && $acc->status_front_admin==1){
+        if ($acc->status_referral==true && $acc->status_front_admin==1 || ($acc->pic_front_admin==0)){
             $acc = Referral::where('referrals.id',$accounting_id)->join('students','students.id','=','referrals.registering_student_id')->first();
             //kalau 2 2 nya disetujui, masukkan ke accounting
             //Parent's referral
@@ -233,12 +240,51 @@ class SuperAdminController extends Controller
 
     public function ReferralDeletion($accounting_id){
         $acc = Referral::where('id',$accounting_id)->first();
-        $acc->update('referral_nominal',0);
+        $acc->referral_nominal = 0;
         if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0){
             $acc->delete();
         }
         elseif($acc->pic_front_admin==0 && !$acc->status_front_admin){
             $acc->delete();
+        }
+        elseif($acc->status_front_admin == 1){
+            //ini berarti sudah disetujui/direview semua
+            $acc = Referral::where('referrals.id',$accounting_id)->join('students','students.id','=','referrals.registering_student_id')->first();
+
+            //Parent's referral
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $acc->date;
+            $payment_accounting->transaction_type = "Parent Referral Bonus";
+            $payment_accounting->sub_transaction = $acc->referrer_name."'s Referral Bonus";
+            $payment_accounting->detail = "Referral for ".$acc->name."'s Registration";
+            $payment_accounting->nominal = $acc->referral_nominal*-1;
+            $payment_accounting->pic = User::where('user_type','admin')->first()->id_teacher;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+            //PIC front admin bonus
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $acc->date;
+            $payment_accounting->transaction_type = "PIC Front Admin Referral Bonus";
+            $payment_accounting->sub_transaction = User::where('user_type','admin')->first()->name."'s Referral Bonus";
+            $payment_accounting->detail = "Referral for ".$acc->name."'s Registration";
+            $payment_accounting->nominal = $acc->referral_nominal*-1;
+            $payment_accounting->pic = User::where('user_type','admin')->first()->id_teacher;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+
+            //Tambahin Incentivenya ke admin
+            $incentive = new Incentive;
+            $incentive->name = "PIC Front Admin Referral Bonus";
+            $incentive->date = $acc->date;
+            $incentive->id_teacher = User::where('user_type','admin')->first()->id_teacher;
+            $incentive->nominal = $acc->referral_nominal;
+            $incentive->note = $acc->note;
+            $incentive->approved = true;
+            $incentive->save();
         }
         else{
             $acc->save();
@@ -250,7 +296,7 @@ class SuperAdminController extends Controller
         $acc = Referral::where('id',$accounting_id)->first();
         $acc->status_front_admin = true;
         $acc->save();
-        if ($acc->status_referral==true && $acc->status_front_admin==1){
+        if ($acc->status_referral==true && $acc->status_front_admin==1 || ($acc->referral_nominal==0)){
             $acc = Referral::where('referrals.id',$accounting_id)->join('students','students.id','=','referrals.registering_student_id')->first();
             //kalau 2 2 nya disetujui, masukkan ke accounting
             //Parent's referral
@@ -283,12 +329,51 @@ class SuperAdminController extends Controller
 
     public function ReferralFrontDeletion($accounting_id){
         $acc = Referral::where('id',$accounting_id)->first();
-        $acc->update('pic_front_admin',0);
+        $acc->pic_front_admin = 0;
         if ($acc->referral_nominal == 0 && $acc->pic_front_admin == 0){
             $acc->delete();
         }
         elseif($acc->referral_nominal==0 && !$acc->status_referral){
             $acc->delete();
+        }
+        elseif($acc->status_referral == 1){
+            //ini berarti sudah disetujui/direview semua
+            $acc = Referral::where('referrals.id',$accounting_id)->join('students','students.id','=','referrals.registering_student_id')->first();
+
+            //Parent's referral
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $acc->date;
+            $payment_accounting->transaction_type = "Parent Referral Bonus";
+            $payment_accounting->sub_transaction = $acc->referrer_name."'s Referral Bonus";
+            $payment_accounting->detail = "Referral for ".$acc->name."'s Registration";
+            $payment_accounting->nominal = $acc->referral_nominal*-1;
+            $payment_accounting->pic = User::where('user_type','admin')->first()->id_teacher;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+            //PIC front admin bonus
+            $payment_accounting = new Accounting;
+            $payment_accounting->date = $acc->date;
+            $payment_accounting->transaction_type = "PIC Front Admin Referral Bonus";
+            $payment_accounting->sub_transaction = User::where('user_type','admin')->first()->name."'s Referral Bonus";
+            $payment_accounting->detail = "Referral for ".$acc->name."'s Registration";
+            $payment_accounting->nominal = $acc->referral_nominal*-1;
+            $payment_accounting->pic = User::where('user_type','admin')->first()->id_teacher;
+            $payment_accounting->payment_method = "Other";
+            $payment_accounting->notes = "This payment is automated";
+            $payment_accounting->approved = true;
+            $payment_accounting->save();
+
+            //Tambahin Incentivenya ke admin
+            $incentive = new Incentive;
+            $incentive->name = "PIC Front Admin Referral Bonus";
+            $incentive->date = $acc->date;
+            $incentive->id_teacher = User::where('user_type','admin')->first()->id_teacher;
+            $incentive->nominal = $acc->referral_nominal;
+            $incentive->note = $acc->note;
+            $incentive->approved = true;
+            $incentive->save();
         }
         else{
             $acc->save();
