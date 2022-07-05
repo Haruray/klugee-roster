@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <title>Report Book</title>
     <style>
         .halaman {
             width: 340mm;
