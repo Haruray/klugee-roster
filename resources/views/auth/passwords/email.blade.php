@@ -19,7 +19,6 @@
             <p class="login-logo-text">Password Reset</p>
         </div>
         <div class="login-form-div-actual">
-
             @if ($message = Session::get('sukses'))
             <div class="login-egg">
                 <span id="egg"><img style="left: 105px;" class="bounce animated login-egg-actual" src="{{ asset('img/bird-key-question.png') }}" width="140px;"></span>
@@ -38,7 +37,6 @@
 
             <form method="POST" action="/forget-password">
                 @csrf
-
                     <div class="login-form">
                         <p class="form-label">Email</p>
 
