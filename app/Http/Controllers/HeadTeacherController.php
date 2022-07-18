@@ -57,7 +57,10 @@ class HeadTeacherController extends Controller
 
     public function UserList(){
         $view = view('teacher-list');
-        $users = Teachers::select('teachers.id', 'teachers.name as teachername', 'users.user_type', 'teachers.photo')->join('users','teachers.id','=','users.id_teacher')->get();
+        $users = Teachers::select('teachers.id', 'teachers.name as teachername', 'users.user_type', 'teachers.photo')
+        ->join('users','teachers.id','=','users.id_teacher')
+        ->orderByRaw('FIELD(users.user_type,"head of institution","super admin","admin","head teacher","teacher")')
+        ->get();
         return $view->with('users',$users);
     }
 
@@ -72,10 +75,13 @@ class HeadTeacherController extends Controller
         $view = view('admin-attendance-list');
         $attendances = TeachPresence::select('teach_presences.id as id_presence', 'teach_presences.id_teacher','teach_presences.date','teachers.name','progress.filled','attendances.id as id_attendance')
         ->join('teachers','teachers.id','=','teach_presences.id_teacher')
-        ->join('attendances','attendances.id','=','teach_presences.id_attendance')
-        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
+        ->join('attendances', 'attendances.id','=','teach_presences.id_attendance')
+        ->leftjoin('progress',function($join){
+            $join->on('progress.id_attendance','=','attendances.id')->on('progress.id_attendance','=','teach_presences.id_attendance')->on('progress.id_attendance','=','teach_presences.id_attendance');
+        })
         ->where('teach_presences.approved',false)
-        ->orderBy('date','DESC')->get();
+        ->orderBy('date','DESC')->distinct()->get();
+
         return $view->with('attendance',$attendances);
     }
 
@@ -103,10 +109,12 @@ class HeadTeacherController extends Controller
 
             //Incentives
             //lunch : syarat adalah mengajar dua kali sesi
-            $sessions = Attendance::whereDay('date',date('d', strtotime($attendance->date)))->where('id_teacher', $teacher_id)->count();
-            if ($sessions>=2){
+            $sessions = Attendance::select('attendances.id')->join('teach_presences','teach_presences.id_attendance','attendances.id')
+            ->where('attendances.date', $attendance->date)->distinct()->where('attendances.id_teacher', $teacher_id);
+            if ($sessions->count() >=2){
                 //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
-                $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d', strtotime($attendance->date)))->sum('lunch_nominal');
+                $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('attendances.date', $attendance->date)
+                ->whereIn('fees.id_attendance',$sessions->pluck('attendances.id')->toArray())->where('lunch_nominal','>',0)->count();
                 if ($check_lunch == 0){
                     //artinya belum dibayar untuk hari ini
                     $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
@@ -129,7 +137,6 @@ class HeadTeacherController extends Controller
     }
 
     public function UserAttendanceDelete($id){
-        $attendance_presence = TeachPresence::where('id',$id)->update(['approved' => true]);
         //get attendance_id
         $attendance_presence = TeachPresence::where('id',$id)->first();
         $id_attendance = $attendance_presence->id_attendance;
@@ -150,6 +157,7 @@ class HeadTeacherController extends Controller
                 $stud_a->delete();
             }
         }
+        $attendance_presence->delete();
 
         return redirect('/user-attendances');
     }
@@ -257,7 +265,6 @@ class HeadTeacherController extends Controller
     }
     public function UserSelectProfilePictureChange(Request $request){
         $user_id = $request["user_id"];
-        app('debugbar')->error($user_id);
         //PROSES UPLOAD KE SERVER
         $data =  $request["image"];
         $image_array_1 = explode(";", $data);
@@ -266,13 +273,16 @@ class HeadTeacherController extends Controller
 
         $destinationPath = 'uploads/profile-pictures';
         $name = User::where('id_teacher',$user_id)->first()->name;
-        $image_name = $user_id.'_'.$name.'.png';
+        $image_name = $user_id.'_'.$name.date('m-d-Y h:i:s').'.png';
+        
+
 
         file_put_contents($destinationPath.'/'.$image_name,$data);
 
 
         //PROSES PERUBAHAN DI DATABASE
         $teacher = Teachers::where('id',$user_id)->update(['photo' => $image_name]);
+        $teacher = User::where('id_teacher',$user_id)->update(['photo' => $image_name]);
 
         return response()->json([
             'success' => true,
@@ -515,6 +525,7 @@ class HeadTeacherController extends Controller
         $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')
         ->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())
         ->whereMonth('attendances.date',$month)->whereYear('attendances.date',$year)
+        ->orderBy('attendances.date','DESC')
         ->get();
         $salary = Salary::whereMonth('date',$month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
         $total_fee = self::CountCurrentUserFee($user_id);

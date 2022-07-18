@@ -104,17 +104,17 @@
         </div>
         </div>
     </nav>
-    @if ($message = Session::get('unregistered-program'))
-        <div class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-    @endif
     <h1 class="bounce animated page-heading">Attendance Input</h1>
     <form id="attendance-form" action="/attendance/input-process" method="post">
         @csrf
     <div class="attendance-box" id="attendance-box">
         <div id="attendance-form-box">
+                @if ($message = Session::get('unregistered-program'))
+                    <div class="alert alert-danger alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>{{ $message }}</strong>
+                    </div>
+                @endif
             <h2 class="page-sub-heading"><i class="fa fa-pencil-square"></i></h2>
             @if ($another_teacher)
             <div class="container">

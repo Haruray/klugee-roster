@@ -115,11 +115,16 @@ class AdminController extends Controller
     }
 
     public function TesNota(){
-        $new_income = Accounting::first();
-        //return view('nota')->with('data',$new_income);
-        view()->share('data',$new_income);
-        $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
-        return $pdf->download('nota.pdf');
+        $new_income = Accounting::get();
+        $admin = User::join('teachers','teachers.id','=','users.id_teacher')->where('users.user_type','admin')->first();
+        return view('nota')->with('title','title')->with('data',$new_income)->with('admin',$admin);
+        // view()->share([
+        //     'data'=>$new_income,
+        //     'admin' => $admin,
+        //     'title' => 'tes'
+        // ]);
+        // $pdf = PDF::loadView('nota', $new_income)->setPaper('b6')->setOrientation('landscape')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0);
+        // return $pdf->download('nota.pdf');
     }
 
     public function FinancialData(){
@@ -228,7 +233,8 @@ class AdminController extends Controller
 
 
         //Kalau pakai referral bonus, catat
-        if ($request->input('referral-bonus')[0] && Referral::where('referrer_parent_student_id',$request->input('student'))->count() !=0 ){
+        $referral_bonus = is_null($request->input('referral-bonus')) ? false : true;
+        if ($referral_bonus && Referral::where('referrer_parent_student_id',$request->input('student'))->count() !=0 ){
             $referral = Referral::where('referrer_parent_student_id',$request->input('student'))
             ->whereNotIn('id',UsedReferral::select('used_referral_id')->pluck('used_referral_id')->toArray())->first();
             if (!is_null($referral)){

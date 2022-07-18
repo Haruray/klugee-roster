@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File; 
 
 use App\Students;
 use App\Attendance;
@@ -76,6 +77,15 @@ class MainController extends Controller
         $new_attendance->program = $request->input('program');
         $new_attendance->location = $request->input('location');
         $new_attendance->class_type = $request->input('class-type');
+        
+        if (!$new_attendance->save()){
+            //If it doesn't success, then return error message
+            return response()->json([
+                'success' => false,
+                'message' => 'Fail to save data. Please reload and re-enter the data.'
+            ], 401);
+        }
+
 
         for ($i = 1 ; $i < $max_stud ; $i++){
             //Search for every student input form
@@ -103,13 +113,6 @@ class MainController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Fail to save data. Student is not registered to a program.'
-                    ], 401);
-                }
-                if (!$new_attendance->save()){
-                    //If it doesn't success, then return error message
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Fail to save data. Please reload and re-enter the data.'
                     ], 401);
                 }
                 //Save attendee data
@@ -170,6 +173,9 @@ class MainController extends Controller
                 ], 401);
             }
         }
+        
+
+        
         //ERROR HERE
         //Save teacher's attendance
         $new_presence = new TeachPresence;
@@ -674,8 +680,14 @@ class MainController extends Controller
         $data = base64_decode($image_array_2[1]);
 
         $destinationPath = 'uploads/profile-pictures';
-        $image_name = auth()->user()->id_teacher.'_'.auth()->user()->name.'.png';
+        $image_name = auth()->user()->id_teacher.'_'.auth()->user()->name.'_'.date('m-d-Y h:i:s').'.png';
+        
+        // $old_profile_pic = '/home/u413247919/domains/rosterklugee.com/public_html/'.$destinationPath.'/'.$old_profile_pic;
+        //     File::delete($old_profile_pic);
+                    $old_profile_pic = $destinationPath.'/'.auth()->user()->photo;
+        File::delete($old_profile_pic);
 
+        
         file_put_contents($destinationPath.'/'.$image_name,$data);
 
 
@@ -765,6 +777,7 @@ class MainController extends Controller
         $fee = Fee::join('attendances','fees.id_attendance','=','attendances.id')
         ->whereIn('id_attendance', $teachPresences->pluck('id')->toArray())
         ->whereMonth('attendances.date',$month)->whereYear('attendances.date',$year)
+        ->orderBy('attendances.date','DESC')
         ->get();
         $salary = Salary::whereMonth('date',$month)->whereYear('date',$year)->where('id_teacher',$user_id)->get();
         $total_fee = self::CountCurrentUserFee();

@@ -5,20 +5,22 @@
     <title>Report Book</title>
     <style>
         .halaman {
-            width: 340mm;
-            height: 473mm; /* Change to 299.2mm on firefox */
+            width: 348mm;
+            height: 479.3mm; /* Change to 299.2mm on firefox */
             background-color: #5cacec;
              /*border: 1px solid black; */
             /* margin-top: -8px;*/
-            margin-left: -20px;
+            margin-left: -35px;
+            margin-right:0;
         }
 
         .halaman-no-bg{
-            width: 340mm;
-            height: 473mm; /* Change to 299.2mm on firefox */
+            width: 348mm;
+            height: 479.3mm; /* Change to 299.2mm on firefox */
              /*border: 1px solid black; */
             /* margin-top: -8px;*/
-            margin-left: -20px;
+            margin-left: -35px;
+            margin-right:0;
         }
 
         .cover {
@@ -150,7 +152,7 @@
 </head>
 <body style="margin-left:-1px;">
 <div class="halaman-no-bg">
-    <img src="{{ public_path('img/cover-bird.png') }}" style="width:340mm; height:473mm; position: absolute; z-index: -1;">
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/cover-bird.png" style="width:348mm; height:479.3mm; position: absolute; z-index: -1;">
     <div class="cover">
         <div id="title" style="color: white">
             Report Book
@@ -172,7 +174,7 @@
 </div>
 
 <div class="halaman-no-bg">
-    <img src="{{  public_path('img/white-logo.png') }}" style="
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/white-logo.png" style="
                             position: relative;
                             width: 45mm;
                             height: auto;
@@ -180,7 +182,7 @@
                             margin-top: 20px;
 							margin-right: 50px;
                             ">
-    <img src="{{ public_path('img/bird-thing-blue.png') }}" style="width:340mm; height:473mm; position: absolute; z-index: -1;">
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/bird-thing-blue.png" style="width:348mm; height:479.3mm;position: absolute; z-index: -1;">
     <div class="page">
         <div id="pagetitle" style="color: #fff952">
             Student's Bio
@@ -248,7 +250,7 @@
 </div>
 
 <div class="halaman">
-    <img src="{{  public_path('img/white-logo.png') }}" style="
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/white-logo.png"style="
                                 position: relative;
                                 width: 45mm;
                                 height: auto;
@@ -300,7 +302,7 @@
 
 @for ($k = 0 ; $k < count($data) ; $k+=$data->where('level',$data[$k]->level)->count() > 10? 10: $data->where('level',$data[$k]->level)->count())
 <div class="halaman" style="background-color: #00c2cb;">
-    <img src="{{  public_path('img/white-logo.png') }}" style="
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/white-logo.png" style="
                                 position: relative;
                                 width: 45mm;
                                 height: auto;
@@ -377,7 +379,7 @@
 
 <div class="halaman-no-bg">
     <!-- <div class="layer-logo"></div> -->
-    <img src="{{ public_path('img/final_bg.png') }}" style="width:340mm; height:473mm; position: absolute; z-index: -1;">
+    <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/final_bg.png" style="width:348mm; height:479.3mm; position: absolute; z-index: -1;">
     <div class="page">
         <div id="congrats">
             Congratulations
@@ -397,7 +399,7 @@
 <div class="halaman" style="page-break-after:avoid; margin-bottom:-10px;">
     <div class="page">
         <div id="pagebody" style="text-align: center; padding-top: 140mm">
-            <img src="{{  public_path('img/white-logo.png') }}" style="
+            <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/white-logo.png" style="
                                             position: relative;
                                             width: 50mm;
                                             height: auto;

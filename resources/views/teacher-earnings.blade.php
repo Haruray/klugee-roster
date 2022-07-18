@@ -270,9 +270,9 @@
                             <td><i class="fa fa-exclamation-circle" style="color: red;font-size: 40px;"></i></td>
                             @endif
                     </tr>
-                            @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count() ; $j++)
+                            @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count() +$i ; $j++)
                             <tr>
-                                <td><button onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})" class="btn btn-primary">Progress Report</button></td>
+                                <td><button onclick="$dc2.TeachingInfo({{ $fee[$j]->id_attendance }})" class="btn btn-primary">Progress Report</button></td>
                                 <td>{{$fee[$j]->fee_nominal}}</td>
                                 <td>{{$fee[$j]->lunch_nominal}}</td>
                                 <td>{{$fee[$j]->transport_nominal}}</td>

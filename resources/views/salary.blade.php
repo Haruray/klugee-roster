@@ -11,10 +11,8 @@
 }
 
 .salary-body {
-  width: 1476px;
-  margin:0;
-  padding-left: 1px;
-  padding-right:1px;
+  width: 1490px;
+  margin:0 -10px -10px 0;
 }
 
 .nota-body {
@@ -147,13 +145,13 @@
 }
 
 .salary-ttd-cap {
-  width: 200px;
+  width: 180px;
   text-align: right;
   z-index: -5;
   position: absolute;
-  right: -100px;
+  right: -90px;
   opacity: 0.25;
-  top: -50px;
+  top: -40px;
 }
 .container, .container-md, .container-sm {
 	max-width: 720px;
@@ -235,7 +233,9 @@ table {
   }
 
 .salary-jabatan {
+    display:inline-block;
   font-size: 23px;
+  width:500px;
 }
 
 .salary-legal-stuff {
@@ -249,19 +249,19 @@ table {
 <body class="salary-body">
     <div class="nota-header">
         <div>
-            <img src="{{ public_path('img/klageealamat.png') }}" style="width: 247px;">
+            <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/klageealamat.png" style="width: 247px;">
             <h1 style="float: right; color:#eeeeee; margin-top:45px; margin-right:40px;">SLIP GAJI</h1>
         </div>
     </div>
     <div class="salary-details">
             <p class="nota-desc">NAMA&nbsp; &nbsp; &nbsp;
-                &nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;
                 &nbsp;: {{ strtoupper($teacher->name) }}<br>
                 <span class="salary-jabatan">Jabatan&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ ucwords($teacher->user_type) }}</span><br></p>
             <p class="salary-legal-stuff">Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;: {{ ucwords($teacher->position) }}<br>
-                Nomor Kontrak&nbsp;&nbsp;: {{ $nk }}<br>
+                Nomor Kontrak&nbsp;&nbsp;&nbsp;: {{ $nk }}<br>
                 Divisi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;: {{ $div }}
             </p>
@@ -317,9 +317,9 @@ table {
             </table>
         </div>
     </div>
-    <div class="nota-ttd-box" style="position: absolute; top:840px;">
+    <div class="nota-ttd-box" style="position: absolute; top:849px;">
         <div>
-                <div style="float: left; position: relative;"><img class="salary-ttd-cap" src="{{ public_path('img/1.png') }}">
+                <div style="float: left; position: relative;"><img class="salary-ttd-cap" src="/home/u413247919/domains/rosterklugee.com/public_html/img/1.png">
                     <p class="text-left salary-ttd">Kepala Lembaga</p>
                     <p class="text-left salary-ttd-name">{{ $head->name }}</p>
                 </div>
@@ -332,7 +332,7 @@ table {
     <footer class="bg-light text-center text-lg-start">
         <!-- Copyright -->
         <div class="text-center p-3" style="height: 50px; background-color:#38b6ff; padding:15px 10px 0 10px; position: absolute;
-        top:990px; width:1481px; margin-left:-5px;">
+        top:998px;margin-left:0px; width: 1490px;">
             <p style="color: white; float: left; font-size:17px;">NPSN <strong>{{ $npsn }}</strong></p>
             <p style="color: white; float: right; font-size:17px;">Nomor Izin Lembaga Pendidikan Non Formal {{ $nilnf }}</p>
         </div>

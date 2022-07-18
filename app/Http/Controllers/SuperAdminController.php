@@ -148,7 +148,7 @@ class SuperAdminController extends Controller
         $payment_accounting->date = $salary->date;
         $payment_accounting->transaction_type = "Teacher's Salary";
         $payment_accounting->sub_transaction = $salary->name."'s Salary";
-        $payment_accounting->detail = "Main salary for ".$salary->date.' '.$salary->date;
+        $payment_accounting->detail = date('F Y', strtotime($salary->date)).' Salary for '.$salary->name;
         $payment_accounting->nominal = $salary->nominal*-1;
         $payment_accounting->pic = 1;
         $payment_accounting->payment_method = "Other";

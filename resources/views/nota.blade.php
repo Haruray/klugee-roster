@@ -11,8 +11,9 @@
   }
 
   .nota-body {
-    width: 276mm;
+    width: 252.5mm;
     padding: 5px;
+    margin-left: 0 0 0 0;
   }
 
   #nota-table-head {
@@ -38,26 +39,26 @@
   }
 
   .nota-payment-detail {
-    font-size: 30px;
+    font-size: 28px;
     margin-bottom: -3px;
   }
 
   .nota-payment {
     font-weight: bold;
-    font-size: 33px;
+    font-size: 31px;
     color: #3079c8;
     margin-bottom: -3px;
   }
 
   .nota-desc {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 28px;
     float: left;
   }
 
   .nota-tanggal {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 28px;
     color: #3079c8;
     float: right;
     margin-left: 200px;
@@ -65,7 +66,7 @@
 
   .nota-ttd {
     font-weight: bold;
-    font-size: 35px;
+    font-size: 33px;
   }
 
   .nota-ttd-name {
@@ -100,7 +101,7 @@
 
   .nota-grand-total {
     border-top: 5px solid grey;
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .nota-table {
@@ -119,7 +120,7 @@
   .nota-lunas {
     color: #dba0a0;
     font-weight: bolder;
-    font-size: 55px;
+    font-size: 53px;
     margin-right: 50px;
     margin-bottom: -10px;
     position: absolute;
@@ -142,11 +143,12 @@
 body {
 	font-family: "roboto";
 }body {
-	font-size: 1.4rem;
+	font-size: 1.25rem;
 	font-weight: 400;
 	line-height: 1.5;
 	color: #212529;
 	text-align: left;
+	margin-left:-10px;
 }
 .row {
 	display: flex;
@@ -209,9 +211,13 @@ table {
     </style>
 </head>
 
-<body class="nota-body" style="margin-left: -1px;">
+<body class="nota-body" style="margin-left: -5px; margin-top:-5px;">
     <div class="nota-header">
-        <div class="container" style="margin-left: -5px;"><img src="{{ public_path('img/klageealamat.png') }}" style="width: 270px;"></div>
+        <div class="container" style="margin-left: -5px;">
+            <!--<img src="{{ public_path('img/klageealamat.png') }}" style="width: 270px;">-->
+            <img src="/home/u413247919/domains/rosterklugee.com/public_html/img/klageealamat.png" style="width: 270px;">
+            
+            </div>
     </div>
     <div class="nota-details">
         @if ($data->sum('nominal')>0)
@@ -259,13 +265,13 @@ table {
             </table>
         </div>
     </div>
-    <div class="nota-ttd-box" style="position: absolute; top:1200px;">
+    <div class="nota-ttd-box" style="position: absolute; top:1150px;">
             <div style="float: left;">
                 <p class="nota-payment">PAYMENT DETAILS<br></p>
                 <p class="nota-payment-detail">{{ $data[0]->payment_method }}</p>
             </div>
-                <div style="float: right; position:relative; left:465px;">
-                    <img class="ttd-cap" src="{{ public_path('img/1.png') }}">
+                <div style="float: right; position:relative; left:357px;">
+                    <img class="ttd-cap" src="/home/u413247919/domains/rosterklugee.com/public_html/img/1.png">
                     <p class="text-right nota-ttd">ADMIN OFFICER</p>
                     <p class="text-right nota-ttd-name">{{ $admin->name }}</p>
                 </div>
