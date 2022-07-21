@@ -158,12 +158,17 @@
                     </div>
                 </div>
             </div>
+
             <div class="container">
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
                             <div class="attendance-icon align-middle"><i class="fa fa-user-circle-o"></i></div>
-                            <input style="margin-left: 16px;" name="parent" class="form-control attendance-input" type="text" placeholder="Parent (Mom or Dad)" required=""></div>
+                            <select style="margin-left: 17px;" name="parent" class="form-control attendance-input">
+                                <option value="" disabled selected>Parent</option>
+                                <option value="Mom">Mom</option>
+                                <option value="Dad">Dad</option>
+                            </select></div>
                     </div>
                 </div>
             </div>
@@ -298,6 +303,14 @@
                 icon : 'error',
                 title: 'Oops...',
                 text: 'Teaching Program checkbox must be filled out.'
+            });
+            return false;
+        }
+        if (x["parent"].value == "") {
+            Swal.fire({
+                icon : 'error',
+                title: 'Oops...',
+                text: 'Parent must be filled out.'
             });
             return false;
         }
