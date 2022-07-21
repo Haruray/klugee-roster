@@ -399,19 +399,6 @@ class AdminController extends Controller
             $accounting->approved = false;
             $accounting->save();
             array_push($acc_ids,$accounting->id);
-            //Diskon referral Registration
-            $accounting = new Accounting;
-            $accounting->date = date("Y-m-d");
-            $accounting->transaction_type = "Diskon Pendaftaran Referral";
-            $accounting->sub_transaction = Referrer::where('parent_student_id',$request->input('referrer'))->first()->referrer_name;
-            $accounting->detail = 'Pendaftaran Murid '.$student->name;
-            $accounting->nominal = -50000;
-            $accounting->pic = $request->input('pic');
-            $accounting->payment_method = $request->input('payment_method');
-            $accounting->notes = $request->input('note');
-            $accounting->approved = false;
-            $accounting->save();
-            array_push($acc_ids,$accounting->id);
         }
         return self::GenerateNota($acc_ids,'Pendaftaran Murid');
         return redirect('/students/'.$student->id);
