@@ -174,7 +174,7 @@ class HeadTeacherController extends Controller
 
     public function UserSelectProfile($user_id){
         //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $program = TeachProgram::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
@@ -191,7 +191,7 @@ class HeadTeacherController extends Controller
 
     public function UserSelectStudents($user_id){
             //Basic data
-            $profile = Teachers::where('id',$user_id)->first();
+            $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
             $position = TeachPosition::where('id_teacher', $user_id)->get();
             $method = TeachMethod::where('id_teacher', $user_id)->get();
 
@@ -229,7 +229,7 @@ class HeadTeacherController extends Controller
         // $view = view('teacher-attendance-history')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('fees',$fees)->with('teach_presence',$teach_presence)->with('approval',$teach_presence_approval);
         // return $view->with('user_id',$user_id);
         //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
 
@@ -253,7 +253,7 @@ class HeadTeacherController extends Controller
     }
     public function UserSelectSchedule($user_id){
         //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
         $fees = self::CountCurrentUserFee($user_id);
@@ -519,7 +519,7 @@ class HeadTeacherController extends Controller
     public function UserSelectEarnings($user_id, $month, $year){
         $years = Attendance::selectRaw('YEAR(date) as year')->distinct()->get();
         //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
 

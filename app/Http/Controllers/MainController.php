@@ -658,7 +658,7 @@ class MainController extends Controller
     public function CurrentUserProfile(){
         $user_id = auth()->user()->id_teacher;
         //Basic data
-        $profile = Teachers::where('id',$user_id)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
         $program = TeachProgram::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
@@ -707,7 +707,7 @@ class MainController extends Controller
     public function CurrentUserStudents(){
         $user_id = auth()->user()->id_teacher;
         //Basic data
-        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
@@ -733,7 +733,7 @@ class MainController extends Controller
     public function CurrentUserAttendance(){
         $user_id = auth()->user()->id_teacher;
         //Basic data
-        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
@@ -758,7 +758,7 @@ class MainController extends Controller
     public function Schedule(){
         $user_id = auth()->user()->id_teacher;
         //Basic data
-        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
+        $profile = Teachers::select('teachers.*','users.user_type')->where('teachers.id',$user_id)->join('users','users.id_teacher','=','teachers.id')->first();
         $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
         $schedule = Schedule::select('schedules.id','schedules.day','schedules.begin','schedules.classroom_type','schedules.classroom_students','schedules.program','schedules.subject','students.name')->join('student_schedules','schedules.id','=','student_schedules.id_schedule')->join('students','student_schedules.id_student','=','students.id')->join('teach_schedules','schedules.id','=','teach_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->orderByRaw('FIELD(day,"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")')->orderBy('schedules.begin','ASC')->get();
