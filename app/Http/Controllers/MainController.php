@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 
 use App\Students;
 use App\Attendance;
@@ -20,6 +20,7 @@ use App\TeachPosition;
 use App\TeachMethod;
 use App\TeachSchedule;
 use App\TeachPresence;
+use App\TeachProgram;
 use App\Schedule;
 use App\StudentSchedule;
 use App\Fee;
@@ -77,7 +78,7 @@ class MainController extends Controller
         $new_attendance->program = $request->input('program');
         $new_attendance->location = $request->input('location');
         $new_attendance->class_type = $request->input('class-type');
-        
+
         if (!$new_attendance->save()){
             //If it doesn't success, then return error message
             return response()->json([
@@ -173,9 +174,9 @@ class MainController extends Controller
                 ], 401);
             }
         }
-        
 
-        
+
+
         //ERROR HERE
         //Save teacher's attendance
         $new_presence = new TeachPresence;
@@ -657,16 +658,18 @@ class MainController extends Controller
     public function CurrentUserProfile(){
         $user_id = auth()->user()->id_teacher;
         //Basic data
-        $profile = Teachers::where('id',auth()->user()->id_teacher)->first();
-        $position = TeachPosition::where('id_teacher', auth()->user()->id_teacher)->get();
-        $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
+        $profile = Teachers::where('id',$user_id)->first();
+        $position = TeachPosition::where('id_teacher', $user_id)->get();
+        $program = TeachProgram::where('id_teacher', $user_id)->get();
+        $method = TeachMethod::where('id_teacher', $user_id)->get();
 
         //Get teacher's schedule student count
-        $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',auth()->user()->id_teacher)->distinct()->get();
+        $schedules = TeachSchedule::select('id_student')->join('schedules','teach_schedules.id_schedule','=','schedules.id')->join('student_schedules','teach_schedules.id_schedule','=','student_schedules.id_schedule')->where('id_teacher',$user_id)->distinct()->get();
 
         //get this month's fee
         $fees = self::CountCurrentUserFee();
-        $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees)->with('user_id',$user_id);
+        $view = view('teacher')->with('profile',$profile)->with('program',$program)
+        ->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees)->with('user_id',$user_id);
         return $view;
     }
 
@@ -681,13 +684,13 @@ class MainController extends Controller
 
         $destinationPath = 'uploads/profile-pictures';
         $image_name = auth()->user()->id_teacher.'_'.auth()->user()->name.'_'.date('m-d-Y h:i:s').'.png';
-        
+
         // $old_profile_pic = '/home/u413247919/domains/rosterklugee.com/public_html/'.$destinationPath.'/'.$old_profile_pic;
         //     File::delete($old_profile_pic);
                     $old_profile_pic = $destinationPath.'/'.auth()->user()->photo;
         File::delete($old_profile_pic);
 
-        
+
         file_put_contents($destinationPath.'/'.$image_name,$data);
 
 

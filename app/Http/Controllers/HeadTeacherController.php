@@ -176,6 +176,7 @@ class HeadTeacherController extends Controller
         //Basic data
         $profile = Teachers::where('id',$user_id)->first();
         $position = TeachPosition::where('id_teacher', $user_id)->get();
+        $program = TeachProgram::where('id_teacher', $user_id)->get();
         $method = TeachMethod::where('id_teacher', $user_id)->get();
 
         //Get teacher's schedule student count
@@ -183,7 +184,8 @@ class HeadTeacherController extends Controller
 
         //get this month's fee
         $fees = self::CountCurrentUserFee($user_id);
-        $view = view('teacher')->with('profile',$profile)->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees)->with('user_id',$user_id);
+        $view = view('teacher')->with('profile',$profile)->with('program',$program)
+        ->with('position',$position)->with('method',$method)->with('schedule',$schedules)->with('fees',$fees)->with('user_id',$user_id);
         return $view;
     }
 
@@ -274,7 +276,7 @@ class HeadTeacherController extends Controller
         $destinationPath = 'uploads/profile-pictures';
         $name = User::where('id_teacher',$user_id)->first()->name;
         $image_name = $user_id.'_'.$name.date('m-d-Y h:i:s').'.png';
-        
+
 
 
         file_put_contents($destinationPath.'/'.$image_name,$data);
