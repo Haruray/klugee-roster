@@ -92,6 +92,7 @@ class HeadTeacherController extends Controller
         $attendance_id = $attendance_presence->id_attendance;
         $teacher_id = $attendance_presence->id_teacher;
         $teacher_name = Teachers::where('id',$teacher_id)->first()->name;
+        $teacher_pos = User::where('id_teacher',$teacher_id)->first()->user_type;
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$attendance_id)->get();
         if (count($new_pr) == 0){
@@ -122,6 +123,9 @@ class HeadTeacherController extends Controller
                 else{
                     $payment->lunch_nominal = 0;
                 }
+            }
+            elseif ($teacher_pos == "head teacher"){
+                $payment->lunch_nominal = IncentiveList::where('name','Lunch')->where('receiver','Head Teacher')->first()->nominal;
             }
             else{
                 $payment->lunch_nominal = 0;
