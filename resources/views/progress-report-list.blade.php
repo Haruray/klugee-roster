@@ -203,6 +203,7 @@
                         <th>Last Exercise</th>
                         <th>Score</th>
                         <th>Documentation</th>
+                        <th>Note</th>
                         <th>Action</th>
                         <th>SPP Paid</th>
                         <th>Filled</th>
@@ -222,6 +223,7 @@
                         @else
                         <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id_attendance}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
                         @endif
+                        <td>{{ $progress_report[$i]->note  }}</td>
                         @if ($progress_report[$i]->filled)
                         <td><button class="btn btn-warning" type="button">Edit</button></td>
                         @else

@@ -63,7 +63,6 @@
             return "Saturday";
         }
     }
-
     dc.addStudentInput = function(){
         //Add new student input form. Get students data from ajax
         let studentFormsCount = countCurrentStudentForms()
@@ -79,10 +78,10 @@
                         "</div>"+
                 "</div>"+
                 "<div class=\"col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center\" id=\"student-attend-input-check-"+studentFormsCount+"\">"+
-                "<a onclick=\"$dc.MarkStudent(\'#student-attend-input-check-"+studentFormsCount+"\')\">" +
-                "<div class=\"attendance-confirm align-bottom\"><i class=\"fa fa-check\"></i></div>" +
+                "<a onclick=\"$dc.MarkStudent(\'#student-attend-input-check-"+studentFormsCount+"\',0)\">" +
+                "<div class=\"attendance-confirm align-bottom\">A</div>" +
                 "</a>" +
-                "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"no\">" +
+                "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"0\">" +
                 "</div>"+
             "</div>"+
         "</div>";
@@ -117,28 +116,52 @@
         });
 
     }
+    let StudentStatusRoulette = function(number, studentFormsCount, selector){
+        if (number == 2){
+            number = 0;
+        }
+        else{
+            number += 1;
+        }
 
-    dc.MarkStudent = function(selector){
+    //     const roulette = [
+
+    //     "<a onclick=\"$dc.MarkStudent(\'"+selector+"\' , "+number+")\">" +
+    //     "<div class=\"attendance-confirm align-bottom\">A</div>" +
+    //     "</a>"+
+    //     "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"0\">",
+
+    //         "<a onclick=\"$dc.MarkStudent(\'"+selector+"\', "+number+")\">" +
+    //     "<div class=\"attendance-confirm-yes align-bottom\"><i class=\"fa fa-check\"></i></div>" +
+    //     "</a>"+
+    //     "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"1\">",
+
+    //     "<a onclick=\"$dc.MarkStudent(\'"+selector+"\' , "+number+")\">" +
+    //     "<div style=\"background-color:#fff5cc;\" class=\"attendance-confirm align-bottom\">H</div>" +
+    //     "</a>"+
+    //     "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"2\">",
+    // ]
+        const roulette = [
+            "<a onclick=\"$dc.MarkStudent('"+selector+"', 0)\">"+
+            "<img class=\"student-attend-status jello animated\" src=\""+imgUrl+"/alpha.png"+"\"></img>"+"</a>"+
+            "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"0\">" ,
+            "<a onclick=\"$dc.MarkStudent('"+selector+"', 1)\">"+
+            "<img class=\"student-attend-status jello animated\" src=\""+imgUrl+"/attending.png"+"\"></img>"+"</a>"+
+            "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"1\">" ,
+            "<a onclick=\"$dc.MarkStudent('"+selector+"', 2)\">"+
+            "<img class=\"student-attend-status jello animated\" src=\""+imgUrl+"/homework.png"+"\"></img>"+"</a>"+
+            "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"2\">" ,
+        ]
+
+        return roulette[number];
+    }
+
+    dc.MarkStudent = function(selector, status){
         //mark student as present
         //replacing the checkmark and add invis input
         let studentFormsCount = selector.slice(-1);
-        let studentCheckDoneHTML = "<a onclick=\"$dc.UnmarkStudent(\'"+selector+"\')\">" +
-        "<div class=\"attendance-confirm-yes align-bottom\"><i class=\"fa fa-check\"></i></div>" +
-        "</a>"+
-        "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"yes\">";
-
+        let studentCheckDoneHTML = StudentStatusRoulette(status, studentFormsCount, selector);
         replaceHtml(selector,studentCheckDoneHTML);
-    }
-
-    dc.UnmarkStudent = function(selector){
-        //mark student as absent
-        //replacing the checkmark and add invis input
-        let studentFormsCount = selector.slice(-1);
-        let studentCheckUndoneHTML = "<a onclick=\"$dc.MarkStudent(\'"+selector+"\')\">" +
-        "<div class=\"attendance-confirm align-bottom\"><i class=\"fa fa-check\"></i></div>" +
-        "</a>"+
-        "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"no\">";
-        replaceHtml(selector,studentCheckUndoneHTML);
     }
 
 
@@ -163,20 +186,6 @@
             cache : false,
             contentType : false,
             processData : false,
-            /*data : {
-                "date" : $("#date").val(),
-                "hour" : $("#attendance-form-hour").val(),
-                "program" : $("#attendance-form-program").val(),
-                "location" : $("#attendance-form-location").val(),
-                "class-type" : $("#attendance-form-classtype").val(),
-                "student1": studentsData[0],
-                "student-attend-1" : studentsPresent[0],
-                "student2": studentsData[1],
-                "student-attend-2" : studentsPresent[1],
-                "student3": studentsData[2],
-                "student-attend-3" : studentsPresent[2],
-                "_token" : $("meta[name='csrf-token']").attr("content")
-            },*/
             data: formdata,
             success : function(response){
                 replaceHtml("#attendance-box","");

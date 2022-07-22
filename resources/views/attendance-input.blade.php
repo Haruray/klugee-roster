@@ -217,11 +217,12 @@
                                     </select>
                                 </div>
                         </div>
-                        <div class="col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center" id="student-attend-input-check-1">
-                            <a onclick="$dc.MarkStudent('#student-attend-input-check-1')">
-                                <div class="attendance-confirm align-bottom"><i class="fa fa-check"></i></div>
+                        <div class="col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center" id="student-attend-input-check-1" style="position: relative;">
+                            <a onclick="$dc.MarkStudent('#student-attend-input-check-1', 0)">
+                                {{-- <div class="attendance-confirm align-bottom"><i class="fa fa-check"></i></div> --}}
+                                <img class="student-attend-status jello animated" src="{{ asset('img/alpha.png') }}" alt="">
                             </a>
-                            <input type="hidden" name="student-attend-1" id="student-attend-1" value="no">
+                            <input type="hidden" name="student-attend-1" id="student-attend-1" value="0">
                         </div>
                     </div>
                 </div>
@@ -235,8 +236,12 @@
                 <button class="btn btn-primary attendance-input-button" type="button" onclick="$dc.AttendanceInput()" value="submit">Submit</button></div>
             </form>
     </div>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script>
+        // "global" vars, built using blade
+        var imgUrl = '{{ URL::asset('/img/') }}';
+    </script>
 
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
 
 

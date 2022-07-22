@@ -120,11 +120,14 @@ class MainController extends Controller
                 $new_attendee = new Attendee;
                 $new_attendee->id_attendance = $new_attendance->id;
                 $new_attendee->id_student = Students::where('name',$request->input($string_search))->first()['id'];
-                if ($request->input($string_search_2)=='no'){
-                    $new_attendee->present = false;
+                if ($request->input($string_search_2)=='0'){
+                    $new_attendee->alpha = true;
+                }
+                elseif($request->input($string_search_2)=='1'){
+                    $new_attendee->present = true;
                 }
                 else{
-                    $new_attendee->present = true;
+                    $new_attendee->homework = true;
                 }
                 if (!$new_attendee->save()){
                     //If it doesn't success, then return error message
@@ -133,13 +136,16 @@ class MainController extends Controller
                         'message' => 'Fail to save data. Please reload and re-enter the data.'
                     ], 401);
                 }
-                if ($new_attendee->present){
+                if ($new_attendee->present || $new_attendee->homework){
                     $should_pay_teach_fee = true;
                     //Create progress report
                     $new_progress = new Progress;
                     $new_progress->id_teacher = $new_attendance->id_teacher;
                     $new_progress->id_student = $new_attendee->id_student;
                     $new_progress->id_attendance = $new_attendance->id;
+                    if ($new_attendee->homework){
+                        $new_progress->note = "Homework";
+                    }
                     $new_progress->filled = false;
                     $new_progress->save();
                     if (!$new_progress->save()){
@@ -149,22 +155,23 @@ class MainController extends Controller
                             'message' => 'Fail to create progress report. Please contact the developer for this problem.'
                         ], 401);
                     }
-                    //Student presences
-                    $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->first();
+                }
+                //Student presences
+                //walaupun engga hadir, tetap kepakai
+                $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->first();
 
-                    $new_student_presence = new StudentPresence;
-                    $new_student_presence->id_student = $new_attendee->id_student;
-                    $new_student_presence->id_attendance = $new_attendance->id;
-                    $new_student_presence->spp_paid = $student_fee->quota > 0 ? true:false;
-                    $new_student_presence->save();
+                $new_student_presence = new StudentPresence;
+                $new_student_presence->id_student = $new_attendee->id_student;
+                $new_student_presence->id_attendance = $new_attendance->id;
+                $new_student_presence->spp_paid = $student_fee->quota > 0 ? true:false;
+                $new_student_presence->save();
 
-                    //update spp
-                    $initial_quota = $student_fee->quota;
-                    if ($initial_quota>0){
-                        $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
-                            'quota' => $initial_quota-1
-                        ]);
-                    }
+                //update spp
+                $initial_quota = $student_fee->quota;
+                if ($initial_quota>0){
+                    $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->update([
+                        'quota' => $initial_quota-1
+                    ]);
                 }
             }
             elseif (!$is_there_any_student){
@@ -175,9 +182,6 @@ class MainController extends Controller
             }
         }
 
-
-
-        //ERROR HERE
         //Save teacher's attendance
         $new_presence = new TeachPresence;
         $new_presence->id_teacher = $user_id_attendance;
@@ -304,11 +308,12 @@ class MainController extends Controller
     }
 
     private function GetPresentAttendee($attendance_id){
+        //get present attendee or with homework
         $students = array();
         $attendee = Attendee::where('id_attendance',$attendance_id)
         ->join('attendances','attendances.id','=','attendees.id_attendance')->get();
         foreach ($attendee as $a){
-            if ($a->present)
+            if ($a->present || $a->homework)
                 array_push($students, Students::where('id',$a->id_student)->get()->first());
         }
         return $students;
@@ -337,7 +342,7 @@ class MainController extends Controller
             //Checking attendance
             $spp_warning = array(); //for SPP warning
             foreach ($attendee as $a){
-                $flag = $flag || $a->present;
+                $flag = $flag || $a->present || $a->homework;
                 if ($a->spp_paid == 0){
                     $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
                     array_push($spp_warning,$warning_string);
@@ -428,10 +433,16 @@ class MainController extends Controller
                 'unit' => $request->input('unit'),
                 'last_exercise' => $request->input('last_exercise'),
                 'score' => $request->input($score_id),
-                'note' => $request->input('note'),
                 'documentation' =>$documentation_file_name,
                 'filled' => true
             ]);
+            $progress_report_update = $progress_report_update->first();
+            //kalau note nya null, berarti dia sudah ada progress report dengan keterangan "Homework"
+            if (is_null($progress_report_update->note)){
+                $progress_report_update->note = $request->input('note');
+            }
+            $progress_report_update->save();
+
         }
 
         //get the new progress report data
