@@ -78,10 +78,9 @@
                         "</div>"+
                 "</div>"+
                 "<div class=\"col-1 col-sm-1 col-md-1 col-lg-1 text-center align-self-center\" id=\"student-attend-input-check-"+studentFormsCount+"\">"+
-                "<a onclick=\"$dc.MarkStudent(\'#student-attend-input-check-"+studentFormsCount+"\',0)\">" +
-                "<div class=\"attendance-confirm align-bottom\">A</div>" +
-                "</a>" +
-                "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"0\">" +
+                "<a onclick=\"$dc.MarkStudent('#student-attend-input-check-"+studentFormsCount+"', 0)\">"+
+                "<img class=\"student-attend-status jello animated\" src=\""+imgUrl+"/alpha.png"+"\"></img>"+"</a>"+
+                "<input type=\"hidden\" name=\"student-attend-"+studentFormsCount+"\" id=\"student-attend-"+studentFormsCount+"\" value=\"0\">"+
                 "</div>"+
             "</div>"+
         "</div>";
@@ -202,9 +201,22 @@
                             let _date = new Date(second_response['attendance']['date']);
                             let day = convertDay(_date.getDay());
                             for (var j = 0 ; j < second_response['attendee'].length-1 ; j++){
-                                attendanceConfirm2 += second_response['attendee'][j]['name']+", ";
+                                attendanceConfirm2 += second_response['attendee'][j]['name'];
+                                if (second_response['attendee'][j]['alpha']){
+                                    attendanceConfirm2+=" (Alpha)";
+                                }
+                                else if(second_response['attendee'][j]['homework']){
+                                    attendanceConfirm2+=" (Izin, Homework)";
+                                }
+                                attendanceConfirm2+=", ";
                             }
                             attendanceConfirm2 += second_response['attendee'][second_response['attendee'].length-1]['name'];
+                            if (second_response['attendee'][j]['alpha']){
+                                attendanceConfirm2+=" (Alpha)";
+                            }
+                            else if(second_response['attendee'][j]['homework']){
+                                attendanceConfirm2+=" (Izin, Homework)";
+                            }
                             let attendanceConfirm3 = "<br>"+day+","+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+"<br>"+second_response['attendance']['location']+"</p>"+
                             "<div class=\"input-confirm-buttons\"><a href= \"/attendance/progress-report/"+response.attendance_id+"\"><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Progress Report</button></a><button class=\"btn btn-primary d-block input-confirm-button\" type=\"button\">Edit Attendance</button></div>"+
                         "</div>";

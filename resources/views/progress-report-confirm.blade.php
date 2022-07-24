@@ -83,9 +83,20 @@
         <p class="input-confirm-description">
             @for ($i=0 ; $i < count($progress) ; $i++)
                 @if ($i != count($progress)-1)
-                    {{ $progress[$i]->name }},
+                    {{ $progress[$i]->name }}
+                    @if ($progress[$i]->homework)
+                    (Izin, Homework)
+                    @elseif ($progress[$i]->alpha)
+                    (Alpha)
+                    @endif
+                    ,
                 @else
                     {{ $progress[$i]->name }}
+                    @if ($progress[$i]->homework)
+                    (Izin, Homework)
+                    @elseif ($progress[$i]->alpha)
+                    (Alpha)
+                    @endif
                 @endif
             @endfor
             <br>

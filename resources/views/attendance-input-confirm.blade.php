@@ -82,9 +82,20 @@
         <h1 class="page-sub-heading"><i class="fa fa-check swing animated infinite input-confirm-check"></i></h1>
         <p class="input-confirm-description">
             @for ($i = 0 ; $i < count($students) - 1 ; $i++)
-                {{$students[$i]->name}},
+                {{$students[$i]->name}}
+                @if ($students[$i]->alpha)
+                    (Alpha)
+                @elseif ($students[$i]->homework)
+                    (Izin, Homework)
+                @endif
+                ,
             @endfor
             {{$students[count($students)-1]->name}}
+            @if ($students[count($students)-1]->alpha)
+                    (Alpha)
+            @elseif ($students[count($students)-1]->homework)
+                (Izin, Homework)
+            @endif
 
             <br>{{date('l', strtotime($attendance->date))}}, {{$attendance->date}}<br>{{$attendance->time}}<br>{{$attendance->program}}<br>{{$attendance->location}}</p>
         <div class="input-confirm-buttons"><a href="/attendance/progress-report/{{$attendance->id}}"><button class="btn btn-primary d-block input-confirm-button" type="button">Progress Report</button></a><button class="btn btn-primary d-block input-confirm-button" type="button">Edit Attendance</button></div>

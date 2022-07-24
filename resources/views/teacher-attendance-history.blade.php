@@ -151,6 +151,7 @@
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">
                     <div class="d-inline-block">
                         <p class="teacher-profile-name bold yellow">{{$profile->name}}</p>
+                        <p class="bold white" style="font-size:25px; margin-top:-20px; margin-bottom:35px;">{{ ucwords($profile->user_type) }}</p>
                         <p class="bold white" style="font-size: 20px;">Joined since</p>
                         <p class="bold teacher-join-time yellow">{{date('F',strtotime($profile->join_date))}} {{date('Y',strtotime($profile->join_date))}}</p>
                         <div class="teacher-status">
@@ -194,7 +195,12 @@
                     <tr>
                         <td id="date" rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{ date('l',strtotime($teach_presence[$i]->date)) }}, {{date('d-m-Y', strtotime($teach_presence[$i]->date))}}</td>
                         @if ($profile->is_teacher)
-                        <td>{{$teach_presence[$i]->name}}</td>
+                        <td>{{$teach_presence[$i]->name}}
+                        @if ($teach_presence[$i]->alpha)
+                            <span style="color: red;">(Alpha)</span>
+                        @elseif ($teach_presence[$i]->homework)
+                            <span style="color: #00c2cb">(Homework)</span>
+                        @endif</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->location}}</td>
                         <td rowspan="{{$teach_presence->where('id', $teach_presence[$i]->id)->count()}}">{{$teach_presence[$i]->class_type}}</td>
                         @if (is_null($teach_presence[$i]->filled) || !$teach_presence[$i]->filled)
@@ -220,7 +226,12 @@
                     </tr>
                         @for ($j=$i+1 ; $j < $i+$teach_presence->where('id', $teach_presence[$i]->id)->count() ; $j++)
                         <tr>
-                            <td>{{$teach_presence[$j]->name}}</td>
+                            <td>{{$teach_presence[$j]->name}}
+                                @if ($teach_presence[$j]->alpha)
+                                <span style="color: red;">(Alpha)</span>
+                                @elseif ($teach_presence[$j]->homework)
+                                <span style="color: #00c2cb">(Homework)</span>
+                            @endif</td>
                         </tr>
 
                         @endfor

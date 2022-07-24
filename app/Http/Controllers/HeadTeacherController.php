@@ -238,14 +238,17 @@ class HeadTeacherController extends Controller
         $method = TeachMethod::where('id_teacher', $user_id)->get();
 
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled')
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled','attendees.present','attendees.alpha','attendees.homework')
         ->join('attendees','attendances.id','=','attendees.id_attendance')
         ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
         })->leftjoin('fees','attendances.id','=','fees.id_attendance')
         ->join('teach_presences','teach_presences.id_attendance','=','attendances.id')
-        ->where('attendances.id_teacher',$user_id)->orderBy('attendances.date','DESC')
+        ->where('attendances.id_teacher',$user_id)
+        ->orderBy('attendances.id','ASC')
+        ->orderBy('attendances.date','DESC')
         ->get();
+
         $teach_presence_approval=TeachPresence::where('id_teacher',$user_id)->get();
         //fees
         //get this month's fee

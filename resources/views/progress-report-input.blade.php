@@ -95,9 +95,16 @@
         @endif
         <h3 class="page-sub-heading yellow">
             @for ($i = 0 ; $i < count($students) - 1 ; $i++)
-                {{$students[$i]->name}},
+                {{$students[$i]->name}}
+                @if ($students[$i]->homework)
+                    (Homework)
+                @endif
+                ,
             @endfor
             {{$students[count($students)-1]->name}}
+            @if ($students[count($students)-1]->homework)
+                    (Homework)
+                @endif
         </h3>
         <h2 class="page-sub-heading">{{ strtoupper($program) }}</h2>
         <div class="input-confirm-buttons" style="margin: 0 0 20px;"><a href="/attendance/{{$attendance_id}}"><button class="btn btn-primary d-block progress-report-check-attendance-button" type="button" style="font-size: 14px;">Check Attendance</button></div></a>
@@ -122,7 +129,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-map-marker"></i></div><input id="unit" name="unit" class="form-control attendance-input" type="text" placeholder="Unit" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-pencil"></i></div><input id="unit" name="unit" class="form-control attendance-input" type="text" placeholder="Unit" required></div>
                     </div>
                 </div>
             </div>
@@ -130,7 +137,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="last_exercise" name="last_exercise" class="form-control attendance-input" type="text" placeholder="Last Exercise" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-pencil"></i></div><input id="last_exercise" name="last_exercise" class="form-control attendance-input" type="text" placeholder="Last Exercise" required></div>
                     </div>
                 </div>
             </div>
@@ -139,7 +146,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="score-{{$student->id}}" name="score-{{$student->id}}" class="form-control attendance-input" type="text" placeholder="{{$student->nickname}}'s Score"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-star"></i></div><input id="score-{{$student->id}}" name="score-{{$student->id}}" class="form-control attendance-input" type="text" placeholder="{{$student->nickname}}'s Score"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required></div>
                     </div>
                 </div>
             </div>
@@ -149,7 +156,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><input id="documentation" name="documentation" class="form-control attendance-input" type="file" placeholder="Documentation" required></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-picture-o"></i></div><input id="documentation" name="documentation" class="form-control attendance-input" type="file" placeholder="Documentation" required></div>
                     </div>
                 </div>
             </div>
@@ -157,7 +164,7 @@
                 <div class="form-row">
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <div class="attendance-input-div">
-                            <div class="attendance-icon align-middle"><i class="fa fa-tag"></i></div><textarea id="note" name="note" class="form-control attendance-input" placeholder="Note" required></textarea></div>
+                            <div class="attendance-icon align-middle"><i class="fa fa-sticky-note"></i></div><textarea id="note" name="note" class="form-control attendance-input" placeholder="Note" required></textarea></div>
                     </div>
                 </div>
             </div>

@@ -14,6 +14,10 @@
         var loadingHTML="<div class=\"loader\"></div>"
         replaceHtml(selector,loadingHTML);
     };
+    var add_loading = function (selector) {
+        var loadingHTML="<div id=\"loader\" class=\"loader\"></div>"
+        insertHtml(selector,loadingHTML);
+    };
     var erase_loading = function(selector){
         var HTML="";
         replaceHtml(selector,HTML);
@@ -54,7 +58,6 @@
         ].join('/');
       }
 
-
     var teachModal = "<div class=\"modal fade\" id=\"teach-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalCenterTitle\" aria-hidden=\"true\">"+
     "<div class=\"modal-dialog modal-dialog-centered\" role=\"document\">"+
       "<div class=\"modal-content\">"+
@@ -67,13 +70,29 @@
     var teachDetails = "<div class=\"attendance-box\" style=\"background-color: #00c2cb; width:100%;\">"+
     "<h3 class=\"page-sub-heading\">Progress report is&nbsp;<span class=\"yellow\">filled</span></h3>"+
     "<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>"+
-    "<p class=\"input-confirm-description\"> <names> <br> <date> <br> <program> <br> <unit> <br> <exercise> <br> <scores> </p>"+
+    "<p id=\"input-confirm-description\" class=\"input-confirm-description\"> <names> <br> <date> <br> <program> <br> <unit> <br> <exercise> <br> <scores> </p>"+
 "</div>";
 
     dc2.TeachingInfo = function(id){
-        insertHtml("body",teachModal);
+        let newModal = false;
+        if (document.getElementById("teach-modal")==null){
+            insertHtml("body",teachModal);
+            newModal = true;
+        }
+        // $('#teach-modal').modal({backdrop: 'static', keyboard: false})
         $('#teach-modal').modal('toggle');
-        show_loading("#teaching-info-body");
+        if (newModal){
+            show_loading("#teaching-info-body");
+        }
+        else{
+            document.getElementById("names").innerHTML='';
+            document.getElementById("date-modal").innerHTML='';
+            document.getElementById("program").innerHTML='';
+            document.getElementById("unit").innerHTML='';
+            document.getElementById("exercise").innerHTML='';
+            document.getElementById("scores").innerHTML='';
+            add_loading("#input-confirm-description")
+        }
         $.ajax({
             url : '/get/teaching-info/'+id,
             type : 'get',
@@ -86,10 +105,24 @@
                     let _date = new Date(response['progress'][0]['date']);
                     let day = convertDay(_date.getDay());
                     let students = '';
+
                     for (var j = 0 ; j < response['progress'].length-1 ; j++){
-                        students += response['progress'][j]['name']+", ";
+                        students += response['progress'][j]['name'];
+                        if (response['progress'][j]['homework']){
+                            students+=" (Izin, Homework)";
+                        }
+                        else if (response['progress'][j]['alpha']){
+                            students+=" (Alpha)";
+                        }
+                        students+=", ";
                     }
                     students+=response['progress'][response['progress'].length-1]['name'];
+                    if (response['progress'][response['progress'].length-1]['homework']){
+                        students+=" (Izin, Homework)";
+                    }
+                    else if (response['progress'][j]['alpha']){
+                        students+=" (Alpha)";
+                    }
                     let timedetails = day+", "+formatDate(_date);
                     let program = response['progress'][0]['program']+", Level "+response['progress'][0]['level'];
                     let unit = response['progress'][0]['unit'];
@@ -98,14 +131,32 @@
                     for (var i = 0 ; i < response['progress'].length ; i++){
                         scores += response['progress'][i]['name']+"'s Score : "+ response['progress'][i]['score']+" <br> ";
                     }
-                    teachDetails = teachDetails.replace("<names>",students);
-                    teachDetails = teachDetails.replace("<date>",timedetails);
-                    teachDetails = teachDetails.replace("<program>",program);
-                    teachDetails = teachDetails.replace("<unit>",unit);
-                    teachDetails = teachDetails.replace("<exercise>",exercise);
-                    teachDetails = teachDetails.replace("<scores>",scores);
-                    console.log(scores);
-                    replaceHtml("#teaching-info-body",teachDetails);
+                    if (newModal){
+                        students = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='names'>"+ students + "</p>";
+                        timedetails = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='date-modal'>"+ timedetails + "</p>";
+                        program = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='program'>"+ program + "</p>";
+                        unit = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='unit'>"+ unit + "</p>";
+                        exercise = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='exercise'>"+ exercise + "</p>";
+                        scores = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='scores'>"+ scores + "</p>";
+                        teachDetails = teachDetails.replace("<names>",students);
+                        teachDetails = teachDetails.replace("<date>",timedetails);
+                        teachDetails = teachDetails.replace("<program>",program);
+                        teachDetails = teachDetails.replace("<unit>",unit);
+                        teachDetails = teachDetails.replace("<exercise>",exercise);
+                        teachDetails = teachDetails.replace("<scores>",scores);
+                        replaceHtml("#teaching-info-body",teachDetails);
+                    }
+                    else{
+                        document.getElementById("loader").remove();
+                         document.getElementById("names").innerHTML=students;
+                         document.getElementById("date-modal").innerHTML=timedetails;
+                         document.getElementById("program").innerHTML=program;
+                         document.getElementById("unit").innerHTML=unit;
+                         document.getElementById("exercise").innerHTML=exercise;
+                         document.getElementById("scores").innerHTML=scores;
+                    }
+
+
                 }
                 else{
                     erase_loading("#teaching-info-body");
@@ -125,8 +176,9 @@
     }
 
     dc2.CloseTeachingInfo = function(){
-        document.getElementById("teach-modal").remove();
     }
+
+
 
     global.$dc2 = dc2;
 })(window);

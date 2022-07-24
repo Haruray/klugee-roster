@@ -142,6 +142,8 @@
                 <div class="col-sm-12 col-md-8 col-xl-8 text-center">
                     <div class="d-inline-block">
                         <p class="teacher-profile-name bold yellow">{{$profile->name}}</p>
+                        <p class="bold white" style="font-size:25px; margin-top:-20px; margin-bottom:35px;">{{ ucwords($profile->user_type) }}</p>
+
                         <p class="bold white" style="font-size: 20px;">Joined since</p>
                         <p class="bold teacher-join-time yellow">{{date('F',strtotime($profile->join_date))}} {{date('Y',strtotime($profile->join_date))}}</p>
                         <div class="teacher-status">

@@ -300,23 +300,23 @@ class MainController extends Controller
 
     private function GetAttendee($attendance_id){
         $students = array();
-        $attendee = Attendee::where('id_attendance',$attendance_id)->get();
-        foreach ($attendee as $a){
-            array_push($students, Students::where('id',$a->id_student)->get()->first());
-        }
-        return $students;
+        $attendee = Attendee::where('attendees.id_attendance',$attendance_id)
+        ->join('students','students.id','attendees.id_student')
+        ->get();
+        return $attendee;
     }
 
     private function GetPresentAttendee($attendance_id){
         //get present attendee or with homework
         $students = array();
-        $attendee = Attendee::where('id_attendance',$attendance_id)
-        ->join('attendances','attendances.id','=','attendees.id_attendance')->get();
-        foreach ($attendee as $a){
-            if ($a->present || $a->homework)
-                array_push($students, Students::where('id',$a->id_student)->get()->first());
-        }
-        return $students;
+        $attendee = Attendance::select('students.id','students.name','students.nickname','attendees.alpha','attendees.present','attendees.homework')
+        ->where('id_attendance',$attendance_id)
+        ->join('attendees','attendances.id','=','attendees.id_attendance')
+        ->join('students','students.id','=','attendees.id_student')
+        ->whereRaw('(attendees.homework = 1 OR attendees.present = 1) AND attendees.alpha = 0')
+        ->distinct()
+        ->get();
+        return $attendee;
     }
 
     public function AttendanceProgressReport($attendance_id){
@@ -367,12 +367,23 @@ class MainController extends Controller
 
  }
     public function ProgressView($attendance_id){
-        $progress = Attendance::join('progress','progress.id_attendance','=','attendances.id')->where('attendances.id',$attendance_id)->get();
+        $progress = Attendance::
+        join('progress','progress.id_attendance','=','attendances.id')
+        ->where('attendances.id',$attendance_id)->get();
         if ($progress[0]->filled){
-            $data = Attendance::join('progress','progress.id_attendance','=','attendances.id')
-            ->join('attendees','attendees.id_attendance','=','attendances.id')
-            ->join('students','students.id','=','attendees.id_student')
-            ->where('attendances.id',$attendance_id)->get();
+            $data = Attendance::select('attendances.id','attendances.date','attendances.time','attendances.program','attendances.location',
+            'attendances.class_type'
+            ,'progress.level','progress.unit','progress.last_exercise','progress.score','students.name','students.nickname')
+            ->join('progress','progress.id_attendance','=','attendances.id')
+            ->join('attendees',function($join){
+                $join->on('attendees.id_attendance','=','attendances.id')->on('attendees.id_attendance','=','progress.id_attendance');
+            })
+            ->join('students',function($join){
+                $join->on('students.id','=','attendees.id_student')->on('students.id','=','progress.id_student');
+            })
+            ->where('attendances.id',$attendance_id)
+            ->distinct()
+            ->get();
             $view = view('progress-report-confirm');
             return $view->with('progress',$data);
         }
@@ -436,13 +447,6 @@ class MainController extends Controller
                 'documentation' =>$documentation_file_name,
                 'filled' => true
             ]);
-            $progress_report_update = $progress_report_update->first();
-            //kalau note nya null, berarti dia sudah ada progress report dengan keterangan "Homework"
-            if (is_null($progress_report_update->note)){
-                $progress_report_update->note = $request->input('note');
-            }
-            $progress_report_update->save();
-
         }
 
         //get the new progress report data
@@ -628,14 +632,25 @@ class MainController extends Controller
         $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())
         ->get();
 
-        $progress_reports = Progress::where('progress.id_student',$student_id)
-        ->whereIn('progress.id_attendance', $attendance_ids->pluck('id')->toArray())
-        ->join('attendances','attendances.id','=','progress.id_attendance')
+        // $progress_reports = Progress::where('progress.id_student',$student_id)
+        // ->whereIn('progress.id_attendance', $attendance_ids->pluck('id')->toArray())
+        // ->join('attendances','attendances.id','=','progress.id_attendance')
+        // ->join('student_presences',function($join){
+        //     $join->on('student_presences.id_attendance','=','progress.id_attendance')->on('student_presences.id_student','=','progress.id_student');
+        // })
+        // ->orderBy('attendances.date','DESC')
+        // ->get();
+
+        $progress_reports = Attendance::select('attendances.*','progress.id as id progress','progress.id_attendance','progress.documentation','progress.note','attendees.present','attendees.alpha','attendees.homework','progress.filled','student_presences.spp_paid')
+        ->whereIn('attendances.id',$attendance_ids->pluck('id')->toArray())
+        ->join('attendees','attendees.id_attendance','=','attendances.id')
+        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
         ->join('student_presences',function($join){
-            $join->on('student_presences.id_attendance','=','progress.id_attendance')->on('student_presences.id_student','=','progress.id_student');
+            $join->on('student_presences.id_attendance','=','attendances.id');
         })
         ->orderBy('attendances.date','DESC')
         ->get();
+        //return $progress_reports;
 
         $student_presences_unpaid = StudentPresence::whereIn('id_attendance',$attendance_ids->pluck('id')->toArray())
         ->where('id_student',$student_id)
@@ -749,13 +764,15 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled')
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled','attendees.present','attendees.alpha','attendees.homework')
         ->join('attendees','attendances.id','=','attendees.id_attendance')
         ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');
         })->leftjoin('fees','attendances.id','=','fees.id_attendance')
         ->join('teach_presences','teach_presences.id_attendance','=','attendances.id')
-        ->where('attendances.id_teacher',auth()->user()->id_teacher)->orderBy('attendances.date','DESC')
+        ->where('attendances.id_teacher',auth()->user()->id_teacher)
+        ->orderBy('attendances.id','ASC')
+        ->orderBy('attendances.date','DESC')
         ->get();
         $teach_presence_approval=TeachPresence::where('id_teacher',auth()->user()->id_teacher)->get();
         //fees

@@ -233,6 +233,8 @@
                                 <button class="btn btn-warning" type="button">Edit</button>
                             </div>
                         </td>
+                        @elseif ($progress_report[$i]->alpha)
+                        <td><i class="fa fa-exclamation-circle" style="color: red;"></i> Alpha</td>
                         @else
                         <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-primary" type="button">Fill <br> Progress Report</button></a></td>
                         @endif
