@@ -224,8 +224,10 @@
                         <td><button onclick="$dc.DocumentationModal({{$progress_report[$i]->id_attendance}})" id="show-img" class="btn btn-primary" type="button">Show Image</button></td>
                         @endif
                         <td>{{ $progress_report[$i]->note  }}</td>
-                        @if ($progress_report[$i]->filled)
+                        @if ($progress_report[$i]->filled && !$progress_report[$i]->student_alpha)
                         <td><button class="btn btn-warning" type="button">Edit</button></td>
+                        @elseif($progress_report[$i]->student_alpha)
+                        <td><i class="fa fa-exclamation-circle" style="color: red;"></i> Alpha</td>
                         @else
                         <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-primary" type="button">Fill <br> Progress Report</button></a></td>
                         @endif

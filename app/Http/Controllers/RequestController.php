@@ -93,9 +93,11 @@ class RequestController extends Controller
     }
 
     public function GetTeachingInfo($id){
-        $data = Attendance::join('progress','progress.id_attendance','=','attendances.id')
+        $data = Attendance::leftjoin('progress','progress.id_attendance','=','attendances.id')
             ->join('attendees', function($join){
-                $join->on('attendees.id_attendance','=','attendances.id')->on('attendees.id_attendance','=','progress.id_attendance')->on('attendees.id_student','=','progress.id_student');
+                $join->on('attendees.id_attendance','=','attendances.id')
+                ->on('attendees.id_attendance','=','progress.id_attendance')
+                ->on('attendees.id_student','=','progress.id_student');
             })
             ->join('students','students.id','=','attendees.id_student')
             ->where('attendances.id',$id)->distinct()->get();

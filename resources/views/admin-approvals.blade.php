@@ -87,6 +87,7 @@
                         <tr>
                             <th>Date</th>
                             <th>Teacher Name</th>
+                            <th>Attendance Info</th>
                             <th>Teaching Info</th>
                             <th>Fee</th>
                             <th>Lunch Incentive</th>
@@ -100,6 +101,7 @@
                             @for ($i = 0 ; $i < count($fee) ; $i+=$fee->where('date',$fee[$i]->date)->count())
                                 <td rowspan="{{$fee->where('date',$fee[$i]->date)->count()}}">{{date('l',strtotime($fee[$i]->date))}}, {{date('d/m/Y',strtotime($fee[$i]->date))}}</td>
                                 <td>{{ $fee[$i]->name }}</td>
+                                <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $a->id_attendance }})">Attendance Info</button></td>
                                 <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})">Progress Report</button></td>
                                 <td>{{$fee[$i]->fee_nominal}}</td>
                                 <td>{{$fee[$i]->lunch_nominal}}</td>

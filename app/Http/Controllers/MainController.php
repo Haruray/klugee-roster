@@ -136,26 +136,27 @@ class MainController extends Controller
                         'message' => 'Fail to save data. Please reload and re-enter the data.'
                     ], 401);
                 }
-                if ($new_attendee->present || $new_attendee->homework){
-                    $should_pay_teach_fee = true;
-                    //Create progress report
-                    $new_progress = new Progress;
-                    $new_progress->id_teacher = $new_attendance->id_teacher;
-                    $new_progress->id_student = $new_attendee->id_student;
-                    $new_progress->id_attendance = $new_attendance->id;
-                    if ($new_attendee->homework){
-                        $new_progress->note = "Homework";
-                    }
-                    $new_progress->filled = false;
-                    $new_progress->save();
-                    if (!$new_progress->save()){
-                        //If it doesn't success, then return error message
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Fail to create progress report. Please contact the developer for this problem.'
-                        ], 401);
-                    }
+
+                $should_pay_teach_fee = true;
+                //Create progress report
+                $new_progress = new Progress;
+                $new_progress->id_teacher = $new_attendance->id_teacher;
+                $new_progress->id_student = $new_attendee->id_student;
+                $new_progress->id_attendance = $new_attendance->id;
+                if ($new_attendee->homework){
+                    $new_progress->note = "Homework";
                 }
+                $new_progress->filled = false;
+                $new_progress->save();
+                $new_progress->student_alpha = $new_attendee->alpha;
+                if (!$new_progress->save()){
+                    //If it doesn't success, then return error message
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fail to create progress report. Please contact the developer for this problem.'
+                    ], 401);
+                }
+
                 //Student presences
                 //walaupun engga hadir, tetap kepakai
                 $student_fee = TuitionFee::where('id_student',$new_attendee->id_student)->where('program',$new_attendance->program)->first();
@@ -302,6 +303,7 @@ class MainController extends Controller
         $students = array();
         $attendee = Attendee::where('attendees.id_attendance',$attendance_id)
         ->join('students','students.id','attendees.id_student')
+        ->where('attendees.alpha',false)
         ->get();
         return $attendee;
     }
@@ -343,7 +345,7 @@ class MainController extends Controller
             $spp_warning = array(); //for SPP warning
             foreach ($attendee as $a){
                 $flag = $flag || $a->present || $a->homework;
-                if ($a->spp_paid == 0){
+                if ($a->spp_paid == 0 && !$a->alpha){
                     $warning_string = $a->name.' belum membayar SPP '.$a->program.' untuk bulan ini.';
                     array_push($spp_warning,$warning_string);
                 }
@@ -600,6 +602,7 @@ class MainController extends Controller
         ->join('student_presences',function($join){
             $join->on('student_presences.id_attendance','=','progress.id_attendance')->on('student_presences.id_student','=','progress.id_student');
         })
+        ->where('progress.student_alpha',false)
         ->orderBy('attendances.date','DESC')
         ->get();
 
@@ -641,15 +644,33 @@ class MainController extends Controller
         // ->orderBy('attendances.date','DESC')
         // ->get();
 
-        $progress_reports = Attendance::select('attendances.*','progress.id as id progress','progress.id_attendance','progress.documentation','progress.note','attendees.present','attendees.alpha','attendees.homework','progress.filled','student_presences.spp_paid')
+        $progress_reports = Attendance::select('attendances.id'
+        ,'attendances.id_teacher','attendances.date','attendances.time','attendances.program','attendances.location','attendances.class_type'
+        ,'progress.id as id progress','progress.id_attendance','progress.documentation','progress.note','progress.student_alpha'
+        ,'attendees.present','attendees.alpha','attendees.homework','progress.filled','student_presences.spp_paid')
         ->whereIn('attendances.id',$attendance_ids->pluck('id')->toArray())
         ->join('attendees','attendees.id_attendance','=','attendances.id')
-        ->leftjoin('progress','progress.id_attendance','=','attendances.id')
-        ->join('student_presences',function($join){
-            $join->on('student_presences.id_attendance','=','attendances.id');
+        ->leftjoin('progress',function($join){
+            $join->on('progress.id_attendance','=','attendances.id')
+            ->on('progress.id_attendance','=','attendees.id_attendance');
         })
+        ->leftjoin('student_presences',function($join){
+            $join->on('student_presences.id_attendance','=','attendances.id')
+            ->on('student_presences.id_attendance','=','progress.id_attendance')
+            ->on('student_presences.id_attendance','=','attendees.id_attendance')
+            ->on('student_presences.id_student','=','progress.id_student')
+            ->on('student_presences.id_student','=','attendees.id_student')
+            ;
+        })
+        ->where([
+            ['attendees.id_student',$student_id],
+            ['progress.id_student',$student_id],
+            ['student_presences.id_student',$student_id]
+        ])
         ->orderBy('attendances.date','DESC')
+        ->distinct()
         ->get();
+
         //return $progress_reports;
 
         $student_presences_unpaid = StudentPresence::whereIn('id_attendance',$attendance_ids->pluck('id')->toArray())

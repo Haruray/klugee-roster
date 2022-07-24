@@ -87,8 +87,9 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Name</th>
-                        <th>Teaching Data</th>
+                        <th>Teacher Name</th>
+                        <th>Attendance Data</th>
+                        <th>Progress Report</th>
                         <th>Approved</th>
                         <th style="width: 20%;">Action</th>
                     </tr>
@@ -99,6 +100,7 @@
                     <tr>
                         <td>{{date('l',strtotime($a->date))}}, {{date('d/m/Y',strtotime($a->date))}}</td>
                         <td>{{$a->name}}</td>
+                        <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $a->id_attendance }})">Attendance Info</button></td>
                         @if ($a->filled)
                         <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $a->id_attendance }})">Progress Report</button></td>
                         @elseif (!$a->filled || is_null($a->filled))

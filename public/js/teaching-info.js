@@ -73,6 +73,21 @@
     "<p id=\"input-confirm-description\" class=\"input-confirm-description\"> <names> <br> <date> <br> <program> <br> <unit> <br> <exercise> <br> <scores> </p>"+
 "</div>";
 
+var attendanceModal = "<div class=\"modal fade\" id=\"attendance-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalCenterTitle\" aria-hidden=\"true\">"+
+"<div class=\"modal-dialog modal-dialog-centered\" role=\"document\">"+
+  "<div class=\"modal-content\">"+
+    "<div class=\"modal-header\">"+
+      "<h5 class=\"modal-title\" id=\"teach-modal-title\">Attendance Information</h5>"+
+      "<button onclick=\"$dc2.CloseTeachingInfo()\"type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"+
+        "<span aria-hidden=\"true\">&times;</span> </button></div>"+
+    "<div id=\"attendance-info-body\" class=\"modal-body\">"+
+            "</div></div></div></div>";
+var attendanceDetails = "<div class=\"attendance-box\" style=\"width:100%;\">"+
+"<h3 class=\"page-sub-heading\">Progress report is&nbsp;<span class=\"yellow\">filled</span></h3>"+
+"<h1 class=\"page-sub-heading\"><i class=\"fa fa-check swing animated infinite input-confirm-check\"></i></h1>"+
+"<p id=\"input-confirm-description\" class=\"input-confirm-description\"> <names> <br> <date> <br> <program> <br> <location> <br> <classtype> </p>"+
+"</div>";
+
     dc2.TeachingInfo = function(id){
         let newModal = false;
         if (document.getElementById("teach-modal")==null){
@@ -160,6 +175,99 @@
                 }
                 else{
                     erase_loading("#teaching-info-body");
+                }
+            },
+            error : function(response){
+                //alert(response.message);
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Oops...',
+                    text: 'Input error. Please re-enter the data or reload the page.'
+                }).then(function(){
+                    location.reload();
+                });
+            }
+        })
+    }
+
+    dc2.AttendanceInfo = function(id){
+        let newModal = false;
+        if (document.getElementById("attendance-modal")==null){
+            insertHtml("body",attendanceModal);
+            newModal = true;
+        }
+        // $('#teach-modal').modal({backdrop: 'static', keyboard: false})
+        $('#attendance-modal').modal('toggle');
+        if (newModal){
+            show_loading("#attendance-info-body");
+        }
+        else{
+            document.getElementById("names-attendance").innerHTML='';
+            document.getElementById("date-modal-attendance").innerHTML='';
+            document.getElementById("program-attendance").innerHTML='';
+            document.getElementById("location-attendance").innerHTML='';
+            document.getElementById("class-type").innerHTML='';
+            add_loading("#input-confirm-description")
+        }
+        $.ajax({
+            url : '/get/teaching-info/'+id,
+            type : 'get',
+            dataType : 'JSON',
+            cache : false,
+            contentType : false,
+            processData : false,
+            success : function(response){
+                if (response.success){
+                    let _date = new Date(response['progress'][0]['date']);
+                    let day = convertDay(_date.getDay());
+                    let students = '';
+
+                    for (var j = 0 ; j < response['progress'].length-1 ; j++){
+                        students += response['progress'][j]['name'];
+                        if (response['progress'][j]['homework']){
+                            students+=" (Izin, Homework)";
+                        }
+                        else if (response['progress'][j]['alpha']){
+                            students+=" (Alpha)";
+                        }
+                        students+=", ";
+                    }
+                    students+=response['progress'][response['progress'].length-1]['name'];
+                    if (response['progress'][response['progress'].length-1]['homework']){
+                        students+=" (Izin, Homework)";
+                    }
+                    else if (response['progress'][j]['student_alpha']){
+                        students+=" (Alpha)";
+                    }
+                    let timedetails = day+", "+formatDate(_date);
+                    let program = response['progress'][0]['program'];
+                    let location = response['progress'][0]['location'];
+                    let classtype = response['progress'][0]['class_type'];
+                    if (newModal){
+                        students = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='names-attendance'>"+ students + "</p>";
+                        timedetails = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='date-modal-attendance'>"+ timedetails + "</p>";
+                        program = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='program-attendance'>"+ program + "</p>";
+                        location = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='location-attendance'>"+ location + "</p>";
+                        classtype = "<p class=\"input-confirm-description\" style=\"margin-bottom:-15px\" id='class-type'>"+ classtype + "</p>";
+                        attendanceDetails = attendanceDetails.replace("<names>",students);
+                        attendanceDetails = attendanceDetails.replace("<date>",timedetails);
+                        attendanceDetails = attendanceDetails.replace("<program>",program);
+                        attendanceDetails = attendanceDetails.replace("<location>",location);
+                        attendanceDetails = attendanceDetails.replace("<classtype>",classtype);
+                        replaceHtml("#attendance-info-body",attendanceDetails);
+                    }
+                    else{
+                        document.getElementById("loader").remove();
+                         document.getElementById("names-attendance").innerHTML=students;
+                         document.getElementById("date-modal-attendance").innerHTML=timedetails;
+                         document.getElementById("program-attendance").innerHTML=program;
+                         document.getElementById("location-attendance").innerHTML=location;
+                         document.getElementById("class-type").innerHTML=classtype;
+                    }
+
+                }
+                else{
+                    erase_loading("#attendance-info-body");
                 }
             },
             error : function(response){
