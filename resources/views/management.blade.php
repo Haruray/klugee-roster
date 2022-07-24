@@ -222,11 +222,11 @@
                       @csrf
                     <input type="hidden" name="fee-id" value="" id="fee-id">
                     <p style="margin-bottom: 0px; margin-top:10px;">Exclusive Fee</p>
-                    <input class="form-control" type="text" name="exclusive" id="exclusive">
+                    <input class="form-control" type="text" name="exclusive" id="exclusive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">Semi-Private Fee</p>
-                    <input class="form-control" type="text" name="semiprivate" id="semiprivate">
+                    <input class="form-control" type="text" name="semiprivate" id="semiprivate" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">School Fee</p>
-                    <input class="form-control" type="text" name="school" id="school">
+                    <input class="form-control" type="text" name="school" id="school" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
               </div>
             </div>
             <div class="modal-footer">
@@ -253,7 +253,7 @@
                       @csrf
                     <input type="hidden" value="" name="incentive-id" id="incentive-id">
                     <p style="margin-bottom: 0px; margin-top:10px;">Incentive Nominal</p>
-                    <input class="form-control" type="text" name="incentive-input" id="incentive-input">
+                    <input class="form-control" type="text" name="incentive-input" id="incentive-input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
               </div>
             </div>
             <div class="modal-footer">
@@ -287,11 +287,11 @@
                     <p style="margin-bottom: 0px; margin-top:10px;">Level</p>
                     <input class="form-control" type="text" name="level-add" id="level-add" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">Exclusive Fee</p>
-                    <input class="form-control" type="text" name="exclusive-add" id="exclusive-add">
+                    <input class="form-control" type="text" name="exclusive-add" id="exclusive-add" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">Semi-Private Fee</p>
-                    <input class="form-control" type="text" name="semiprivate-add" id="semiprivate-add">
+                    <input class="form-control" type="text" name="semiprivate-add" id="semiprivate-add" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     <p style="margin-bottom: 0px; margin-top:10px;">School Fee</p>
-                    <input class="form-control" type="text" name="school-add" id="school-add">
+                    <input class="form-control" type="text" name="school-add" id="school-add" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
 
               </div>
             </div>
@@ -346,7 +346,7 @@
                         @csrf
                     <input type="hidden" value="" name="salary-id" id="salary-id">
                     <p style="margin-bottom: 0px; margin-top:10px;">Salary Nominal</p>
-                    <input class="form-control" type="text" name="salary-input" id="salary-input">
+                    <input class="form-control" type="text" name="salary-input" id="salary-input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                 </div>
             </div>
             <div class="modal-footer">
