@@ -146,6 +146,7 @@ Route::post('/management/program-add','SuperAdminController@ProgramAdd');
 Route::post('/management/partner-add','SuperAdminController@PartnerAdd');
 Route::post('/accounting/teacher-payment/salary/process','SuperAdminController@TeacherSalaryProcess');
 Route::post('/accounting/teacher-payment/incentive/process','SuperAdminController@TeacherIncentiveProcess');
+Route::post('/accounting/approvals/fee-edit','SuperAdminController@ApprovalFeeEdit');
 Route::post('/generate-salary','SuperAdminController@GenerateSalaryProfile');
 
 
@@ -157,6 +158,7 @@ Route::post('/users/add/process','SuperAdminController@AddTeacherProcess');
 //requests route
 Route::get('/get/student','RequestController@GetStudentData');
 Route::get('/get/attendance/{id}','RequestController@GetAttendanceData');
+Route::get('/get/attendance-present/{id}','RequestController@GetPresentAttendanceData');
 Route::get('/get/progress-report/{attendance_id}/documentation','RequestController@GetDocumentation');
 Route::get('/get/schedule/{teacher_id}','RequestController@GetSchedule');
 Route::get('/get/schedule/id/{schedule_id}','RequestController@GetScheduleWithId');

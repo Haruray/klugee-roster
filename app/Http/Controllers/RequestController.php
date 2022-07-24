@@ -52,6 +52,18 @@ class RequestController extends Controller
         return $arr;
     }
 
+    public function GetPresentAttendanceData($id){
+        $attendance = Attendance::where('id',$id)->get()->first();
+        $attendee = Attendee::where('id_attendance',$attendance->id)->where('alpha',false)->get();
+        $students=array();
+        foreach ($attendee as $d){
+            array_push($students, Students::where('id',$d->id_student)->get()->first());
+        }
+        $arr['attendance'] = $attendance;
+        $arr['attendee'] = $students;
+        return $arr;
+    }
+
     public function GetDocumentation($attendance_id){
         $documentation = Progress::where('id_attendance',$attendance_id)->first()->documentation;
         return response()->json([

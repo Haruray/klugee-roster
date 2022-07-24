@@ -519,7 +519,12 @@ class HeadTeacherController extends Controller
         $attendance_ids = Attendance::whereIn('id', $attendee_data->pluck('id_attendance')->toArray())->where('program',$program)->get();
         $head_teacher = Teachers::join('users','users.id_teacher','=','teachers.id')
         ->where('user_type','head teacher')->first();
-        $progress_reports = Progress::select('progress.*','attendances.date')->where('id_student',$student_id)->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())->join('attendances','attendances.id','progress.id_attendance')->where('generated',false)->where('filled',true)->orderBy('level','ASC')->orderBy('date','ASC')->get();
+        $progress_reports = Progress::select('progress.*','attendances.date')
+        ->where('id_student',$student_id)
+        ->whereIn('id_attendance', $attendance_ids->pluck('id')->toArray())
+        ->join('attendances','attendances.id','progress.id_attendance')
+        ->where('generated',false)->where('filled',true)->whereNotNull('level')
+        ->orderBy('level','ASC')->orderBy('date','ASC')->get();
         $view = view('report-book-generation')->with('progress_report',$progress_reports)
         ->with('attendance',$attendance_ids)
         ->with('student', $studentbio)

@@ -371,7 +371,14 @@ class MainController extends Controller
         $progress = Attendance::
         join('progress','progress.id_attendance','=','attendances.id')
         ->where('attendances.id',$attendance_id)->get();
-        if ($progress[0]->filled){
+        $indexReference = 0;
+        for ($k = 0 ; $k < count($progress) ; $k++){
+            if (!is_null($new_pr[$k]->level)){
+                $indexReference = $k;
+                break;
+            }
+        }
+        if (!is_null($progress[$indexReference]->level) && $progress[$indexReference]->filled){
             $data = Attendance::select('attendances.id','attendances.date','attendances.time','attendances.program','attendances.location',
             'attendances.class_type'
             ,'progress.level','progress.unit','progress.last_exercise','progress.score','students.name','students.nickname')

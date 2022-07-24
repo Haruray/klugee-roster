@@ -815,5 +815,15 @@ class SuperAdminController extends Controller
         return redirect()->back();
     }
 
+    public function ApprovalFeeEdit(Request $request){
+        $fee = Fee::where('id',$request->input('fee-id'))->first();
+        $fee->fee_nominal = $request->input('main-fee');
+        $fee->lunch_nominal = $request->input('lunch-incentive');
+        $fee->transport_nominal = $request->input('transport-incentive');
+        $fee->save();
+
+        return redirect()->back();
+    }
+
 
 }

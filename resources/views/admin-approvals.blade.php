@@ -103,14 +103,14 @@
                                 <td>{{ $fee[$i]->name }}</td>
                                 <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $fee[$i]->id_attendance }})">Attendance Info</button></td>
                                 <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})">Progress Report</button></td>
-                                <td>{{$fee[$i]->fee_nominal}}</td>
-                                <td>{{$fee[$i]->lunch_nominal}}</td>
-                                <td>{{$fee[$i]->transport_nominal}}</td>
+                                <td id="{{ $fee[$i]->id_fee }}-main-fee">{{$fee[$i]->fee_nominal}}</td>
+                                <td id="{{ $fee[$i]->id_fee }}-lunch-fee">{{$fee[$i]->lunch_nominal}}</td>
+                                <td id="{{ $fee[$i]->id_fee }}-transport-fee">{{$fee[$i]->transport_nominal}}</td>
                                 <td>{{$fee[$i]->fee_nominal + $fee[$i]->lunch_nominal + $fee[$i]->transport_nominal}}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="/accounting/approvals/approve-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
-                                        <a href=""><button class="btn btn-warning">Edit</button></a>
+                                        <button onclick="editFee({{ $fee[$i]->id_fee }})" class="btn btn-warning">Edit</button>
                                         <a href="/accounting/approvals/delete-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                     </div>
                                 </td>
@@ -120,14 +120,14 @@
                                     <td>{{ $fee[$j]->name }}</td>
                                     <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $fee[$j]->id_attendance }})">Attendance Info</button></td>
                                     <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$j]->id_attendance }})">Progress Report</button></td>
-                                    <td>{{$fee[$j]->fee_nominal}}</td>
-                                    <td>{{$fee[$j]->lunch_nominal}}</td>
-                                    <td>{{$fee[$j]->transport_nominal}}</td>
+                                    <td id="{{ $fee[$j]->id_fee }}-main-fee">{{$fee[$j]->fee_nominal}}</td>
+                                    <td id="{{ $fee[$j]->id_fee }}-lunch-fee">{{$fee[$j]->lunch_nominal}}</td>
+                                    <td id="{{ $fee[$j]->id_fee }}-transport-fee">{{$fee[$j]->transport_nominal}}</td>
                                     <td>{{$fee[$j]->fee_nominal + $fee[$j]->lunch_nominal + $fee[$j]->transport_nominal}}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="/accounting/approvals/approve-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
-                                            <a href=""><button class="btn btn-warning">Edit</button></a>
+                                            <button onclick="editFee({{ $fee[$j]->id_fee }})" class="btn btn-warning">Edit</button>
                                             <a href="/accounting/approvals/delete-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                         </div>
                                     </td>
@@ -339,9 +339,51 @@
             </div>
         </div>
     </div>
+    <!-- FEE EDIT MODAL -->
+    <div class="modal fade" id="edit-fee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 id="edit-title" class="modal-title">Fee Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <form id="edit-fee-form" method="POST" action="/accounting/approvals/fee-edit">
+                    @csrf
+                <input type="hidden" name="fee-id" value="" id="fee-id">
+                <p style="margin-bottom: 0px; margin-top:10px;">Main Fee</p>
+                <input class="form-control" type="text" name="main-fee" id="main-fee" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <p style="margin-bottom: 0px; margin-top:10px;">Lunch Incentive</p>
+                <input class="form-control" type="text" name="lunch-incentive" id="lunch-incentive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <p style="margin-bottom: 0px; margin-top:10px;">Transport Incentive</p>
+                <input class="form-control" type="text" name="transport-incentive" id="transport-incentive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+        </form>
+        </div>
+        </div>
+    </div>
+    </div>
+
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
     <script src="{{ asset('js/teaching-info.js') }}"></script>
+    <script>
+        function editFee(id_fee){
+        let mainmodal = document.getElementById("edit-fee");
+        $('#edit-fee').modal('toggle');
+        mainmodal.querySelector("#fee-id").value = id_fee;
+        mainmodal.querySelector("#main-fee").value = document.getElementById(id_fee+"-main-fee").innerHTML.replace("K","000");
+        mainmodal.querySelector("#lunch-incentive").value = document.getElementById(id_fee+"-lunch-fee").innerHTML.replace("K","000");
+        mainmodal.querySelector("#transport-incentive").value = document.getElementById(id_fee+"-transport-fee").innerHTML.replace("K","000");
+
+    }
+    </script>
 </body>
 </html>

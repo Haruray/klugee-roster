@@ -102,10 +102,17 @@
                     formContainer.classList.remove("attendance-box");
                     show_loading("#attendance-box");
                     $.ajax({
-                        url : "/get/attendance/"+response.attendance_id,
+                        url : "/get/attendance-present/"+response.attendance_id,
                         type:'get',
                         dataType:'json',
                         success:function(second_response){
+                            let indexReference = 0;
+                            for (k = 0 ; k < response['progress_report'].length ; k++){
+                                if (response['progress_report'][k]['level']!=null){
+                                    indexReference = k;
+                                    break;
+                                }
+                            }
                             let progressReportConfirm2 = "<p class=\"input-confirm-description\">";
                             let _date = new Date(second_response['attendance']['date']);
                             let day = convertDay(_date.getDay());
@@ -115,7 +122,7 @@
                             }
                             progressReportConfirm2 += second_response['attendee'][second_response['attendee'].length-1]['name'];
                             //Filling the details of the meeting
-                            let progressReportConfirm3 = "<br>"+day+", "+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+","+response['progress_report'][0]['level']+"<br>"+response['progress_report'][0]['unit']+"<br>"+response['progress_report'][0]['last_exercise']
+                            let progressReportConfirm3 = "<br>"+day+", "+second_response['attendance']['date']+"<br>"+second_response['attendance']['time']+"<br>"+second_response['attendance']['program']+","+response['progress_report'][indexReference]['level']+"<br>"+response['progress_report'][indexReference]['unit']+"<br>"+response['progress_report'][indexReference]['last_exercise']
                             //Filling the scores
                             for (var i = 0 ; i < second_response['attendee'].length ; i++){
                                 progressReportConfirm3 += "<br>"+second_response['attendee'][i]['nickname']+"'s Score : "+getAttendeeScore(response['progress_report'],second_response['attendee'][i]['id']);
