@@ -134,7 +134,7 @@ class AdminController extends Controller
 
     public function FinancialReport($month, $year){
         $years = Accounting::selectRaw('YEAR(date) as year')->distinct()->get();
-        $income_spp = Accounting::select('id','transaction_type','nominal')->where('transaction_type','SPP')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
+        $income_spp = Accounting::select('id','transaction_type','detail','nominal')->where('transaction_type','SPP')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
         $income_regis = Accounting::select('id','transaction_type','nominal')->where('transaction_type','Registration')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
         $income_other = Accounting::select('id','transaction_type','sub_transaction','nominal')->where('transaction_type','Other')->whereMonth('date','=',$month)->whereYear('date','=',$year)->get();
 

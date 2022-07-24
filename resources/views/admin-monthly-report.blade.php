@@ -174,7 +174,7 @@
                     <tbody>
                         <tr>
                             <td>Active Students</td>
-                            <td>{{ count($income_spp) }}</td>
+                            <td>{{ $income_spp->groupBy('detail')->count() }}</td>
                             <td>{{ $income_regis->sum('nominal') }}</td>
                             <td>{{ $income_spp->sum('nominal') }}</td>
                             <td>{{$income_spp->sum('nominal') +  $income_regis->sum('nominal')}}</td>
