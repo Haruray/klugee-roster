@@ -921,7 +921,12 @@ class MainController extends Controller
     }
 
     public function ChangePassword(Request $request){
-        $user = User::where('id_teacher',$request->input('id-teacher'))->first();
+        $request->validate([
+
+            'password-form' => ['required'],
+            'password-form-confirm' => ['same:password-form'],
+        ]);
+        $user = User::where('id',auth()->user()->id)->first();
         $user->password = Hash::make($request->input('password-form'));
         $user->save();
         return redirect()->back();
