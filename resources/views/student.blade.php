@@ -93,8 +93,8 @@
                 <div class="col-sm-12 col-md-8 col-lg-7 col-xl-8 offset-lg-0 text-center">
                     <div class="d-inline-block">
                         <p class="teacher-profile-name bold blue" style="margin: 20px 0 0 0;">{{$student->name}}</p>
-                        <p class="green bold" style="font-size: 20px;">School</p>
-                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;">{{$student->school_name}}</p>
+                        <p class="green bold" style="font-size: 20px; text-align:left;">School</p>
+                        <p class="blue bold" style="margin: -20px 0 0 0;font-size: 25px;text-align:left;">{{$student->school_name}}</p>
                         <button data-toggle="modal" data-target="#student-bio" class="btn btn-primary attendance-input-button" type="button" style="margin: 20px 10px 10px 10px;">Student Bio</button>
                     </div>
                 </div>
@@ -106,7 +106,12 @@
         <div class="row">
             <div class="col-lg-12">
                 @foreach ($programs as $p)
-                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8"><img class="student-card-profile" src="{{url('/img/'.$p->program.'-logo.png')}}">
+                <div class="d-inline-block student-program-card col-xl-3 col-lg-3 col-md-4 col-sm-8 col-8">
+
+                    <a style="display: block; width:100%;" href="/students/{{$student->id}}/progress-report/{{$p->program}}">
+                        <img class="student-card-profile" src="{{url('/img/'.$p->program.'-logo.png')}}">
+                    </a>
+
                     <p class="student-program-name">{{$p->program}}</p>
                     @if ($p->quota>0)
                         <p class="student-program-payment-paid"><i class="fa fa-check"></i>&nbsp;Paid</p>
@@ -131,10 +136,21 @@
           </button>
         </div>
         <div class="modal-body">
+            <div style="text-align: right;">
+                <button data-toggle="modal" data-target="#edit-student-biodata" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i> Edit</button>
+                <button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button><br>
+            </div>
+
           <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Name</p>
           <p>{{ $student->name }}</p>
           <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Nickname</p>
           <p>{{ $student->nickname }}</p>
+          <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Jenis Kelamin</p>
+          @if ($student->jenis_kelamin == "L")
+          <p>Laki-laki</p>
+          @elseif($student->jenis_kelamin == "P")
+          <p>Perempuan</p>
+          @endif
           <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Address</p>
           <p>{{ $student->address }}</p>
           <p style="color: #38b6ff; font-weight:bold; font-size:23px; margin-bottom:-2px;">Birth Place</p>
@@ -156,6 +172,172 @@
   <script src="{{ asset('js/jquery.min.js') }}"></script>
   <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{asset('js/bs-init.js')}}"></script>
+
+     <!-- BIODATA EDIT MODAL -->
+     <div class="modal fade" id="edit-student-biodata" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="edit-title" class="modal-title">Biodata Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-biodata-form" method="POST" action="/student-biodata-edit">
+                    @csrf
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input style="margin-left:16px;" value="{{ $student->name }}" name="name" class="form-control attendance-input" type="text" placeholder="Name" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input style="margin-left:16px;" value="{{ $student->nickname }}" name="nickname" class="form-control attendance-input" type="text" placeholder="Nickname" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <p style="color: black; font-weight:bold; margin:1px 0px 5px 20px;">Jenis Kelamin</p>
+                                    @if ($student->jenis_kelamin == "L")
+                                    <div id="jenis-kelamin-checkbox" class="form-check" style="display: inline-block; margin-right:5px; margin-left:20px; color:black;">
+                                        <input class="form-check-input" name="jenis-kelamin" type="radio" value="L" id="laki-laki" checked>
+                                        <label class="form-check-label" for="laki-laki">
+                                          Laki-laki
+                                        </label>
+                                      </div>
+                                      <div class="form-check" style="display: inline-block; margin-right:5px; color:black;">
+                                        <input class="form-check-input" name="jenis-kelamin" type="radio" value="P" id="perempuan">
+                                        <label class="form-check-label" for="perempuan">
+                                          Perempuan
+                                        </label>
+                                      </div>
+                                        @elseif($student->jenis_kelamin == "P")
+                                        <div id="jenis-kelamin-checkbox" class="form-check" style="display: inline-block; margin-right:5px; margin-left:20px; color:black;">
+                                            <input class="form-check-input" name="jenis-kelamin" type="radio" value="L" id="laki-laki">
+                                            <label class="form-check-label" for="laki-laki">
+                                              Laki-laki
+                                            </label>
+                                          </div>
+                                          <div class="form-check" style="display: inline-block; margin-right:5px; color:black;">
+                                            <input class="form-check-input" name="jenis-kelamin" type="radio" value="P" id="perempuan" checked>
+                                            <label class="form-check-label" for="perempuan">
+                                              Perempuan
+                                            </label>
+                                          </div>
+                                        @else
+                                        <div id="jenis-kelamin-checkbox" class="form-check" style="display: inline-block; margin-right:5px; margin-left:20px; color:black;">
+                                            <input class="form-check-input" name="jenis-kelamin" type="radio" value="L" id="laki-laki">
+                                            <label class="form-check-label" for="laki-laki">
+                                              Laki-laki
+                                            </label>
+                                          </div>
+                                          <div class="form-check" style="display: inline-block; margin-right:5px; color:black;">
+                                            <input class="form-check-input" name="jenis-kelamin" type="radio" value="P" id="perempuan">
+                                            <label class="form-check-label" for="perempuan">
+                                              Perempuan
+                                            </label>
+                                          </div>
+                                        @endif
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input style="margin-left:16px;" value="{{ $student->address }}" name="address" class="form-control attendance-input" type="text" placeholder="Address" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input value="{{ $student->birthplace }}" style="margin-left: 16px;" name="birthplace" class="form-control attendance-input" type="text" placeholder="Birth Place" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <p style="color: black; font-weight:bold; margin:1px 0px 5px 20px;">Birthdate</p>
+                                    <input value="{{ $student->birthdate }}" style="margin-left: 16px;" name="date" class="form-control attendance-input" type="date" required="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input value="{{ $student->school_name }}" style="margin-left: 16px;" name="school" class="form-control attendance-input" type="text" placeholder="School Name" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <select style="margin-left: 17px;" name="parent" class="form-control attendance-input">
+                                        <option value="" disabled>Parent</option>
+                                        @if (explode(' ',$student->parent)[0] == "Mom")
+                                        <option value="Mom" selected>Mom</option>
+                                        <option value="Dad">Dad</option>
+                                        @elseif (explode(' ',$student->parent)[0] == "Dad")
+                                        <option value="Mom">Mom</option>
+                                        <option value="Dad" selected>Dad</option>
+                                        @endif
+                                    </select></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input value="{{ $student->parent_name }}" style="margin-left: 16px;" name="parent-name" class="form-control attendance-input" type="text" placeholder="Parent Name" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input value="{{ $student->parent_contact }}" style="margin-left: 16px;" name="telp" class="form-control attendance-input" type="text" placeholder="Parent Contact" required="" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-row">
+                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="attendance-input-div">
+                                    <input value="{{ $student->email }}" style="margin-left:16px;" id="email" name="email" class="form-control attendance-input" type="text" placeholder="Email" required=""></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="student_id" name="student_id" value="{{$student->id}}">
+            </div>
+            <div class="modal-footer">
+                <button id="schedule-edit-submit" type="submit" value="submit" class="btn btn-primary">Confirm</button>
+            </form>
+            </div>
+            </div>
+        </div>
+        </div>
+
 </body>
 
 </html>

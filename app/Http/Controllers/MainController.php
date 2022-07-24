@@ -926,4 +926,31 @@ class MainController extends Controller
         $user->save();
         return redirect()->back();
     }
+
+    public function StudentBiodataEdit(Request $request){
+        $student = Students::where('id',$request->input('student_id'))->first();
+        $student->name = $request->input('name');
+        $student->nickname = $request->input('nickname');
+        $student->jenis_kelamin = $request->input('jenis-kelamin');
+        $student->birthplace = $request->input('birthplace');
+        $student->birthdate = $request->input('date');
+        $student->school_name = $request->input('school');
+        $student->parent = $request->input('parent');
+        $student->parent_name = $request->input('parent-name');
+        $student->parent_contact = $request->input('telp');
+        $student->address = $request->input('address');
+        $student->email = $request->input('email');
+        if($request->input('jenis-kelamin') == "L"){
+            $student->photo = "student-male.png";
+        }
+        elseif($request->input('jenis-kelamin') == "P"){
+            $student->photo = "student-female.png";
+        }
+        else{
+            $student->photo = "default-profile-img.png";
+        }
+        $student->save();
+
+        return redirect()->back();
+    }
 }

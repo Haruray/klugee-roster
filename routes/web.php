@@ -57,6 +57,7 @@ Route::post('/progress-edit','MainController@ProgressEdit');
 Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
 Route::post('/profile/upload','MainController@ProfilePictureChange');
 Route::post('/profile/edit','MainController@ProfileEdit');
+Route::post('/student-biodata-edit','MainController@StudentBiodataEdit');
 
 Route::post('/change-password','MainController@ChangePassword');
 
