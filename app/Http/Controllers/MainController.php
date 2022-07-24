@@ -351,8 +351,15 @@ class MainController extends Controller
             }
         }
         if ($flag){ //Proceed if at least one of the attendee is present
-            $filled = Progress::where('id_attendance',$attendance_id)->first()->filled;
-            if (!$filled){ //if its not filled, the proceed to the form
+            $filled = Progress::where('id_attendance',$attendance_id)->get();
+            $indexReference = 0;
+            for ($k = 0 ; $k < count($filled) ; $k++){
+                if (!is_null($filled[$k]->level)){
+                    $indexReference = $k;
+                    break;
+                }
+            }
+            if (is_null($filled[$indexReference]->level) || !$filled[$indexReference]->filled){ //if its not filled, the proceed to the form
                 //SPP warning stuff
                 Session::flash('spp-warning', $spp_warning);
                 $levels = FeeList::select('level')->where('program', $program)->get();
@@ -373,15 +380,18 @@ class MainController extends Controller
         ->where('attendances.id',$attendance_id)->get();
         $indexReference = 0;
         for ($k = 0 ; $k < count($progress) ; $k++){
-            if (!is_null($new_pr[$k]->level)){
+            if (!is_null($progress[$k]->level)){
                 $indexReference = $k;
                 break;
             }
         }
         if (!is_null($progress[$indexReference]->level) && $progress[$indexReference]->filled){
-            $data = Attendance::select('attendances.id','attendances.date','attendances.time','attendances.program','attendances.location',
+            $data = Attendance::select('attendances.id','attendances.date'
+            ,'attendances.time','attendances.program','attendances.location',
             'attendances.class_type'
-            ,'progress.level','progress.unit','progress.last_exercise','progress.score','students.name','students.nickname')
+            ,'progress.level','progress.unit','progress.last_exercise'
+            ,'progress.score','students.name','students.nickname','students.id as student_id'
+            ,'attendees.alpha','attendees.homework','attendees.present')
             ->join('progress','progress.id_attendance','=','attendances.id')
             ->join('attendees',function($join){
                 $join->on('attendees.id_attendance','=','attendances.id')->on('attendees.id_attendance','=','progress.id_attendance');
@@ -392,8 +402,32 @@ class MainController extends Controller
             ->where('attendances.id',$attendance_id)
             ->distinct()
             ->get();
+
+            $data_not_null = Attendance::select('attendances.id','attendances.date','attendances.time','attendances.program','attendances.location',
+            'attendances.class_type'
+            ,'progress.level','progress.unit','progress.last_exercise','progress.score','students.name','students.nickname','students.id as student_id')
+            ->join('progress','progress.id_attendance','=','attendances.id')
+            ->join('attendees',function($join){
+                $join->on('attendees.id_attendance','=','attendances.id')->on('attendees.id_attendance','=','progress.id_attendance');
+            })
+            ->join('students',function($join){
+                $join->on('students.id','=','attendees.id_student')->on('students.id','=','progress.id_student');
+            })
+            ->where('attendances.id',$attendance_id)
+            ->distinct()
+            ->whereNotNull('progress.level')
+            ->get();
+
+            for ($k = 0 ; $k < count($data) ; $k++){
+                if (!is_null($data[$k]->level)){
+                    $indexReference = $k;
+                    break;
+                }
+            }
+            $levels = FeeList::select('level')->where('program',$data[$indexReference]->program)->get();
             $view = view('progress-report-confirm');
-            return $view->with('progress',$data);
+            return $view->with('progress_no_null',$data_not_null)
+            ->with('progress',$data)->with('levels',$levels)->with('attendance_id',$attendance_id)->with('level_ouch',$data[$indexReference]->level);
         }
         else{
             return redirect('/attendance/progress-report/'.$attendance_id);
@@ -408,7 +442,7 @@ class MainController extends Controller
         return $view->with('students', $students)->with('attendance',$attendance);
     }
 
-    public function ProgressReportInputProcess(Request $request){
+    public function ProgressEdit(Request $request){
         $user_id_attendance = Attendance::where('id', $request->input('attendance_id'))->first()->id_teacher;
         $user_info = Teachers::where('id',$user_id_attendance)->first();
         //get all progress report with $attendance_id
@@ -429,16 +463,6 @@ class MainController extends Controller
         else{
             $documentation_file_name = null;
         }
-
-
-        /*$progress_reports = Progress::where('id_attendance',$request->input('attendance_id'))->update([
-            'level' => $request->input('level'),
-                'unit' => $request->input('unit'),
-                'last_exercise' => $request->input('last_exercise'),
-                'score' => $request->input('score'),
-                'note' => $request->input('note'),
-                'documentation' =>$documentation_file_name,
-        ]);*/
 
         //Update data individually per student
         $students = self::GetAttendee($request->input('attendance_id'));
@@ -465,84 +489,63 @@ class MainController extends Controller
                     'filled' => true
                 ]);
             }
+        }
 
+        return redirect('/attendance/progress-report/'.$request->input('attendance_id'));
+    }
+
+    public function ProgressReportInputProcess(Request $request){
+        $user_id_attendance = Attendance::where('id', $request->input('attendance_id'))->first()->id_teacher;
+        $user_info = Teachers::where('id',$user_id_attendance)->first();
+        //get all progress report with $attendance_id
+        if ($request->input('level')==null || $request->input('unit')==null || $request->input('last_exercise')==null){
+            return response()->json([
+                'success' => false,
+                'message' => 'Fail to save data. Please reload and re-enter the data.'
+            ],401);
+        }
+        //Move the file to uploads\progress-reports
+        //if there's a documentation image
+        if (!is_null($request->file('documentation'))){
+            $file = $request->file('documentation');
+            $destinationPath = 'uploads/progress-reports';
+            $documentation_file_name = $user_info->name."_Progress-report_".$request->input('attendance_id').'.'.$file->getClientOriginalExtension();
+            $file->move($destinationPath,$documentation_file_name);
+        }
+        else{
+            $documentation_file_name = null;
+        }
+
+        //Update data individually per student
+        $students = self::GetAttendee($request->input('attendance_id'));
+        foreach ($students as $student){
+            if (!$student->alpha){
+                $score_id = 'score-'.$student->id;
+                $progress_report_update = Progress::where([
+                    ['id_attendance', $request->input('attendance_id')],
+                    ['id_student', $student->id]
+                ])->update([
+                    'level' => $request->input('level'),
+                    'unit' => $request->input('unit'),
+                    'last_exercise' => $request->input('last_exercise'),
+                    'score' => $request->input($score_id),
+                    'documentation' =>$documentation_file_name,
+                    'filled' => true
+                ]);
+            }
+            else{
+                $progress_report_update = Progress::where([
+                    ['id_attendance', $request->input('attendance_id')],
+                    ['id_student', $student->id]
+                ])->update([
+                    'filled' => true
+                ]);
+            }
         }
 
         //get the new progress report data
         $new_pr = Progress::where('id_attendance',$request->input('attendance_id'))->get();
 
-        // //PAYMENT TIME
-        // $attendance = Attendance::where('id',$request->input('attendance_id'))->first();
-        // $cunt = $new_pr[0]->level;
-        // $payment = new Fee;
-        // $payment->id_attendance = $attendance->id;
-        // $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
-
-        // //Incentives
-        // //lunch : syarat adalah mengajar dua kali sesi
-        // $sessions = Attendance::whereDay('date',date('d', strtotime($attendance->date)))->where('id_teacher', auth()->user()->id_teacher)->count();
-        // if ($sessions>=2){
-        //     //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
-        //     $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('date',date('d', strtotime($attendance->date)))->sum('lunch_nominal');
-        //     if ($check_lunch == 0){
-        //         //artinya belum dibayar untuk hari ini
-        //         $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
-        //     }
-        //     else{
-        //         $payment->lunch_nominal = 0;
-        //     }
-        // }
-        // else{
-        //     $payment->lunch_nominal = 0;
-        // }
-
-        // //transport
-        // $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
-        // $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
-        // $payment->approved = false;
-        // $payment->save();
-
-        // //Saving it in accounting
-        // //main fee
-        // $payment_accounting = new Accounting;
-        // $payment_accounting->date = $attendance->date;
-        // $payment_accounting->transaction_type = "Teacher's Fee";
-        // $payment_accounting->sub_transaction = auth()->user()->name."'s Fee";
-        // $payment_accounting->detail = "Main fee";
-        // $payment_accounting->nominal = $payment->fee_nominal*-1;
-        // $payment_accounting->pic = 1;
-        // $payment_accounting->payment_method = "Other";
-        // $payment_accounting->notes = "This payment is automated";
-        // $payment_accounting->approved = false;
-        // $payment_accounting->save();
-        // //incentives : lunch
-        // if ($payment->lunch_nominal >0){
-        //     $payment_accounting = new Accounting;
-        //     $payment_accounting->date = $attendance->date;
-        //     $payment_accounting->transaction_type = "Teacher's Fee";
-        //     $payment_accounting->sub_transaction = auth()->user()->name."'s Lunch Incentives";
-        //     $payment_accounting->detail = "Lunch Incentives";
-        //     $payment_accounting->nominal = $payment->lunch_nominal*-1;
-        //     $payment_accounting->pic = 1;
-        //     $payment_accounting->payment_method = "Other";
-        //     $payment_accounting->notes = "This payment is automated";
-        //     $payment_accounting->approved = false;
-        //     $payment_accounting->save();
-        // }
-        // //incentives : transport
-        // if ($payment->transport_nominal >0){
-        //     $payment_accounting = new Accounting;
-        //     $payment_accounting->date = $attendance->date;
-        //     $payment_accounting->transaction_type = "Teacher's Fee";
-        //     $payment_accounting->sub_transaction = auth()->user()->name."'s Transport Incentives";
-        //     $payment_accounting->detail = "Transport Incentives";
-        //     $payment_accounting->nominal = $payment->transport_nominal*-1;
-        //     $payment_accounting->pic = 1;
-        //     $payment_accounting->payment_method = "Other";
-        //     $payment_accounting->notes = "This payment is automated";
-        //     $payment_accounting->approved = false;
-        //     $payment_accounting->save();
-        // }
         return response()->json([
             'success' => true,
             'attendance_id' => $request->input('attendance_id'),
@@ -802,7 +805,10 @@ class MainController extends Controller
         $method = TeachMethod::where('id_teacher', auth()->user()->id_teacher)->get();
 
         //Get attendance detail
-        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name', 'attendances.location', 'attendances.class_type','fees.approved as fee_approval','teach_presences.approved as presence_approval','progress.filled','attendees.present','attendees.alpha','attendees.homework')
+        $teach_presence = Attendance::select('attendances.id','attendances.date', 'students.name',
+        'attendances.location', 'attendances.class_type','fees.approved as fee_approval',
+        'teach_presences.approved as presence_approval','progress.filled','attendees.present',
+        'attendees.alpha','attendees.homework', 'progress.student_alpha')
         ->join('attendees','attendances.id','=','attendees.id_attendance')
         ->join('students','attendees.id_student','=','students.id')->leftjoin('progress', function($join){
             $join->on('attendances.id','=','progress.id_attendance')->on('progress.id_student','=','attendees.id_student');

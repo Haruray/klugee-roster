@@ -102,7 +102,7 @@
                     formContainer.classList.remove("attendance-box");
                     show_loading("#attendance-box");
                     $.ajax({
-                        url : "/get/attendance-present/"+response.attendance_id,
+                        url : "/get/attendance/"+response.attendance_id,
                         type:'get',
                         dataType:'json',
                         success:function(second_response){

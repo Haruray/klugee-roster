@@ -225,7 +225,7 @@
                         @endif
                         <td>{{ $progress_report[$i]->note  }}</td>
                         @if ($progress_report[$i]->filled && !$progress_report[$i]->student_alpha)
-                        <td><button class="btn btn-warning" type="button">Edit</button></td>
+                        <td><a href="/attendance/progress-report/{{ $progress_report[$i]->id_attendance }}"><button class="btn btn-warning" type="button">Edit</button></a></td>
                         @elseif($progress_report[$i]->student_alpha)
                         <td><i class="fa fa-exclamation-circle" style="color: red;"></i> Alpha</td>
                         @else

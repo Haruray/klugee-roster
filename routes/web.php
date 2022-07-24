@@ -53,6 +53,7 @@ Route::get('/notification/mark-all-as-read', 'MainController@MarkAllNotification
 //teacher post route
 Route::post('/attendance/input-process','MainController@AttendanceInputProcess');
 Route::post('/attendance/edit','MainController@AttendanceEdit');
+Route::post('/progress-edit','MainController@ProgressEdit');
 Route::post('/attendance/progress-report/input-process','MainController@ProgressReportInputProcess');
 Route::post('/profile/upload','MainController@ProfilePictureChange');
 Route::post('/profile/edit','MainController@ProfileEdit');
