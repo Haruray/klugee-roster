@@ -27,6 +27,7 @@ use App\Salary;
 use App\Incentive;
 use App\StudentPresence;
 use App\FeeList;
+use App\SpecialFeeList;
 use App\IncentiveList;
 use App\User;
 use App\Accounting;
@@ -93,50 +94,96 @@ class HeadTeacherController extends Controller
         $teacher_id = $attendance_presence->id_teacher;
         $teacher_name = Teachers::where('id',$teacher_id)->first()->name;
         $teacher_pos = User::where('id_teacher',$teacher_id)->first()->user_type;
+        $class_type = Attendance::where('id',$attendance_id)->first()->class_type;
         //get the new progress report data
+        $attendance = Attendance::where('id',$attendance_id)->first();
         $new_pr = Progress::where('id_attendance',$attendance_id)->get();
-        if (count($new_pr) == 0){
-            //Kalau gaada progress reportnya, langsung balik aja
+
+        $indexReference = 0;
+        for ($k = 0 ; $k < count($new_pr) ; $k++){
+            if (!is_null($new_pr[$k]->level)){
+                $indexReference = $k;
+                break;
+            }
+        }
+        $payment = new Fee;
+        $payment->id_attendance = $attendance->id;
+        $payment->fee_nominal = 0;
+        //SKENARIO PEMBAYARAN 1:
+        //Untuk semua level, kalo alpha tidak masuk semua, fee guru per kelas Rp. 15.000
+        $attendees_count = Attendee::where('id_attendance',$attendance_id)->count();
+        $attendees_count_alpha = Attendee::where('id_attendance',$attendance_id)->where('alpha',true)->count();
+        $attendees_count_homework = Attendee::where('id_attendance',$attendance_id)->where('homework',true)->count();
+
+        if ($attendees_count == $attendees_count_alpha){
+            $payment->fee_nominal += SpecialFeeList::where('special_fee_name','All Alpha')->first()->special_fee_nominal;
+        }
+
+        //SKENARIO PEMBAYARAN 2 :
+        //Semiprivate, Bila salah satu murid masuk, ngikut fee teacher eksklusif (karena hanya 1 murid yg masuk)
+        else if (($class_type=="Semi-Private") && $attendees_count - $attendees_count_alpha - $attendees_count_homework==1){
+            $class_type = "Exclusive";
+        }
+
+        //SKENARIO PEMBAYARAN 3:
+        // bila exclusive 1 murid izin, fee Rp. 15.000
+        else if (($class_type=="Semi-Private") && $attendees_count_homework==1){
+            $payment->fee_nominal += SpecialFeeList::where('special_fee_name','Exclusive Semua Izin')->first()->special_fee_nominal;
+        }
+
+        //SKENARIO PEMBAYARAN 4 :
+        //bila semiprivate, izin semua = Rp. 20.000 berapapun levelnya
+        else if (($class_type=="Semi-Private") && ($attendees_count==$attendees_count_homework)){
+            $payment->fee_nominal += SpecialFeeList::where('special_fee_name','Semiprivate Semua Izin')->first()->special_fee_nominal;
+        }
+
+        //SKENARIO PEMBAYARAN 5 :
+        //semiprivate salah satu izin = fee normal - 5000
+        else if (($class_type=="Semi-Private") && ($attendees_count_homework==1)){
+            $payment->fee_nominal += - $attendees_count_homework*SpecialFeeList::where('special_fee_name','Pengurangan Semiprivate Per Murid Izin')->first()->special_fee_nominal;
+        }
+
+        else if(($attendees_count_alpha+$attendees_count_homework == 0) && is_null($new_pr[$indexReference]->level)){
+            //artinya udah diisi, kelas lengkap, tapi progress report emang bener bener engga diisi
             return redirect('/user-attendances');
         }
-        if ($new_pr[0]->filled){
+
+        //MAIN SCENARIO
+        if ($new_pr[$indexReference]->filled){
             //process the payment thing if only the progress report is filled
             //PAYMENT TIME
-            $attendance = Attendance::where('id',$attendance_id)->first();
-            $cunt = $new_pr[0]->level;
-            $payment = new Fee;
-            $payment->id_attendance = $attendance->id;
-            $payment->fee_nominal = FeeList::where('program', $attendance->program)->where('level', $new_pr[0]->level)->first()['nominal_'.strtolower($attendance->class_type)];
-
-            //Incentives
-            //lunch : syarat adalah mengajar dua kali sesi
-            $sessions = Attendance::select('attendances.id')->join('teach_presences','teach_presences.id_attendance','attendances.id')
-            ->where('attendances.date', $attendance->date)->distinct()->where('attendances.id_teacher', $teacher_id);
-            if ($sessions->count() >=2){
-                //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
-                $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('attendances.date', $attendance->date)
-                ->whereIn('fees.id_attendance',$sessions->pluck('attendances.id')->toArray())->where('lunch_nominal','>',0)->count();
-                if ($check_lunch == 0){
-                    //artinya belum dibayar untuk hari ini
-                    $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
-                }
-                else{
-                    $payment->lunch_nominal = 0;
-                }
-            }
-            elseif ($teacher_pos == "head teacher"){
-                $payment->lunch_nominal = IncentiveList::where('name','Lunch')->where('receiver','Head Teacher')->first()->nominal;
+            $cunt = $new_pr[$indexReference]->level;
+            $payment->fee_nominal += FeeList::where('program', $attendance->program)->where('level', $new_pr[$indexReference]->level)->first()['nominal_'.strtolower($class_type)];
+        }
+        //Incentives
+        //lunch : syarat adalah mengajar dua kali sesi
+        $sessions = Attendance::select('attendances.id')->join('teach_presences','teach_presences.id_attendance','attendances.id')
+        ->where('attendances.date', $attendance->date)->distinct()->where('attendances.id_teacher', $teacher_id);
+        if ($sessions->count() >=2){
+            //check apakah buat lunch sudah dibayar untuk hari ini. Karena dibayarnya cuma sekali
+            $check_lunch = Fee::join('attendances','fees.id_attendance','=','attendances.id')->where('attendances.date', $attendance->date)
+            ->whereIn('fees.id_attendance',$sessions->pluck('attendances.id')->toArray())->where('lunch_nominal','>',0)->count();
+            if ($check_lunch == 0){
+                //artinya belum dibayar untuk hari ini
+                $payment->lunch_nominal = IncentiveList::where('name','Lunch')->first()->nominal;
             }
             else{
                 $payment->lunch_nominal = 0;
             }
-
-            //transport
-            $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
-            $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
-            $payment->approved = false;
-            $payment->save();
         }
+        elseif ($teacher_pos == "head teacher"){
+            $payment->lunch_nominal = IncentiveList::where('name','Lunch')->where('receiver','Head Teacher')->first()->nominal;
+        }
+        else{
+            $payment->lunch_nominal = 0;
+        }
+
+        //transport
+        $payment_incentive_check = IncentiveList::where('name','Transport ('.$attendance->location.')')->first();
+        $payment->transport_nominal = is_null($payment_incentive_check) ? 0 : $payment_incentive_check->nominal;
+        $payment->approved = false;
+        $payment->save();
+
         return redirect('/user-attendances');
     }
 

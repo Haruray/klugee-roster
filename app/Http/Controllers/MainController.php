@@ -303,7 +303,6 @@ class MainController extends Controller
         $students = array();
         $attendee = Attendee::where('attendees.id_attendance',$attendance_id)
         ->join('students','students.id','attendees.id_student')
-        ->where('attendees.alpha',false)
         ->get();
         return $attendee;
     }
@@ -437,18 +436,29 @@ class MainController extends Controller
         //Update data individually per student
         $students = self::GetAttendee($request->input('attendance_id'));
         foreach ($students as $student){
-            $score_id = 'score-'.$student->id;
-            $progress_report_update = Progress::where([
-                ['id_attendance', $request->input('attendance_id')],
-                ['id_student', $student->id]
-            ])->update([
-                'level' => $request->input('level'),
-                'unit' => $request->input('unit'),
-                'last_exercise' => $request->input('last_exercise'),
-                'score' => $request->input($score_id),
-                'documentation' =>$documentation_file_name,
-                'filled' => true
-            ]);
+            if (!$student->alpha){
+                $score_id = 'score-'.$student->id;
+                $progress_report_update = Progress::where([
+                    ['id_attendance', $request->input('attendance_id')],
+                    ['id_student', $student->id]
+                ])->update([
+                    'level' => $request->input('level'),
+                    'unit' => $request->input('unit'),
+                    'last_exercise' => $request->input('last_exercise'),
+                    'score' => $request->input($score_id),
+                    'documentation' =>$documentation_file_name,
+                    'filled' => true
+                ]);
+            }
+            else{
+                $progress_report_update = Progress::where([
+                    ['id_attendance', $request->input('attendance_id')],
+                    ['id_student', $student->id]
+                ])->update([
+                    'filled' => true
+                ]);
+            }
+
         }
 
         //get the new progress report data

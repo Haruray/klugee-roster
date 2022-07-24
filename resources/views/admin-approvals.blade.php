@@ -101,7 +101,7 @@
                             @for ($i = 0 ; $i < count($fee) ; $i+=$fee->where('date',$fee[$i]->date)->count())
                                 <td rowspan="{{$fee->where('date',$fee[$i]->date)->count()}}">{{date('l',strtotime($fee[$i]->date))}}, {{date('d/m/Y',strtotime($fee[$i]->date))}}</td>
                                 <td>{{ $fee[$i]->name }}</td>
-                                <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $a->id_attendance }})">Attendance Info</button></td>
+                                <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $fee[$i]->id_attendance }})">Attendance Info</button></td>
                                 <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$i]->id_attendance }})">Progress Report</button></td>
                                 <td>{{$fee[$i]->fee_nominal}}</td>
                                 <td>{{$fee[$i]->lunch_nominal}}</td>
@@ -110,6 +110,7 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="/accounting/approvals/approve-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                        <a href=""><button class="btn btn-warning">Edit</button></a>
                                         <a href="/accounting/approvals/delete-fee/{{  $fee[$i]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                     </div>
                                 </td>
@@ -117,6 +118,7 @@
                                 @for ($j = $i+1 ; $j < $fee->where('date',$fee[$i]->date)->count()+$i ; $j++)
                                 <tr>
                                     <td>{{ $fee[$j]->name }}</td>
+                                    <td><button type="button" class="btn btn-primary" onclick="$dc2.AttendanceInfo({{ $fee[$j]->id_attendance }})">Attendance Info</button></td>
                                     <td><button type="button" class="btn btn-primary" onclick="$dc2.TeachingInfo({{ $fee[$j]->id_attendance }})">Progress Report</button></td>
                                     <td>{{$fee[$j]->fee_nominal}}</td>
                                     <td>{{$fee[$j]->lunch_nominal}}</td>
@@ -125,6 +127,7 @@
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="/accounting/approvals/approve-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-success" type="button">Approve</button></a>
+                                            <a href=""><button class="btn btn-warning">Edit</button></a>
                                             <a href="/accounting/approvals/delete-fee/{{  $fee[$j]->id_fee }}"><button class="btn btn-danger" type="button">Delete</button></a>
                                         </div>
                                     </td>

@@ -51,10 +51,20 @@ class SuperAdminController extends Controller
         $view = view('admin-approvals');
         $income_approvals = Accounting::select('accountings.*','teachers.name')->where('nominal','>','0')->where('approved','=','0')->join('teachers','teachers.id','=','pic')->get();
         $expense_approvals = Accounting::select('accountings.*','teachers.name')->where('nominal','<','0')->where('approved','=','0')->join('teachers','teachers.id','=','pic')->get();
-        $fees_approvals = Fee::select('fees.id as id_fee','fees.fee_nominal','fees.lunch_nominal','fees.transport_nominal','fees.note','fees.approved','fees.id_attendance','attendances.date','teachers.name')->where('approved','=','0')->join('attendances','attendances.id','=','fees.id_attendance')
-        ->join('teachers','teachers.id','=','attendances.id_teacher')
+        $fees_approvals = Fee::select('fees.id as id_fee','fees.fee_nominal',
+        'fees.lunch_nominal','fees.transport_nominal','fees.note',
+        'fees.approved','fees.id_attendance','attendances.date',
+        'teachers.name')
+        ->where('approved','=','0')
+        ->join('attendances','attendances.id','=','fees.id_attendance')
+
+        ->join('teachers',function($join){
+            $join->on('teachers.id','=','attendances.id_teacher');
+        })
+        ->distinct()
         ->orderBy('attendances.date')
         ->get();
+        //return $fees_approvals;
         $referrals_approvals = Referral::select('referrals.*','students.name as registering_student_name')
         ->where([
             ['referral_nominal','>',0],
