@@ -58,7 +58,7 @@ class HeadTeacherController extends Controller
 
     public function UserList(){
         $view = view('teacher-list');
-        $users = Teachers::select('teachers.id', 'teachers.name as teachername', 'users.user_type', 'teachers.photo')
+        $users = Teachers::select('teachers.id', 'teachers.name as teachername','teachers.nickname as teachernickname', 'users.user_type', 'teachers.photo')
         ->join('users','teachers.id','=','users.id_teacher')
         ->orderByRaw('FIELD(users.user_type,"head of institution","super admin","admin","head teacher","teacher")')
         ->get();

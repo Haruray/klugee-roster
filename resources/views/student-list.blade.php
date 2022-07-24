@@ -97,7 +97,8 @@
             <div id="student-list" class="col-lg-12">
                 @foreach ($students as $student)
                 <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{url('/uploads/students/'.$student->photo)}}">
-                    <p class="student-card-name">{{$student->name}}</p><a href="/students/{{$student->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a>
+                    <p class="student-card-name" style="margin: 0 0; height:70px; overflow:auto;">{{$student->name}} <span style="display:none;">{{ $student->nickname }}</span></p>
+                    <a href="/students/{{$student->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a>
                 </div>
                 @endforeach
             </div>

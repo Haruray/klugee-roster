@@ -92,7 +92,7 @@
             <div id="student-list" class="col-lg-12">
                 @foreach ($users as $u)
                 <div class="d-inline-block student-card col-xl-2 col-lg-3 col-md-4 col-sm-5 col-5"><img class="student-card-profile" src="{{url('/uploads/profile-pictures/'.$u->photo)}}">
-                    <p class="student-card-name" style="margin: 0 0; height:50px; overflow:auto;">{{$u->teachername}}</p>
+                    <p class="student-card-name" style="margin: 0 0; height:70px; overflow:auto;">{{$u->teachername}} <span style="display:none;">{{ $u->teachernickname }}</span></p>
                     <p class="student-card-desc yellow" style="font-size: 15px;">{{ ucwords($u->user_type) }}</p><a href="/users/{{$u->id}}"><button class="btn btn-primary student-card-button" type="button">Select</button></a></div>
                 @endforeach
             </div>
